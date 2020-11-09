@@ -18,23 +18,23 @@ using UnityEngine;
 
 namespace NALStudio.UI
 {
-    public enum UIAnimationTypes
-    {
-        Move,
-        Scale,
-        ScaleX,
-        ScaleY,
-        Fade
-    }
-
     public class UITweener : MonoBehaviour
     {
+        public enum AnimationType
+        {
+            Move,
+            Scale,
+            ScaleX,
+            ScaleY,
+            Fade
+        }
+
         #region Variables
 
         [Tooltip("Gameobject will default to component gameobject if left empty.")]
         public GameObject objectToAnimate;
 
-        public UIAnimationTypes animationType;
+        public AnimationType animationType;
         public LeanTweenType easeType;
         public float duration;
         public float delay;
@@ -49,27 +49,31 @@ namespace NALStudio.UI
 
         LTDescr _tweenObject;
 
-        public bool showOnEnable;
-        public bool workOnDisable;
+        public bool startOnEnable;
+        public bool stopOnDisable;
 
         bool reversed = false;
 
-        #endregion
+        CanvasGroup canvasGroup;
+        RectTransform rect;
+		#endregion
 
-        void OnEnable()
+		void Awake()
+		{
+            canvasGroup = GetComponent<CanvasGroup>();
+            rect = GetComponent<RectTransform>();
+		}
+
+		void OnEnable()
         {
-            if (showOnEnable)
-            {
+            if (startOnEnable)
                 DoTween(false, false);
-            }
         }
 
         void OnDisable()
         {
-            if (!workOnDisable)
-            {
+            if (stopOnDisable)
                 StopTween();
-            }
         }
 
         public void DoTween(bool reverse = false, bool disableAfterTween = false)
@@ -77,20 +81,12 @@ namespace NALStudio.UI
             if (reverse)
             {
                 if (!reversed)
-                {
                     SwapDirection();
-                }
-                if (reversed)
-                {
-                    SwapDirection();
-                }
             }
             else
             {
                 if (reversed)
-                {
                     SwapDirection();
-                }
             }
             HandleTween();
             if (disableAfterTween)
@@ -108,20 +104,20 @@ namespace NALStudio.UI
         {
             switch (animationType)
             {
-                case UIAnimationTypes.Fade:
+                case AnimationType.Fade:
                     Fade();
                     break;
-                case UIAnimationTypes.Move:
+                case AnimationType.Move:
                     MoveAbsolute();
                     break;
-                case UIAnimationTypes.Scale:
+                case AnimationType.Scale:
                     Scale();
                     break;
-                case UIAnimationTypes.ScaleX:
-                    Scale();
+                case AnimationType.ScaleX:
+                    ScaleX();
                     break;
-                case UIAnimationTypes.ScaleY:
-                    Scale();
+                case AnimationType.ScaleY:
+                    ScaleY();
                     break;
             }
 
@@ -140,25 +136,34 @@ namespace NALStudio.UI
 
         void Fade()
         {
-            if (objectToAnimate.GetComponent<CanvasGroup>() == null)
-            {
-                objectToAnimate.AddComponent<CanvasGroup>();
-            }
-
-            objectToAnimate.GetComponent<CanvasGroup>().alpha = from.x;
-            _tweenObject = LeanTween.alphaCanvas(objectToAnimate.GetComponent<CanvasGroup>(), to.x, duration);
+            if (canvasGroup == null)
+                canvasGroup = objectToAnimate.AddComponent<CanvasGroup>();
+            canvasGroup.alpha = from.x;
+            _tweenObject = LeanTween.alphaCanvas(canvasGroup, to.x, duration);
         }
 
         void MoveAbsolute()
         {
-            objectToAnimate.GetComponent<RectTransform>().anchoredPosition = from;
-            _tweenObject = LeanTween.move(objectToAnimate.GetComponent<RectTransform>(), to, duration);
+            rect.anchoredPosition = new Vector2(from.x, from.y);
+            _tweenObject = LeanTween.move(rect, to, duration);
         }
 
         void Scale()
         {
-            objectToAnimate.GetComponent<RectTransform>().localScale = from;
+            rect.localScale = from;
             _tweenObject = LeanTween.scale(objectToAnimate, to, duration);
+        }    
+        
+        void ScaleX()
+        {
+            rect.localScale = new Vector3(from.x, rect.localScale.y, rect.localScale.z);
+            _tweenObject = LeanTween.scale(objectToAnimate, new Vector3(to.x, rect.localScale.y, rect.localScale.z), duration);
+        }   
+        
+        void ScaleY()
+        {
+            rect.localScale = new Vector3(rect.localScale.x, from.y, rect.localScale.z);
+            _tweenObject = LeanTween.scale(objectToAnimate, new Vector3(rect.localScale.x, to.y, rect.localScale.z), duration);
         }
 
         void SwapDirection()

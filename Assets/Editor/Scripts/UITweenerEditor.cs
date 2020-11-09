@@ -31,7 +31,7 @@ namespace NALStudio.UI.Editors
 
 			GUILayout.Space(10f);
 
-			tweener.animationType = (UIAnimationTypes)EditorGUILayout.EnumPopup(new GUIContent("Animation Type"), tweener.animationType);
+			tweener.animationType = (UITweener.AnimationType)EditorGUILayout.EnumPopup(new GUIContent("Animation Type"), tweener.animationType);
 			tweener.easeType = (LeanTweenType)EditorGUILayout.EnumPopup(new GUIContent("Ease Type"), tweener.easeType);
 			tweener.duration = EditorGUILayout.FloatField(new GUIContent("Duration", "The duration of the animation."), tweener.duration);
 			tweener.delay = EditorGUILayout.FloatField(new GUIContent("Delay", "The delay for the start of the animation."), tweener.delay);
@@ -53,23 +53,51 @@ namespace NALStudio.UI.Editors
 			if (!tweener.endPositionOffset)
 				tweener.to = Vector3.one;
 			EditorGUI.BeginDisabledGroup(!tweener.startPositionOffset);
-			if(tweener.animationType == UIAnimationTypes.Fade)
+			switch (tweener.animationType)
+			{
+				case UITweener.AnimationType.Fade:
 					tweener.from.x = EditorGUILayout.Slider(new GUIContent("From"), tweener.from.x, 0f, 1f);
-			else
+					break;
+				case UITweener.AnimationType.Move:
+					Vector2 tmpMove = EditorGUILayout.Vector2Field(new GUIContent("From"), new Vector2(tweener.from.x, tweener.from.y));
+					tweener.from = new Vector3(tmpMove.x, tmpMove.y);
+					break;
+				case UITweener.AnimationType.Scale:
 					tweener.from = EditorGUILayout.Vector3Field(new GUIContent("From"), tweener.from);
+					tweener.from.y = tweener.from.x;
+					break;
+				case UITweener.AnimationType.ScaleX:
+				case UITweener.AnimationType.ScaleY:
+					tweener.from.x = EditorGUILayout.FloatField(new GUIContent("From"), tweener.from.x);
+					break;
+			}
 			EditorGUI.EndDisabledGroup();
 			tweener.endPositionOffset = EditorGUILayout.Toggle(new GUIContent("End Position Offset", "Set a custom end position offset."), tweener.endPositionOffset);
 			EditorGUI.BeginDisabledGroup(!tweener.endPositionOffset);
-			if(tweener.animationType == UIAnimationTypes.Fade)
+			switch (tweener.animationType)
+			{
+				case UITweener.AnimationType.Fade:
 					tweener.to.x = EditorGUILayout.Slider(new GUIContent("To"), tweener.to.x, 0f, 1f);
-			else
+					break;
+				case UITweener.AnimationType.Move:
+					Vector2 tmpMove = EditorGUILayout.Vector2Field(new GUIContent("To"), new Vector2(tweener.to.x, tweener.to.y));
+					tweener.to = new Vector3(tmpMove.x, tmpMove.y);
+					break;
+				case UITweener.AnimationType.Scale:
 					tweener.to = EditorGUILayout.Vector3Field(new GUIContent("To"), tweener.to);
+					break;
+				case UITweener.AnimationType.ScaleX:
+				case UITweener.AnimationType.ScaleY:
+					tweener.to.x = EditorGUILayout.FloatField(new GUIContent("To"), tweener.to.x);
+					tweener.to.y = tweener.to.x;
+					break;
+			}
 			EditorGUI.EndDisabledGroup();
 
 			GUILayout.Space(10f);
 
-			tweener.showOnEnable = EditorGUILayout.Toggle(new GUIContent("Show On Enable", "Triggers the animation when the gameobject has been set active."), tweener.showOnEnable);
-			tweener.workOnDisable = EditorGUILayout.Toggle(new GUIContent("Work On Disable", "Continue the animation even if the animated object is disabled."), tweener.workOnDisable);
+			tweener.startOnEnable = EditorGUILayout.Toggle(new GUIContent("Start On Enable", "Triggers the animation when the gameobject has been set active."), tweener.startOnEnable);
+			tweener.stopOnDisable = EditorGUILayout.Toggle(new GUIContent("Stop On Disable", "Continue the animation even if the animated object is disabled."), tweener.stopOnDisable);
 		}
 	}
 }
