@@ -21,25 +21,25 @@ namespace NALStudio.ConfigManager
 {
 	public class ConfigManager : MonoBehaviour
 	{
-		string fileLocation = Path.Combine(Application.persistentDataPath, "settings.nal");
+		public SettingsHolder Settings = new SettingsHolder();
 
 		[Serializable]
 		public class SettingsHolder
 		{
-			public string installDir;
+			public List<string> installDirs;
 		}
 
-		SettingsHolder Settings = null;
+		string settingsFileLocation = Path.Combine(Application.persistentDataPath, "settings.nal");
 
 		public void SaveSettings()
 		{
 			string json = JsonUtility.ToJson(Settings);
-			File.WriteAllText(fileLocation, json);
+			File.WriteAllText(settingsFileLocation, json);
 		}
 
 		public void LoadSettings()
 		{
-			string json = File.ReadAllText(fileLocation);
+			string json = File.ReadAllText(settingsFileLocation);
 			Settings = JsonUtility.FromJson<SettingsHolder>(json);
 		}
 	}
