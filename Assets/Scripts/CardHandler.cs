@@ -39,8 +39,6 @@ public class CardHandler : MonoBehaviour
 #if UNITY_EDITOR
 	void Reset()
 	{
-		gridHeight = 200f;
-		verticalSpacing = 10f;
 		Start();
 	}
 
@@ -56,7 +54,7 @@ public class CardHandler : MonoBehaviour
         gridLayout.cellSize = new Vector2((rectTranform.rect.width - 20) / 3, gridHeight);
 		gridLayout.spacing = new Vector2(gridLayout.spacing.x, verticalSpacing);
 		rectTranform.sizeDelta = new Vector2(rectTranform.sizeDelta.x,
-			gridHeight + verticalSpacing + ((gridHeight + verticalSpacing) * Mathf.CeilToInt((rectTranform.childCount - 1) / 3)));
+			gridHeight + ((gridHeight + verticalSpacing) * Mathf.CeilToInt((rectTranform.childCount - 1) / 3)));
 	}
 
 	void OnRectTransformDimensionsChange()
