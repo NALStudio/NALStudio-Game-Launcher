@@ -79,13 +79,16 @@ namespace NALStudio.UI
         public void DoTween(bool reverse = false, bool disableAfterTween = false)
         {
             StopTween();
-            if (reverse)
-            {
-                if (!reversed)
-                    SwapDirection();
-            }
+			if (reverse)
+			{
+				if (!reversed)
+					SwapDirection();
+			}
 			else if (reversed)
+			{
 				SwapDirection();
+			}
+
 			HandleTween();
             if (disableAfterTween)
                 _tweenObject.setOnComplete(() => objectToAnimate.SetActive(false));

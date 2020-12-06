@@ -59,7 +59,7 @@ public class FlexibleGridLayoutEditor : Editor
             layout.rows = EditorGUILayout.DelayedIntField(new GUIContent("Rows"), layout.rows);
             layout.columns = EditorGUILayout.DelayedIntField(new GUIContent("Columns"), layout.columns);
             GUILayout.Space(10f);
-            EditorGUI.BeginDisabledGroup(true);
+            EditorGUI.BeginDisabledGroup(layout.fitX && layout.fitY);
             layout.cellSize = EditorGUILayout.Vector2Field("Cell Size", layout.cellSize);
             EditorGUI.EndDisabledGroup();
             layout.spacing = EditorGUILayout.Vector2Field("Spacing", layout.spacing);
@@ -72,7 +72,9 @@ public class FlexibleGridLayoutEditor : Editor
             EditorGUI.BeginDisabledGroup(true);
             layout.rows = EditorGUILayout.DelayedIntField(new GUIContent("Rows"), layout.rows);
             layout.columns = EditorGUILayout.DelayedIntField(new GUIContent("Columns"), layout.columns);
+            EditorGUI.EndDisabledGroup();
             GUILayout.Space(10f);
+            EditorGUI.BeginDisabledGroup(layout.fitX && layout.fitY);
             layout.cellSize = EditorGUILayout.Vector2Field("Cell Size", layout.cellSize);
             EditorGUI.EndDisabledGroup();
             layout.spacing = EditorGUILayout.Vector2Field("Spacing", layout.spacing);
