@@ -1249,6 +1249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   downloadHandler: {fileID: 441260885}
+  githubHelper: {fileID: 0}
 --- !u!114 &441260885
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,13 +11,17 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
+using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using NALStudio.Cache;
 using NALStudio.JSON;
 using NALStudio.UI;
+using NALStudio.Encryption;
 
 namespace NALStudio.GameLauncher.Cards
 {
@@ -58,34 +62,52 @@ namespace NALStudio.GameLauncher.Cards
 			CalculateCellSize();
 
 			childCount = transform.childCount;
-			StartCoroutine(loadCards());
+			StartCoroutine(LoadCards());
 		}
 
-		IEnumerator loadCards()
+		void AddCards(string json)
 		{
-			UnityWebRequest wr = UnityWebRequest.Get("https://nalstudio-game-launcher-api-default-rtdb.europe-west1.firebasedatabase.app/.json");
-			yield return wr.SendWebRequest();
-			if (wr.isNetworkError || wr.isHttpError)
+			CardData[] cardDatas = JsonHelper.FromJsonArray<CardData>(json);
+			for (int i = 0; i < cardDatas.Length; i++)
 			{
-				Debug.LogError(wr.error);
+				GameObject instantiated = Instantiate(cardPrefab, transform);
+				Card insCard = instantiated.GetComponent<Card>();
+				insCard.LoadAssets(cardDatas[i]);
+				UITweener insTweener = instantiated.GetComponent<UITweener>();
+				insTweener.duration = cardAnimationDuration;
+				insTweener.delay = cardAnimationBasedelay + (i / 10f);
+				cardTweeners.Add(insTweener);
+			}
+			CalculateCellSize();
+		}
+
+		IEnumerator LoadCards()
+		{
+			string dataDirPath = Path.Combine(Cache.Cache.Path, "data");
+			string fileName = EncryptionHelper.ToMD5Hex(DateTime.UtcNow.ToString("ddMMyyyy"));
+			string filePath = Path.Combine(dataDirPath, $"{fileName}.nal");
+			if (File.Exists(filePath))
+			{
+				AddCards(File.ReadAllText(filePath));
 			}
 			else
 			{
-				string jsonString = wr.downloadHandler.text;
-				CardData[] cardDatas = JsonHelper.FromJsonArray<CardData>(jsonString);
-				for (int i = 0; i < cardDatas.Length; i++)
+				Debug.Log("Loading new JSON file...");
+				UnityWebRequest wr = UnityWebRequest.Get("https://nalstudio-game-launcher-api-default-rtdb.europe-west1.firebasedatabase.app/.json");
+				yield return wr.SendWebRequest();
+				if (wr.isNetworkError || wr.isHttpError)
 				{
-					GameObject instantiated = Instantiate(cardPrefab, transform);
-					Card insCard = instantiated.GetComponent<Card>();
-					insCard.LoadAssets(cardDatas[i]);
-					UITweener insTweener = instantiated.GetComponent<UITweener>();
-					insTweener.duration = cardAnimationDuration;
-					insTweener.delay = cardAnimationBasedelay + (i  / 10f);
-					cardTweeners.Add(insTweener);
+					Debug.LogError(wr.error);
 				}
-				CalculateCellSize();
+				else
+				{
+					string jsonString = wr.downloadHandler.text;
+					Directory.Delete(dataDirPath);
+					Directory.CreateDirectory(dataDirPath);
+					File.WriteAllText(filePath, jsonString);
+					AddCards(jsonString);
+				}
 			}
-
 		}
 
 		public void PlayAnimation()
