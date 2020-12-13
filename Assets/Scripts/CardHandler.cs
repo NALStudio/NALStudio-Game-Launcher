@@ -88,7 +88,8 @@ namespace NALStudio.GameLauncher.Cards
 			string filePath = Path.Combine(dataDirPath, $"{fileName}.nal");
 			if (File.Exists(filePath))
 			{
-				AddCards(File.ReadAllText(filePath));
+				string encryptedText = File.ReadAllText(filePath);
+				AddCards(EncryptionHelper.DecryptString(encryptedText));
 			}
 			else
 			{
@@ -102,9 +103,10 @@ namespace NALStudio.GameLauncher.Cards
 				else
 				{
 					string jsonString = wr.downloadHandler.text;
-					Directory.Delete(dataDirPath);
+					if (Directory.Exists(dataDirPath))
+						Directory.Delete(dataDirPath, true);
 					Directory.CreateDirectory(dataDirPath);
-					File.WriteAllText(filePath, jsonString);
+					File.WriteAllText(filePath, EncryptionHelper.EncryptString(jsonString));
 					AddCards(jsonString);
 				}
 			}
