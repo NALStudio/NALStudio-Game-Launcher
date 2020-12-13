@@ -94,6 +94,11 @@ namespace NALStudio.UI
                 _tweenObject.setOnComplete(() => objectToAnimate.SetActive(false));
         }
 
+        public void EasyTween()
+		{
+            DoTween();
+		}
+
         public void StopTween()
         {
             LeanTween.cancel(objectToAnimate);

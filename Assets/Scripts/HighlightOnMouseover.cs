@@ -28,6 +28,11 @@ public class HighlightOnMouseover : MonoBehaviour, IPointerEnterHandler, IPointe
 	}
 #endif
 
+	void OnEnable()
+	{
+		graphic.canvasRenderer.SetColor(normalColor);
+	}
+
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		graphic.CrossFadeColor(highlightedColor, fadeDuration, true, true);

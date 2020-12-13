@@ -11,7 +11,6 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -19,29 +18,24 @@ using UnityEngine;
 
 namespace NALStudio.ConfigManager
 {
-	public class ConfigManager : MonoBehaviour
+	public static class ConfigManager
 	{
-		public SettingsHolder Settings = new SettingsHolder();
-		string settingsFileLocation = string.Empty;
+		public static SettingsHolder Settings = new SettingsHolder();
+		static readonly string settingsFileLocation = Path.Combine(Application.persistentDataPath, "settings.nal");
 
-		void Awake()
-		{
-			settingsFileLocation = Path.Combine(Application.persistentDataPath, "settings.nal");
-		}
-
-		[Serializable]
+		[System.Serializable]
 		public class SettingsHolder
 		{
-			public List<string> installDirs;
+			public static List<string> installDirs = new List<string>() { Path.GetFullPath("Games") };
 		}
 
-		public void SaveSettings()
+		public static void SaveSettings()
 		{
-			string json = JsonUtility.ToJson(Settings);
+			string json = JsonUtility.ToJson(Settings, true);
 			File.WriteAllText(settingsFileLocation, json);
 		}
 
-		public void LoadSettings()
+		public static void LoadSettings()
 		{
 			string json = File.ReadAllText(settingsFileLocation);
 			Settings = JsonUtility.FromJson<SettingsHolder>(json);

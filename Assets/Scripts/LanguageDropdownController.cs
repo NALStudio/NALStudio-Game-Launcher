@@ -11,68 +11,41 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+using Lean.Localization;
+using TMPro;
 
-namespace NALStudio.UI
+public class LanguageDropdownController : MonoBehaviour
 {
-	public class TabGroup : MonoBehaviour
+    #region Variables
+    public TMP_Dropdown dropdown;
+    public LeanPhrase phrase;
+    List<string> languages = new List<string>();
+	#endregion
+
+    [System.Serializable]
+    class testi
+	{
+        public string thingy = Random.Range(0, 1000).ToString();
+        public int parameter = Random.Range(0, 11);
+	}
+
+    void Start()
     {
-        #region Variables
+        foreach (KeyValuePair<string, LeanLanguage> tmpLang in LeanLocalization.CurrentLanguages)
+            languages.Add(tmpLang.Key);
+        List<string> strEntries = new List<string>();
+        foreach (LeanPhrase.Entry entry in phrase.Entries)
+            strEntries.Add(entry.Text);
+        dropdown.AddOptions(strEntries);
+        dropdown.onValueChanged.AddListener(LanguageChange);
+        dropdown.value = languages.IndexOf(LeanLocalization.CurrentLanguage);
+    }
 
-        public List<TabButton> tabButtons;
-		public List<GameObject> tabs;
-		public List<UnityEvent> onSelect;
-		public List<UnityEvent> onDeselect;
-
-		public int defaultIndex = 0;
-
-        [HideInInspector]
-        public TabButton SelectedButton;
-
-		TabButton mouseInside;
-
-		public delegate void TabAction();
-		public event TabAction OnTabSwitch;
-
-		#endregion
-
-		void Awake()
-		{
-			foreach (TabButton button in tabButtons)
-			{
-				button.gameObject.SetActive(true);
-				button.Subscribe(this);
-			}
-			SwitchTab(tabButtons[defaultIndex]);
-#if UNITY_EDITOR
-			if (tabButtons.Count != tabs.Count)
-				throw new ArgumentException("TabButton count is not equal to Tab count.");
-			else if (defaultIndex >= tabButtons.Count || defaultIndex < 0)
-				throw new IndexOutOfRangeException("DefaultIndex is invalid. " +
-					$"Allowed range 0 - {tabButtons.Count - 1}, DefaultIndex: {defaultIndex}");
-#endif
-		}
-
-		public void SwitchTab(TabButton tabButton)
-		{
-			if (tabButton == SelectedButton)
-				return;
-			SelectedButton = tabButton;
-			for (int i = 0; i < tabButtons.Count; i++)
-			{
-				if (tabs[i] != null)
-					tabs[i].SetActive(tabButtons[i] == tabButton);
-				if (tabButtons[i] == tabButton)
-					onSelect[i]?.Invoke();
-				else
-					onDeselect[i]?.Invoke();
-			}
-
-			OnTabSwitch?.Invoke();
-		}
+    void LanguageChange(int i)
+	{
+        LeanLocalization.CurrentLanguage = languages[i];
 	}
 }
