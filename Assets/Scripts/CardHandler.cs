@@ -35,24 +35,38 @@ namespace NALStudio.GameLauncher.Cards
 		public GameObject cardPrefab;
 		public float cardAnimationBasedelay;
 		public float cardAnimationDuration = 0.5f;
+		[Space(10)]
+		public StorePage storePage;
+		[Space(10)]
+		public List<UITweener> cardTweeners;
 
 		GridLayoutGroup gridLayout;
 		RectTransform rectTranform;
 		int childCount;
 
-		public List<UITweener> cardTweeners;
 
 		#endregion
 
 		[System.Serializable]
 		public class CardData
 		{
-			public string developer;
-			public string download;
-			public int price;
-			public string publisher;
-			public string thumbnail;
+			public class GameData
+			{
+				public string version;
+				public ulong timePlayed; //Seconds
+			}
+
 			public string title;
+			public string developer;
+			public string publisher;
+			public int price;
+			public string version;
+			public bool early_access;
+			public string thumbnail;
+			public string download;
+
+			public Texture2D thumbnailTexture;
+			public GameData gameData;
 		}
 
 		void Start()
@@ -72,6 +86,7 @@ namespace NALStudio.GameLauncher.Cards
 			{
 				GameObject instantiated = Instantiate(cardPrefab, transform);
 				Card insCard = instantiated.GetComponent<Card>();
+				insCard.storePage = storePage;
 				insCard.LoadAssets(cardDatas[i]);
 				UITweener insTweener = instantiated.GetComponent<UITweener>();
 				insTweener.duration = cardAnimationDuration;

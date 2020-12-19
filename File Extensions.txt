@@ -1,0 +1,3 @@
+.nal = NAL File
+.ndf = NAL Data Format
+.nbf = NAL Binary Format

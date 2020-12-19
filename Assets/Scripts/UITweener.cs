@@ -79,17 +79,9 @@ namespace NALStudio.UI
         public void DoTween(bool reverse = false, bool disableAfterTween = false)
         {
             StopTween();
-			if (reverse)
-			{
-				if (!reversed)
-					SwapDirection();
-			}
-			else if (reversed)
-			{
-				SwapDirection();
-			}
-
+            Reverse(reverse);
 			HandleTween();
+
             if (disableAfterTween)
                 _tweenObject.setOnComplete(() => objectToAnimate.SetActive(false));
         }
@@ -101,7 +93,8 @@ namespace NALStudio.UI
 
         public void StopTween()
         {
-            LeanTween.cancel(objectToAnimate);
+            if (_tweenObject != null)
+                LeanTween.cancel(_tweenObject.id);
         }
 
         void HandleTween()
@@ -156,23 +149,36 @@ namespace NALStudio.UI
         {
             rect.localScale = from;
             _tweenObject = LeanTween.scale(objectToAnimate, to, duration);
-        }    
-        
+        }
+
         void ScaleX()
         {
             rect.localScale = new Vector3(from.x, rect.localScale.y, rect.localScale.z);
             _tweenObject = LeanTween.scale(objectToAnimate, new Vector3(to.x, rect.localScale.y, rect.localScale.z), duration);
-        }   
-        
+        }
+
         void ScaleY()
         {
             rect.localScale = new Vector3(rect.localScale.x, from.y, rect.localScale.z);
             _tweenObject = LeanTween.scale(objectToAnimate, new Vector3(rect.localScale.x, to.y, rect.localScale.z), duration);
         }
 
+        void Reverse(bool reverse)
+		{
+			if (reverse)
+			{
+				if (!reversed)
+					SwapDirection();
+			}
+			else if (reversed)
+			{
+				SwapDirection();
+			}
+		}
+
         void SwapDirection()
         {
-            var temp = from;
+            Vector3 temp = from;
             from = to;
             to = temp;
             reversed = !reversed;

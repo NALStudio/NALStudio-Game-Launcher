@@ -1,0 +1,13 @@
+{
+    "Physics": {
+        "Items": {
+            "fallMaxVelocity": 8,
+            "fallSpeed": 1
+        },
+        "Player": {
+            "fallMaxVelocity": 8,
+            "fallMultiplier": 2.5,
+            "fallSpeed": 0.4
+        }
+    }
+}

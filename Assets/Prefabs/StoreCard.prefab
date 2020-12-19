@@ -223,8 +223,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   graphic: {fileID: 5189744834235210305}
-  normalColor: {r: 1, g: 1, b: 1, a: 0}
-  highlightedColor: {r: 1, g: 1, b: 1, a: 0.2509804}
+  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  highlightedColor: {r: 0, g: 0, b: 0, a: 0.2509804}
   fadeDuration: 0.15
 --- !u!1 &4472178525805489519
 GameObject:
@@ -477,7 +477,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 30
+  m_PixelsPerUnitMultiplier: 50
 --- !u!114 &7845690710370261581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,7 +506,7 @@ GameObject:
   - component: {fileID: 3546759972682811835}
   - component: {fileID: 2997460615028724254}
   m_Layer: 5
-  m_Name: Card
+  m_Name: StoreCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

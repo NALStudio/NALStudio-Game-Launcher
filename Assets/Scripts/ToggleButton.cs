@@ -34,9 +34,8 @@ namespace NALStudio.UI
         [Space(10)]
         public bool isOn;
         [Space(10)]
-        public GameObject toggleObject;
-        public bool tweenOnDeselect;
-        UITweener tweener;
+        public UnityEvent onSelected;
+        public UnityEvent onDeselected;
         #endregion
 
 #if UNITY_EDITOR
@@ -61,14 +60,8 @@ namespace NALStudio.UI
         void Start()
         {
 #if UNITY_EDITOR
-            if (Application.isPlaying)
-            {
-#endif
-                toggleObject.SetActive(isOn);
-                if (tweenOnDeselect)
-                    tweener = toggleObject.GetComponent<UITweener>();
-#if UNITY_EDITOR
-            }
+            if (!Application.isPlaying)
+                return;
 #endif
             if (isOn)
                 graphic.canvasRenderer.SetColor(selectedColor);
@@ -96,14 +89,16 @@ namespace NALStudio.UI
         public void OnPointerClick(PointerEventData eventData)
         {
             isOn = !isOn;
-            if (tweenOnDeselect && !isOn)
-                tweener.DoTween(true, true);
-            else
-                toggleObject.SetActive(isOn);
             if (isOn)
+            {
                 graphic.CrossFadeColor(selectedColor, fadeDuration, true, true);
+                onSelected?.Invoke();
+            }
             else
+            {
                 graphic.CrossFadeColor(highlightedColor, fadeDuration, true, true);
+                onDeselected?.Invoke();
+            }
         }
     }
 }

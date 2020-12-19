@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,9 @@ namespace NALStudio.GameLauncher.Cards
         public TextMeshProUGUI devPub;
         public TextMeshProUGUI price;
 
+        [HideInInspector]
+        public StorePage storePage;
+
         public void LoadAssets(CardHandler.CardData cData)
         {
             cardData = cData;
@@ -23,7 +27,7 @@ namespace NALStudio.GameLauncher.Cards
 
         public void OpenStorePage()
         {
-
+            storePage.Open(cardData);
         }
 
         void LanguageChange()
@@ -39,6 +43,9 @@ namespace NALStudio.GameLauncher.Cards
 
 		IEnumerator SetContent()
         {
+            string gameDataPath = Path.Combine(Constants.Constants.GamesPath, cardData.title, "data.nal");
+            if (File.Exists(gameDataPath))
+                cardData.gameData = JsonUtility.FromJson<CardHandler.CardData.GameData>(File.ReadAllText(gameDataPath));
             UnityWebRequest wr = new UnityWebRequest(cardData.thumbnail);
             DownloadHandlerTexture texDl = new DownloadHandlerTexture(true);
             wr.downloadHandler = texDl;
@@ -49,9 +56,9 @@ namespace NALStudio.GameLauncher.Cards
             }
             else
             {
-                Texture2D t = texDl.texture;
-                thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = t.width / t.height;
-                thumbnail.texture = t;
+                cardData.thumbnailTexture = texDl.texture;
+                thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = cardData.thumbnailTexture.width / (float)cardData.thumbnailTexture.height;
+                thumbnail.texture = cardData.thumbnailTexture;
 
                 title.text = cardData.title;
 
