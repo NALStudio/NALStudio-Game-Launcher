@@ -24,6 +24,6 @@ public class SplashScreenHandler : MonoBehaviour
 	void Awake()
 	{
 		splashScreen.SetActive(true);
-		splashTweener.DoTween(disableAfterTween: true);
+		splashTweener.DoTween(false, true);
 	}
 }

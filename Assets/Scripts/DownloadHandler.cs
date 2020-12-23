@@ -21,6 +21,9 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using UnityEngine.UI.Extensions;
 using TMPro;
+using NALStudio.GameLauncher.Games;
+using Lean.Localization;
+using NALStudio.Math;
 
 namespace NALStudio.GameLauncher
 {
@@ -30,8 +33,11 @@ namespace NALStudio.GameLauncher
 		[Space(10f)]
 		public UILineRenderer lineRenderer;
 		public TextMeshProUGUI downloadSpeedText;
+		public TextMeshProUGUI downloadProgressText;
 		public RectTransform downloadSpeedRect;
 		public RectTransform LineArea;
+		public GameObject[] hideOnSleep;
+		[Space(10f)]
 		public int maxDataPoints;
 		[Range(0, 1)]
 		public float lineSmoothing;
@@ -48,10 +54,14 @@ namespace NALStudio.GameLauncher
 		Color progressNormalColor;
 		Color progressFillNormalColor;
 		bool downloadError;
+		[Space(10f)]
+		public GameHandler gameHandler;
 
         UnityWebRequest request;
 		[HideInInspector]
 		public QueueHandler Queue = new QueueHandler();
+		[HideInInspector]
+		public Cards.CardHandler.CardData currentlyDownloading;
 
 		void Awake()
 		{
@@ -71,6 +81,16 @@ namespace NALStudio.GameLauncher
             public void Remove(Cards.CardHandler.CardData item)
 			{
                 queued.Remove(item);
+			}
+
+			public bool Contains(Cards.CardHandler.CardData item)
+			{
+				return queued.Contains(item);
+			}
+
+			public int Count()
+			{
+				return queued.Count;
 			}
 
 			public Cards.CardHandler.CardData GetNextDownload()
@@ -100,20 +120,20 @@ namespace NALStudio.GameLauncher
 			else
 			{
 				updateGraphs = false;
-				Cards.CardHandler.CardData cardData = Queue.GetNextDownload();
-				if (cardData != null)
+				currentlyDownloading = Queue.GetNextDownload();
+				if (currentlyDownloading != null)
 				{
-					StartCoroutine(Downloader(cardData));
+					StartCoroutine(Downloader(currentlyDownloading));
 				}
 			}
 		}
 
 		void FixedUpdate()
 		{
-			if (updateGraphs && request != null)
+			if (updateGraphs && Application.targetFrameRate != 1 && request != null)
 			{
-				downloadSpeedText.gameObject.SetActive(true);
-				progressBar.gameObject.SetActive(true);
+				foreach (GameObject _object in hideOnSleep)
+					_object.SetActive(true);
 
 				if (downloadsMenu.opened)
 				{
@@ -125,7 +145,7 @@ namespace NALStudio.GameLauncher
 					#region Point Loading
 					while (dataPoints.Count >= maxDataPoints)
 						dataPoints.RemoveAt(0);
-					dataPoints.Add((request.downloadedBytes - oldDownloadedBytes) / Time.fixedDeltaTime);
+					dataPoints.Add((request.downloadedBytes - oldDownloadedBytes) / Time.fixedUnscaledDeltaTime);
 					if (dataPoints.Count > 1)
 					{
 						if (dataPoints[dataPoints.Count - 1] == 0f)
@@ -158,9 +178,18 @@ namespace NALStudio.GameLauncher
 					#endregion
 					#endregion
 
-					#region DownloadSpeed
-					downloadSpeedText.text = $"{Math.Convert.BytesToMB(Mathf.RoundToInt(dataPoints.Last() * 8)):0.0}Mb/s";
+					#region Download Speed
+					downloadSpeedText.text = $"{Convert.BitsToMb(Mathf.RoundToInt(dataPoints.Last() * 8)):0.0}{LeanLocalization.GetTranslationText("units-megabits_per_second-short", "Mb/s")}";
 					downloadSpeedRect.anchoredPosition = new Vector2((lineRenderer.Points.Last().x * LineArea.rect.width) + lineRenderer.LineThickness + 5, downloadSpeedRect.anchoredPosition.y);
+					#endregion
+
+					#region Download Progress
+					double downloadSize = request.downloadedBytes / (double)request.downloadProgress;
+					if (double.IsNaN(downloadSize))
+						downloadSize = 0;
+					downloadProgressText.text =
+						$"{Convert.BytesToMB(request.downloadedBytes):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")} / " +
+						$"{Convert.BytesToMB(downloadSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short")}";
 					#endregion
 
 					oldDownloadedBytes = request.downloadedBytes;
@@ -177,11 +206,26 @@ namespace NALStudio.GameLauncher
 			}
 			else
 			{
-				progressBar.gameObject.SetActive(false);
-				downloadSpeedText.gameObject.SetActive(false);
+				foreach (GameObject _object in hideOnSleep)
+					_object.SetActive(false);
 				dataPoints.Clear();
 				oldDownloadedBytes = 0;
 				lineRenderer.Points = new Vector2[] { Vector2.zero };
+			}
+		}
+
+		public void Cancel(Cards.CardHandler.CardData toCancel)
+		{
+			if (currentlyDownloading == toCancel)
+			{
+				StopCoroutine(Downloader(currentlyDownloading));
+				if (Directory.Exists(Constants.Constants.DownloadPath))
+					Directory.Delete(Constants.Constants.DownloadPath, true);
+				request = null;
+			}
+			else if (Queue.Contains(toCancel))
+			{
+				Queue.Remove(toCancel);
 			}
 		}
 
@@ -195,9 +239,11 @@ namespace NALStudio.GameLauncher
 
 		IEnumerator Downloader(Cards.CardHandler.CardData cardData)
 		{
-            string downloadDir = Path.Combine(Constants.Constants.GamesPath, "download");
+			string downloadDir = Constants.Constants.DownloadPath;
             if (Directory.Exists(downloadDir))
                 Directory.Delete(downloadDir, true);
+			DirectoryInfo downloadTmp = Directory.CreateDirectory(downloadDir);
+			downloadTmp.Attributes |= FileAttributes.Hidden;
             string downloadPath = Path.Combine(downloadDir, "data.nbf");
 			request = new UnityWebRequest(cardData.download)
 			{
@@ -218,15 +264,44 @@ namespace NALStudio.GameLauncher
 		IEnumerator Extractor(string downloadDir, string zipPath, Cards.CardHandler.CardData cardData)
 		{
 			string extractPath = Path.Combine(downloadDir, "extraction");
-			ZipFile.ExtractToDirectory(zipPath, Path.Combine(downloadDir, "extraction"));
+			if (Directory.Exists(extractPath))
+				Directory.Delete(extractPath, true);
+			ZipFile.ExtractToDirectory(zipPath, extractPath);
 			string gamePath = Path.Combine(Constants.Constants.GamesPath, cardData.title);
-			if (Directory.Exists(gamePath))
-				Directory.Delete(gamePath, true);
+			gameHandler.Uninstall(cardData.title);
 			if (Directory.GetDirectories(extractPath).Length == 1 && Directory.GetFiles(extractPath).Length < 1)
 				Directory.Move(Directory.GetDirectories(extractPath)[0], gamePath);
 			else
 				Directory.Move(extractPath, gamePath);
+
 			Directory.Delete(downloadDir, true);
+
+			string gamedataPath = Path.Combine(gamePath, GameHandler.gamedataFileName);
+			GameHandler.GameData gamedata;
+			if (File.Exists(gamedataPath))
+			{
+				string encrypted = File.ReadAllText(gamedataPath);
+				string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
+				gamedata = JsonUtility.FromJson<GameHandler.GameData>(unencrypted);
+				gamedata.version = cardData.version;
+				gamedata.executable_path = cardData.executable_path;
+			}
+			else
+			{
+				gamedata = new GameHandler.GameData
+				{
+					name = cardData.title,
+					version = cardData.version,
+					play_time = 0,
+					executable_path = cardData.executable_path
+				};
+			}
+			string gamedataJson = JsonUtility.ToJson(gamedata);
+			string gamedataEncrypted = Encryption.EncryptionHelper.EncryptString(gamedataJson);
+			File.WriteAllText(Path.Combine(gamePath, GameHandler.gamedataFileName), gamedataEncrypted);
+
+			gameHandler.LoadGames();
+
 			request = null;
 			yield return null;
 		}

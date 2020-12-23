@@ -67,7 +67,7 @@ namespace NALStudio.UI
 		void OnEnable()
         {
             if (startOnEnable)
-                DoTween(false, false);
+                DoTween();
         }
 
         void OnDisable()
@@ -76,19 +76,28 @@ namespace NALStudio.UI
                 StopTween();
         }
 
-        public void DoTween(bool reverse = false, bool disableAfterTween = false)
+        public void DoTween(bool reverse, bool disableAfterTween)
         {
             StopTween();
             Reverse(reverse);
 			HandleTween();
-
             if (disableAfterTween)
                 _tweenObject.setOnComplete(() => objectToAnimate.SetActive(false));
         }
 
-        public void EasyTween()
+        public void DoTween()
 		{
-            DoTween();
+            StopTween();
+            if (reversed)
+                Reverse(false);
+            HandleTween();
+		}
+
+        public void DoTween(bool reverse)
+		{
+            StopTween();
+            Reverse(reverse);
+            HandleTween();
 		}
 
         public void StopTween()

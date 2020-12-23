@@ -31,8 +31,28 @@ namespace NALStudio.UI
         public Color pressedColor;
         public Color selectedColor;
         public float fadeDuration;
-        [Space(10)]
-        public bool isOn;
+        bool _isOn;
+        public bool IsOn
+		{
+			get
+			{
+                return _isOn;
+			}
+			set
+			{
+                _isOn = value;
+                if (_isOn)
+                {
+                    graphic.CrossFadeColor(selectedColor, fadeDuration, true, true);
+                    onSelected?.Invoke();
+                }
+                else
+                {
+                    graphic.CrossFadeColor(highlightedColor, fadeDuration, true, true);
+                    onDeselected?.Invoke();
+                }
+            }
+		}
         [Space(10)]
         public UnityEvent onSelected;
         public UnityEvent onDeselected;
@@ -47,23 +67,13 @@ namespace NALStudio.UI
             pressedColor = new Color(0.5f, 0.5f, 0.5f);
             selectedColor = new Color(0.75f, 0.75f, 0.75f);
             fadeDuration = 0.1f;
-            isOn = false;
-        }
-
-        void Update()
-        {
-            if (!Application.isPlaying && graphic != null)
-                graphic.canvasRenderer.SetColor(normalColor);
+            IsOn = false;
         }
 #endif
 
         void Start()
         {
-#if UNITY_EDITOR
-            if (!Application.isPlaying)
-                return;
-#endif
-            if (isOn)
+            if (IsOn)
                 graphic.canvasRenderer.SetColor(selectedColor);
             else
                 graphic.canvasRenderer.SetColor(normalColor);
@@ -71,13 +81,13 @@ namespace NALStudio.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (!isOn)
+            if (!IsOn)
                 graphic.CrossFadeColor(highlightedColor, fadeDuration, true, true);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (!isOn)
+            if (!IsOn)
                 graphic.CrossFadeColor(normalColor, fadeDuration, true, true);
         }
 
@@ -88,17 +98,7 @@ namespace NALStudio.UI
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            isOn = !isOn;
-            if (isOn)
-            {
-                graphic.CrossFadeColor(selectedColor, fadeDuration, true, true);
-                onSelected?.Invoke();
-            }
-            else
-            {
-                graphic.CrossFadeColor(highlightedColor, fadeDuration, true, true);
-                onDeselected?.Invoke();
-            }
+            IsOn = !IsOn;
         }
     }
 }

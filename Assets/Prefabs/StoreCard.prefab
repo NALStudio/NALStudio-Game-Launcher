@@ -639,16 +639,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardData:
-    developer: 
-    download: 
-    price: 0
-    publisher: 
-    thumbnail: 
     title: 
+    developer: 
+    publisher: 
+    price: 0
+    version: 
+    release_date: 
+    early_access: 0
+    thumbnail: 
+    download: 
+    executable_path: 
+    thumbnailTexture: {fileID: 0}
   thumbnail: {fileID: 2397607654950276116}
   title: {fileID: 9104463210509869330}
   devPub: {fileID: 8374592262258013811}
   price: {fileID: 5401786029272540756}
+  storePage: {fileID: 0}
 --- !u!114 &2997460615028724254
 MonoBehaviour:
   m_ObjectHideFlags: 0

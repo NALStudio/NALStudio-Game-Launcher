@@ -43,9 +43,6 @@ namespace NALStudio.GameLauncher.Cards
 
 		IEnumerator SetContent()
         {
-            string gameDataPath = Path.Combine(Constants.Constants.GamesPath, cardData.title, "data.nal");
-            if (File.Exists(gameDataPath))
-                cardData.gameData = JsonUtility.FromJson<CardHandler.CardData.GameData>(File.ReadAllText(gameDataPath));
             UnityWebRequest wr = new UnityWebRequest(cardData.thumbnail);
             DownloadHandlerTexture texDl = new DownloadHandlerTexture(true);
             wr.downloadHandler = texDl;

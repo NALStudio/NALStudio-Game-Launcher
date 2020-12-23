@@ -48,10 +48,13 @@ namespace NALStudio.UI.Editors
 			GUILayout.Space(10f);
 
 			tweener.startPositionOffset = EditorGUILayout.Toggle(new GUIContent("Start Position Offset", "Set a custom start position offset."), tweener.startPositionOffset);
-			if (!tweener.startPositionOffset)
-				tweener.from = Vector3.zero;
-			if (!tweener.endPositionOffset)
-				tweener.to = Vector3.one;
+			if (!Application.isPlaying)
+			{
+				if (!tweener.startPositionOffset)
+					tweener.from = Vector3.zero;
+				if (!tweener.endPositionOffset)
+					tweener.to = Vector3.one;
+			}
 			EditorGUI.BeginDisabledGroup(!tweener.startPositionOffset);
 			switch (tweener.animationType)
 			{

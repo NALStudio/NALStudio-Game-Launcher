@@ -19,7 +19,13 @@ using UnityEngine.UI;
 using NALStudio.UI;
 using NALStudio.GameLauncher.Cards;
 using NALStudio.GameLauncher.Constants;
+using NALStudio.GameLauncher.Games;
 using TMPro;
+using NALStudio.Encryption;
+using static NALStudio.GameLauncher.Games.GameHandler;
+using NALStudio.GameLauncher;
+using System;
+using NALStudio.Coroutines;
 
 public class StorePage : MonoBehaviour
 {
@@ -33,21 +39,19 @@ public class StorePage : MonoBehaviour
 	public TextMeshProUGUI publisher;
 	public TextMeshProUGUI price;
 	public Button button;
-	public enum ButtonMode { Install, Update, Uninstall }
+	public enum ButtonMode { Install, Update, Uninstall, Queued, Downloading }
 	public ButtonMode buttonMode;
 	public TextMeshProUGUI buttonText;
 	[Space(10f)]
-	public NALStudio.GameLauncher.DownloadHandler downloadHandler;
+	public DownloadHandler downloadHandler;
+	public ToggleButton downloadsButton;
+	public GameHandler gameHandler;
 
-	public class GameData
-	{
-		public string version;
-	}
+	GameData openedGamedata;
 
 	public void Open(CardHandler.CardData cardData)
 	{
 		gameObject.SetActive(true);
-		tweener.DoTween();
 		openedData = cardData;
 		if (cardData.early_access)
 			earlyAccessBanner.SetActive(true);
@@ -64,35 +68,75 @@ public class StorePage : MonoBehaviour
 		price.text = priceText;
 
 		buttonMode = ButtonMode.Install;
-		if (cardData.gameData != null)
+		string gameDataPath = Path.Combine(Constants.GamesPath, cardData.title, GameHandler.gamedataFileName);
+		if (File.Exists(gameDataPath))
 		{
-			if (cardData.gameData.version != cardData.version)
+			string encrypted = File.ReadAllText(gameDataPath);
+			string decrypted = EncryptionHelper.DecryptString(encrypted);
+			openedGamedata = JsonUtility.FromJson<GameData>(decrypted);
+
+			if (cardData.version != openedGamedata.version)
 				buttonMode = ButtonMode.Update;
 			else
 				buttonMode = ButtonMode.Uninstall;
 		}
+		if (downloadHandler.Queue.Contains(cardData))
+			buttonMode = ButtonMode.Queued;
+		else if (downloadHandler.currentlyDownloading == cardData)
+			buttonMode = ButtonMode.Downloading;
 
 		switch (buttonMode)
 		{
 			case ButtonMode.Install:
-				buttonText.text = "INSTALL";
+				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-install", "INSTALL");
 				break;
 			case ButtonMode.Update:
-				buttonText.text = "UPDATE";
+				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-update", "UPDATE");
 				break;
 			case ButtonMode.Uninstall:
-				buttonText.text = "UNINSTALL";
+				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-uninstall", "UNINSTALL");
+				break;
+			case ButtonMode.Queued:
+				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-queued", "Queued...");
+				break;
+			case ButtonMode.Downloading:
+				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-downloading", "Downloading...");
 				break;
 		}
+
+		tweener.DoTween();
 	}
 
 	public void ButtonClick()
 	{
-		downloadHandler.Queue.Add(openedData);
+		bool openDownloads = true;
+		switch (buttonMode)
+		{
+			case ButtonMode.Install:
+			case ButtonMode.Update:
+				downloadHandler.Queue.Add(openedData);
+				break;
+			case ButtonMode.Queued:
+			case ButtonMode.Downloading:
+				downloadHandler.Cancel(openedData);
+				break;
+			case ButtonMode.Uninstall:
+				gameHandler.Uninstall(openedGamedata);
+				openDownloads = false;
+				break;
+		}
+		Close(openDownloads);
 	}
 
 	public void Close()
 	{
 		tweener.DoTween(true, true);
+	}
+
+	public void Close(bool openDownloads)
+	{
+		tweener.DoTween(true, true);
+		if (openDownloads)
+			downloadsButton.IsOn = true;
 	}
 }

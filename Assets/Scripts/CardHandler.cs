@@ -18,10 +18,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
-using NALStudio.Cache;
 using NALStudio.JSON;
 using NALStudio.UI;
 using NALStudio.Encryption;
+using NALStudio.GameLauncher.Games;
 
 namespace NALStudio.GameLauncher.Cards
 {
@@ -37,62 +37,83 @@ namespace NALStudio.GameLauncher.Cards
 		public float cardAnimationDuration = 0.5f;
 		[Space(10)]
 		public StorePage storePage;
+		public GameHandler gameHandler;
 		[Space(10)]
-		public List<UITweener> cardTweeners;
+		[HideInInspector]
+		public List<GameObject> cards = new List<GameObject>();
+		[HideInInspector]
+		public List<Card> cardScripts = new List<Card>();
+		[HideInInspector]
+		public List<UITweener> cardTweeners = new List<UITweener>();
 
 		GridLayoutGroup gridLayout;
-		RectTransform rectTranform;
-		int childCount;
-
+		RectTransform rectTransform;
 
 		#endregion
 
 		[System.Serializable]
 		public class CardData
 		{
-			public class GameData
-			{
-				public string version;
-				public ulong timePlayed; //Seconds
-			}
-
 			public string title;
 			public string developer;
 			public string publisher;
 			public int price;
 			public string version;
+			public string release_date;
 			public bool early_access;
 			public string thumbnail;
 			public string download;
+			public string executable_path;
 
 			public Texture2D thumbnailTexture;
-			public GameData gameData;
 		}
 
 		void Start()
 		{
 			gridLayout = GetComponent<GridLayoutGroup>();
-			rectTranform = GetComponent<RectTransform>();
-			CalculateCellSize();
+			rectTransform = GetComponent<RectTransform>();
 
-			childCount = transform.childCount;
 			StartCoroutine(LoadCards());
+		}
+
+		public void AddToGames()
+		{
+			foreach (Card c in cardScripts)
+			{
+				foreach(Game g in gameHandler.gameScripts)
+				{
+					if (c.cardData.title == g.gameData.name)
+					{
+						g.cardData = c.cardData;
+						break;
+					}
+				}
+			}
 		}
 
 		void AddCards(string json)
 		{
+			foreach (GameObject go in cards)
+				Destroy(go);
+			cards.Clear();
+			cardScripts.Clear();
+			cardTweeners.Clear();
+
 			CardData[] cardDatas = JsonHelper.FromJsonArray<CardData>(json);
 			for (int i = 0; i < cardDatas.Length; i++)
 			{
 				GameObject instantiated = Instantiate(cardPrefab, transform);
+				cards.Add(instantiated);
 				Card insCard = instantiated.GetComponent<Card>();
 				insCard.storePage = storePage;
 				insCard.LoadAssets(cardDatas[i]);
+				cardScripts.Add(insCard);
 				UITweener insTweener = instantiated.GetComponent<UITweener>();
 				insTweener.duration = cardAnimationDuration;
 				insTweener.delay = cardAnimationBasedelay + (i / 10f);
 				cardTweeners.Add(insTweener);
 			}
+			AddToGames();
 			CalculateCellSize();
 		}
 
@@ -137,29 +158,22 @@ namespace NALStudio.GameLauncher.Cards
 		void Reset()
 		{
 			gridLayout = GetComponent<GridLayoutGroup>();
-			rectTranform = GetComponent<RectTransform>();
+			rectTransform = GetComponent<RectTransform>();
 			CalculateCellSize();
 		}
 #endif
 
 		void CalculateRectHeight()
 		{
-			rectTranform.sizeDelta = new Vector2(rectTranform.sizeDelta.x,
-				gridHeight + ((gridHeight + verticalSpacing) * Mathf.CeilToInt((rectTranform.childCount - 1) / 3)));
+			rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x,
+				gridHeight + ((gridHeight + verticalSpacing) * Mathf.CeilToInt((transform.childCount - 1) / 3)));
 		}
 
 		void CalculateCellSize()
 		{
-			gridLayout.cellSize = new Vector2((rectTranform.rect.width - 20) / 3, gridHeight);
+			gridLayout.cellSize = new Vector2((rectTransform.rect.width - 20) / 3, gridHeight);
 			gridLayout.spacing = new Vector2(gridLayout.spacing.x, verticalSpacing);
-			if (childCount != transform.childCount)
-				CalculateRectHeight();
-		}
-
-		void OnRectTransformDimensionsChange()
-		{
-			if (gridLayout != null)
-				CalculateCellSize();
+			CalculateRectHeight();
 		}
 	}
 }
