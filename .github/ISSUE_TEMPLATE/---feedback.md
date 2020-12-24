@@ -2,7 +2,7 @@
 name: "\U0001F4AC Feedback"
 about: Give some general feedback about NALStudio Game Launcher.
 title: ''
-labels: ''
+labels: feedback
 assignees: ''
 
 ---
