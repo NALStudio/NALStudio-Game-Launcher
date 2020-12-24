@@ -33,7 +33,8 @@ namespace NALStudio.GameLauncher.Cards
 		public float verticalSpacing;
 		[Space(10)]
 		public GameObject cardPrefab;
-		public float cardAnimationBasedelay;
+		public float cardAnimationBaseDelay;
+		public float cardAnimationAddDelay = 0.05f;
 		public float cardAnimationDuration = 0.5f;
 		[Space(10)]
 		public StorePage storePage;
@@ -110,7 +111,7 @@ namespace NALStudio.GameLauncher.Cards
 				cardScripts.Add(insCard);
 				UITweener insTweener = instantiated.GetComponent<UITweener>();
 				insTweener.duration = cardAnimationDuration;
-				insTweener.delay = cardAnimationBasedelay + (i / 10f);
+				insTweener.delay = cardAnimationBaseDelay + (i * cardAnimationAddDelay);
 				cardTweeners.Add(insTweener);
 			}
 			AddToGames();
@@ -132,12 +133,13 @@ namespace NALStudio.GameLauncher.Cards
 				Debug.Log("Loading new JSON file...");
 				UnityWebRequest wr = UnityWebRequest.Get("https://nalstudio-game-launcher-api-default-rtdb.europe-west1.firebasedatabase.app/.json");
 				yield return wr.SendWebRequest();
-				if (wr.isNetworkError || wr.isHttpError)
+				if (wr.result == UnityWebRequest.Result.ConnectionError || wr.result == UnityWebRequest.Result.DataProcessingError || wr.result == UnityWebRequest.Result.ProtocolError)
 				{
 					Debug.LogError(wr.error);
 				}
 				else
 				{
+					yield return new WaitWhile(() => wr.downloadProgress < 1f);
 					string jsonString = wr.downloadHandler.text;
 					if (Directory.Exists(dataDirPath))
 						Directory.Delete(dataDirPath, true);

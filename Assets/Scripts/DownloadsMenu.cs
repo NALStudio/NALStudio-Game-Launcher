@@ -27,10 +27,15 @@ public class DownloadsMenu : MonoBehaviour
 	public UITweener inputIntercepterTweener;
 	public CanvasGroup canvasGroup;
 	public ToggleButton toggler;
-	public TextMeshProUGUI queuedText;
 
 	public bool opened;
 	public bool trueOpened;
+
+	void Start()
+	{
+		tweener.OnComplete += () => opened = trueOpened;
+		inputIntercepterTweener.OnComplete += () => opened = trueOpened;
+	}
 
 	public void Open()
 	{
@@ -40,8 +45,6 @@ public class DownloadsMenu : MonoBehaviour
 		trueOpened = true;
 		canvasGroup.interactable = true;
 		canvasGroup.blocksRaycasts = true;
-		queuedText.text =
-			$"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {downloadHandler.Queue.Count()}";
 		tweener.DoTween();
 		inputIntercepterTweener.gameObject.SetActive(true);
 	}
@@ -55,12 +58,5 @@ public class DownloadsMenu : MonoBehaviour
 		canvasGroup.blocksRaycasts = false;
 		tweener.DoTween(true);
 		inputIntercepterTweener.DoTween(true, true);
-		StartCoroutine(waitClose());
-	}
-
-	IEnumerator waitClose()
-	{
-		yield return new WaitForSeconds(tweener.delay + tweener.duration);
-		opened = trueOpened;
 	}
 }

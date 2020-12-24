@@ -585,6 +585,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -680,6 +681,7 @@ MonoBehaviour:
   to: {x: 1, y: 1, z: 1}
   startOnEnable: 0
   stopOnDisable: 0
+  debugLogs: 0
 --- !u!1 &7845690712204332373
 GameObject:
   m_ObjectHideFlags: 0
@@ -766,7 +768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 4
-  m_AspectRatio: 1.7777778
+  m_AspectRatio: 0.001
 --- !u!1 &8077679222529229446
 GameObject:
   m_ObjectHideFlags: 0

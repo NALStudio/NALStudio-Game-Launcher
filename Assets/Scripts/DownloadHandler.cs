@@ -24,6 +24,7 @@ using TMPro;
 using NALStudio.GameLauncher.Games;
 using Lean.Localization;
 using NALStudio.Math;
+using NALStudio.Coroutines;
 
 namespace NALStudio.GameLauncher
 {
@@ -34,6 +35,7 @@ namespace NALStudio.GameLauncher
 		public UILineRenderer lineRenderer;
 		public TextMeshProUGUI downloadSpeedText;
 		public TextMeshProUGUI downloadProgressText;
+		public TextMeshProUGUI queuedCountText;
 		public RectTransform downloadSpeedRect;
 		public RectTransform LineArea;
 		public GameObject[] hideOnSleep;
@@ -58,6 +60,7 @@ namespace NALStudio.GameLauncher
 		public GameHandler gameHandler;
 
         UnityWebRequest request;
+		bool downloadInProgress = false;
 		[HideInInspector]
 		public QueueHandler Queue = new QueueHandler();
 		[HideInInspector]
@@ -110,7 +113,7 @@ namespace NALStudio.GameLauncher
 
 		void Update()
 		{
-			if (request != null)
+			if (downloadInProgress)
 			{
 				if (!updateGraphs)
 				{
@@ -123,6 +126,7 @@ namespace NALStudio.GameLauncher
 				currentlyDownloading = Queue.GetNextDownload();
 				if (currentlyDownloading != null)
 				{
+					downloadInProgress = true;
 					StartCoroutine(Downloader(currentlyDownloading));
 				}
 			}
@@ -192,10 +196,24 @@ namespace NALStudio.GameLauncher
 						$"{Convert.BytesToMB(downloadSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short")}";
 					#endregion
 
+					#region Queued Count
+					queuedCountText.text =
+						$"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {Queue.Count()}";
+					#endregion
+
 					oldDownloadedBytes = request.downloadedBytes;
 
 					if (downloadError)
+					{
 						downloadSpeedText.text = "[ERROR]";
+						progressBarBackground.color = errorProgressColor;
+						progressBarFill.color = errorProgressFillColor;
+					}
+					else if(progressBarBackground.color != progressNormalColor)
+					{
+						progressBarBackground.color = progressNormalColor;
+						progressBarFill.color = progressFillNormalColor;
+					}
 				}
 				else
 				{
@@ -219,9 +237,27 @@ namespace NALStudio.GameLauncher
 			if (currentlyDownloading == toCancel)
 			{
 				StopCoroutine(Downloader(currentlyDownloading));
-				if (Directory.Exists(Constants.Constants.DownloadPath))
-					Directory.Delete(Constants.Constants.DownloadPath, true);
+				request.Abort();
+				byte tries = 0;
+				while (Directory.Exists(Constants.Constants.DownloadPath))
+				{
+					tries++;
+					try
+					{
+						Directory.Delete(Constants.Constants.DownloadPath, true);
+					}
+					catch (IOException e)
+					{
+						Debug.LogWarning(e.Message);
+					}
+					if (tries > 10)
+					{
+						Debug.LogError($"Could not delete download files at path {Constants.Constants.DownloadPath}");
+						break;
+					}
+				}
 				request = null;
+				downloadInProgress = false;
 			}
 			else if (Queue.Contains(toCancel))
 			{
@@ -229,12 +265,16 @@ namespace NALStudio.GameLauncher
 			}
 		}
 
-		void DownloadError(string error)
+		IEnumerator DownloadError(string error)
 		{
 			Debug.LogError(error);
-			progressBarBackground.color = errorProgressColor;
-			progressBarFill.color = errorProgressFillColor;
 			downloadError = true;
+			yield return new WaitForSeconds(5f);
+			downloadError = false;
+			request = null;
+			updateGraphs = false;
+			yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
+			downloadInProgress = false;
 		}
 
 		IEnumerator Downloader(Cards.CardHandler.CardData cardData)
@@ -250,14 +290,22 @@ namespace NALStudio.GameLauncher
 				downloadHandler = new DownloadHandlerFile(downloadPath)
 			};
 			yield return request.SendWebRequest();
-			if (request.isNetworkError || request.isHttpError)
+			if (request != null)
 			{
-				DownloadError(request.error);
-			}
-			else
-			{
-				yield return new WaitWhile(() => request.downloadProgress < 1.0);
-				StartCoroutine(Extractor(downloadDir, downloadPath, cardData));
+				if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.DataProcessingError || request.result == UnityWebRequest.Result.ProtocolError)
+				{
+					StartCoroutine(DownloadError(request.error));
+				}
+				else
+				{
+					yield return new WaitWhile(() => request?.downloadProgress < 1f);
+					if (request != null)
+					{
+						request = null;
+						if (downloadInProgress)
+							StartCoroutine(Extractor(downloadDir, downloadPath, cardData));
+					}
+				}
 			}
 		}
 
@@ -292,7 +340,6 @@ namespace NALStudio.GameLauncher
 				{
 					name = cardData.title,
 					version = cardData.version,
-					play_time = 0,
 					executable_path = cardData.executable_path
 				};
 			}
@@ -302,8 +349,8 @@ namespace NALStudio.GameLauncher
 
 			gameHandler.LoadGames();
 
-			request = null;
-			yield return null;
+			yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
+			downloadInProgress = false;
 		}
 	}
 }

@@ -34,7 +34,11 @@ namespace NALStudio.UI.Editors
 			tweener.animationType = (UITweener.AnimationType)EditorGUILayout.EnumPopup(new GUIContent("Animation Type"), tweener.animationType);
 			tweener.easeType = (LeanTweenType)EditorGUILayout.EnumPopup(new GUIContent("Ease Type"), tweener.easeType);
 			tweener.duration = EditorGUILayout.FloatField(new GUIContent("Duration", "The duration of the animation."), tweener.duration);
+			if (tweener.duration < 0)
+				tweener.duration = 0;
 			tweener.delay = EditorGUILayout.FloatField(new GUIContent("Delay", "The delay for the start of the animation."), tweener.delay);
+			if (tweener.delay < 0)
+				tweener.delay = 0;
 
 			GUILayout.Space(10f);
 

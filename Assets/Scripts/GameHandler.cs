@@ -15,7 +15,6 @@ using NALStudio.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,13 +26,13 @@ namespace NALStudio.GameLauncher.Games
 		public float gridHeight;
 		public float verticalSpacing;
 		[Space(10f)]
-		public bool gameRunning;
 		GameData gameRunningData;
 		DateTime gameRunningStartTime;
-		Process gameRunningProcess;
+		System.Diagnostics.Process gameRunningProcess;
 		[Space(10f)]
 		public GameObject gamePrefab;
 		public Cards.CardHandler cardHandler;
+		public StorePage storePage;
 		public float cardAnimationBasedelay;
 		public float cardAnimationDuration = 0.5f;
 		[HideInInspector]
@@ -49,12 +48,13 @@ namespace NALStudio.GameLauncher.Games
 		RectTransform rectTransform;
 		GridLayoutGroup gridLayout;
 
+		Dictionary<string, float> playtimesToSave = new Dictionary<string, float>();
+
 
 		public class GameData
 		{
 			public string name;
 			public string version;
-			public ulong play_time;
 			public string executable_path;
 		}
 
@@ -64,6 +64,8 @@ namespace NALStudio.GameLauncher.Games
 			rectTransform = GetComponent<RectTransform>();
 
 			LoadGames();
+
+			StartCoroutine(CheckForStartRequest());
 		}
 
 #if UNITY_EDITOR
@@ -77,7 +79,7 @@ namespace NALStudio.GameLauncher.Games
 
 		IEnumerator Uninstaller(string path)
 		{
-			int tries = 0;
+			byte tries = 0;
 			while (Directory.Exists(path))
 			{
 				tries++;
@@ -87,15 +89,17 @@ namespace NALStudio.GameLauncher.Games
 				}
 				catch (IOException e)
 				{
-					UnityEngine.Debug.LogWarning(e.Message);
+					Debug.LogWarning(e.Message);
 				}
 				if (tries > 10)
 				{
-					UnityEngine.Debug.LogError($"Could not delete game at path {path}");
+					Debug.LogError($"Could not delete game at path {path}");
 					break;
 				}
 				yield return null;
 			}
+			yield return null;
+			LoadGames();
 		}
 
 		public void Uninstall(GameData game)
@@ -122,6 +126,7 @@ namespace NALStudio.GameLauncher.Games
 				games.Add(instantiated);
 				Game insGame = instantiated.GetComponent<Game>();
 				insGame.gameHandler = this;
+				insGame.storePage = storePage;
 				insGame.LoadAssets(gameDatas[i]);
 				gameScripts.Add(insGame);
 				UITweener insTweener = instantiated.AddComponent<UITweener>();
@@ -134,69 +139,91 @@ namespace NALStudio.GameLauncher.Games
 
 		public void LoadGames()
 		{
-			foreach (string path in Directory.EnumerateFiles(Constants.Constants.GamesPath))
-				File.Delete(path);
-
-			gameDatas = new List<GameData>();
-			foreach (string path in Directory.EnumerateDirectories(Constants.Constants.GamesPath))
+			try
 			{
-				string gamedataPath = Path.Combine(path, gamedataFileName);
-				if (File.Exists(gamedataPath))
+				foreach (string path in Directory.EnumerateFiles(Constants.Constants.GamesPath))
+					File.Delete(path);
+
+				gameDatas = new List<GameData>();
+				foreach (string path in Directory.EnumerateDirectories(Constants.Constants.GamesPath))
 				{
-					string encrypted = File.ReadAllText(gamedataPath);
-					string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
-					gameDatas.Add(JsonUtility.FromJson<GameData>(unencrypted));
+					string gamedataPath = Path.Combine(path, gamedataFileName);
+					if (File.Exists(gamedataPath))
+					{
+						string encrypted = File.ReadAllText(gamedataPath);
+						string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
+						gameDatas.Add(JsonUtility.FromJson<GameData>(unencrypted));
+					}
+					else
+					{
+						if (path != Constants.Constants.DownloadPath)
+							Directory.Delete(path, true);
+					}
 				}
-				else
-				{
-					if (path != Constants.Constants.DownloadPath)
-						Directory.Delete(path, true);
-				}
+			}
+			catch (IOException e)
+			{
+				Debug.LogError(e.Message);
 			}
 			AddGames();
 		}
 
 		public void StartGame(GameData gameData)
 		{
+			if (gameRunningProcess != null)
+				return;
 			string path = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
-			ProcessStartInfo startInfo = new ProcessStartInfo
+			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
 			{
 				FileName = path,
 				WorkingDirectory = Path.Combine(Constants.Constants.GamesPath, gameData.name)
 			};
+			gameRunningProcess = new System.Diagnostics.Process
+			{
+				StartInfo = startInfo,
+				EnableRaisingEvents = true
+			};
+			gameRunningProcess.Exited += GameCloseHandler;
 			gameRunningData = gameData;
 			gameRunningStartTime = DateTime.UtcNow;
-			gameRunningProcess = Process.Start(startInfo);
-			gameRunningProcess.Exited += GameCloseHandler;
+			gameRunningProcess.Start();
+		}
+
+		void Update()
+		{
+			foreach (KeyValuePair<string, float> kv in playtimesToSave)
+			{
+				float toAdd = PlayerPrefs.GetFloat($"playtime/{kv.Key}", 0f);
+				float added = toAdd + kv.Value;
+				PlayerPrefs.SetFloat($"playtime/{kv.Key}", added);
+			}
+			playtimesToSave.Clear();
 		}
 
 		void GameCloseHandler(object sender, EventArgs e)
 		{
-			TimeSpan playTime = gameRunningStartTime - DateTime.UtcNow;
-			if (playTime.Seconds < 0)
-				return;
-			string gamedataPath = Path.Combine(Constants.Constants.GamesPath, gameRunningData.name, gamedataFileName);
-			if (File.Exists(gamedataPath))
+			try
 			{
-				string encrypted = File.ReadAllText(gamedataPath);
-				string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
-				GameData tmpData = JsonUtility.FromJson<GameData>(unencrypted);
-				tmpData.play_time += Convert.ToUInt64(playTime.Seconds);
-				string gamedataJson = JsonUtility.ToJson(tmpData);
-				string gamedataEncrypted = Encryption.EncryptionHelper.EncryptString(gamedataJson);
-				File.WriteAllText(gamedataPath, gamedataEncrypted);
+				TimeSpan playTime = DateTime.UtcNow - gameRunningStartTime;
+				if (playTime.TotalMinutes > 0)
+					playtimesToSave.Add(gameRunningData.name, (float)playTime.TotalMinutes);
+				gameRunningData = null;
+				gameRunningProcess = null;
 			}
-
-			LoadGames();
+			catch (Exception ex)
+			{
+				gameRunningData = null;
+				gameRunningProcess = null;
+				Debug.LogError(ex.Message);
+			}
 		}
+
+		public System.Diagnostics.Process GetActiveProcess() { return gameRunningProcess; }
+		public GameData GetActiveData() { return gameRunningData; }
 
 		public void StopActiveGame()
 		{
-			if (gameRunningProcess != null)
-			{
-				gameRunningProcess.Kill();
-				gameRunningProcess = null;
-			}
+			gameRunningProcess?.Kill();
 		}
 
 		void CalculateRectHeight()
@@ -216,6 +243,42 @@ namespace NALStudio.GameLauncher.Games
 		{
 			foreach (UITweener tweener in gameTweeners)
 				tweener.DoTween();
+		}
+
+		IEnumerator CheckForStartRequest()
+		{
+			while (true)
+			{
+				yield return new WaitForSeconds(5f);
+				if (gameRunningProcess == null)
+				{
+					if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+					{
+						string launchApp = Environment.GetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", EnvironmentVariableTarget.User);
+						if (launchApp != null)
+						{
+							GameData correctData = null;
+							foreach (GameData gd in gameDatas)
+							{
+								if (gd.name == launchApp)
+								{
+									correctData = gd;
+								}
+							}
+							if (correctData != null)
+								StartGame(correctData);
+							else
+								Debug.LogError($"Game name not found in gameDatas! GameDatas count: {gameDatas.Count}, GameName: {launchApp}");
+
+							Environment.SetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", null, EnvironmentVariableTarget.User);
+						}
+					}
+					else
+					{
+						throw new PlatformNotSupportedException("Shortcuts currently support only Windows NT or newer!");
+					}
+				}
+			}
 		}
 	}
 }

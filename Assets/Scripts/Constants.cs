@@ -16,7 +16,17 @@ namespace NALStudio.GameLauncher.Constants
 {
 	public static class Constants
 	{
-		public static readonly string GamesPath = Path.GetFullPath("Games");
+		static readonly string gamesPath = Path.GetFullPath("Games");
+		public static string GamesPath
+		{
+			get
+			{
+				if (!Directory.Exists(gamesPath))
+					Directory.CreateDirectory(gamesPath);
+				return gamesPath;
+			}
+		}
+
 		public static readonly string DownloadPath = Path.Combine(GamesPath, "download");
 	}
 }

@@ -29,6 +29,9 @@ namespace NALStudio.UI
             Fade
         }
 
+        public delegate void UITweenerComplete();
+        public event UITweenerComplete OnComplete;
+
         #region Variables
 
         [Tooltip("Gameobject will default to component gameobject if left empty.")]
@@ -53,9 +56,12 @@ namespace NALStudio.UI
         public bool stopOnDisable;
 
         bool reversed = false;
+        bool disableOnComplete = false;
 
         CanvasGroup canvasGroup;
         RectTransform rect;
+
+        public bool debugLogs;
 		#endregion
 
 		void Awake()
@@ -70,7 +76,7 @@ namespace NALStudio.UI
                 DoTween();
         }
 
-        void OnDisable()
+		void OnDisable()
         {
             if (stopOnDisable)
                 StopTween();
@@ -81,8 +87,7 @@ namespace NALStudio.UI
             StopTween();
             Reverse(reverse);
 			HandleTween();
-            if (disableAfterTween)
-                _tweenObject.setOnComplete(() => objectToAnimate.SetActive(false));
+            disableOnComplete = disableAfterTween;
         }
 
         public void DoTween()
@@ -91,19 +96,24 @@ namespace NALStudio.UI
             if (reversed)
                 Reverse(false);
             HandleTween();
-		}
+            disableOnComplete = false;
+        }
 
         public void DoTween(bool reverse)
 		{
             StopTween();
             Reverse(reverse);
             HandleTween();
+            disableOnComplete = false;
 		}
 
         public void StopTween()
         {
             if (_tweenObject != null)
+            {
                 LeanTween.cancel(_tweenObject.id);
+                _tweenObject = null;
+            }
         }
 
         void HandleTween()
@@ -138,6 +148,15 @@ namespace NALStudio.UI
             {
                 _tweenObject.setLoopPingPong();
             }
+            _tweenObject.setOnComplete(() => {
+                OnComplete?.Invoke();
+                _tweenObject = null;
+                if (disableOnComplete)
+                {
+                    disableOnComplete = false;
+                    objectToAnimate.SetActive(false);
+                }
+            });
         }
 
         void Fade()

@@ -11,15 +11,13 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
-using NALStudio.GameLauncher;
 using NALStudio.GameLauncher.Games;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ApplicationStateHandler : MonoBehaviour
 {
     public GameHandler gameHandler;
+	public bool EditorOverride;
 
     void OnApplicationFocus(bool hasFocus)
 	{
@@ -29,7 +27,11 @@ public class ApplicationStateHandler : MonoBehaviour
 		}
 		else
 		{
-			if (gameHandler.gameRunning)
+#if UNITY_EDITOR
+			if (EditorOverride)
+				return;
+#endif
+			if (gameHandler.GetActiveData() != null)
 				Application.targetFrameRate = 1;
 			else
 				Application.targetFrameRate = Mathf.CeilToInt(1 / Time.fixedUnscaledDeltaTime);

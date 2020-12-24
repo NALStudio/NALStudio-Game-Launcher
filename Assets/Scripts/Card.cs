@@ -47,12 +47,13 @@ namespace NALStudio.GameLauncher.Cards
             DownloadHandlerTexture texDl = new DownloadHandlerTexture(true);
             wr.downloadHandler = texDl;
             yield return wr.SendWebRequest();
-            if (wr.isNetworkError || wr.isHttpError)
+            if (wr.result == UnityWebRequest.Result.ConnectionError || wr.result == UnityWebRequest.Result.DataProcessingError || wr.result == UnityWebRequest.Result.ProtocolError)
             {
                 Debug.LogError(wr.error);
             }
             else
             {
+                yield return new WaitWhile(() => wr.downloadProgress < 1f);
                 cardData.thumbnailTexture = texDl.texture;
                 thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = cardData.thumbnailTexture.width / (float)cardData.thumbnailTexture.height;
                 thumbnail.texture = cardData.thumbnailTexture;
