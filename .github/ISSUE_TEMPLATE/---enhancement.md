@@ -1,6 +1,6 @@
 ---
 name: "\U0001F4A1 Enhancement"
-about: NALStudio Game Launcher
+about: Suggest an idea to improve NALStudio Game Launcher.
 title: ''
 labels: enhancement
 assignees: ''
