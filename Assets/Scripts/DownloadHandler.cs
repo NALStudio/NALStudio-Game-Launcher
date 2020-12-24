@@ -324,7 +324,7 @@ namespace NALStudio.GameLauncher
 
 			Directory.Delete(downloadDir, true);
 
-			string gamedataPath = Path.Combine(gamePath, GameHandler.gamedataFileName);
+			string gamedataPath = Path.Combine(gamePath, GameHandler.gamedataFilePath);
 			GameHandler.GameData gamedata;
 			if (File.Exists(gamedataPath))
 			{
@@ -345,7 +345,9 @@ namespace NALStudio.GameLauncher
 			}
 			string gamedataJson = JsonUtility.ToJson(gamedata);
 			string gamedataEncrypted = Encryption.EncryptionHelper.EncryptString(gamedataJson);
-			File.WriteAllText(Path.Combine(gamePath, GameHandler.gamedataFileName), gamedataEncrypted);
+			if (!Directory.Exists(GameHandler.launcherDataFilePath))
+				Directory.CreateDirectory(Path.Combine(gamePath, GameHandler.launcherDataFilePath));
+			File.WriteAllText(Path.Combine(gamePath, GameHandler.gamedataFilePath), gamedataEncrypted);
 
 			gameHandler.LoadGames();
 

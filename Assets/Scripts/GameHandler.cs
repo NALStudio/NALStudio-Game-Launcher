@@ -36,7 +36,9 @@ namespace NALStudio.GameLauncher.Games
 		public float cardAnimationBasedelay;
 		public float cardAnimationDuration = 0.5f;
 		[HideInInspector]
-		public const string gamedataFileName = "data.nal";
+		public const string launcherDataFilePath = "launcher-data";
+		public const string gamedataFilePath = "launcher-data/data.nal";
+		public const string gameLaunchFilePath = "launcher-data/launch.exe";
 		[HideInInspector]
 		public List<GameData> gameDatas = new List<GameData>();
 		[HideInInspector]
@@ -147,7 +149,7 @@ namespace NALStudio.GameLauncher.Games
 				gameDatas = new List<GameData>();
 				foreach (string path in Directory.EnumerateDirectories(Constants.Constants.GamesPath))
 				{
-					string gamedataPath = Path.Combine(path, gamedataFileName);
+					string gamedataPath = Path.Combine(path, gamedataFilePath);
 					if (File.Exists(gamedataPath))
 					{
 						string encrypted = File.ReadAllText(gamedataPath);
@@ -237,6 +239,13 @@ namespace NALStudio.GameLauncher.Games
 			gridLayout.cellSize = new Vector2((rectTransform.rect.width - 20) / 5, gridHeight);
 			gridLayout.spacing = new Vector2(gridLayout.spacing.x, verticalSpacing);
 			CalculateRectHeight();
+		}
+
+		void OnRectTransformDimensionsChange()
+		{
+			if (gridLayout == null)
+				return;
+			CalculateCellSize();
 		}
 
 		public void PlayAnimation()

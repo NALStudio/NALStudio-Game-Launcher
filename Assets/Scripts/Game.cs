@@ -18,6 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -71,19 +72,23 @@ namespace NALStudio.GameLauncher.Games
 			string shortcutPath = Path.Combine(deskDir, $"{gameData.name}.url");
 			if (File.Exists(shortcutPath))
 			{
-				for (int i = 0; File.Exists(shortcutPath); i++)
+				for (int i = 1; File.Exists(shortcutPath); i++)
 					shortcutPath = Path.Combine(deskDir, $"{gameData.name} ({i}).url");
 			}
 
-			using (StreamWriter writer = new StreamWriter(shortcutPath))
+			string fileUrl = Path.Combine(Constants.Constants.GamesPath, gameData.name, GameHandler.gameLaunchFilePath);
+			File.Copy(Path.Combine(Application.streamingAssetsPath, "NALStudioGameLauncherLaunch.exe"), fileUrl, true);
+
+			string iconPath = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
+
+			string[] shortcutLines = new string[]
 			{
-				writer.WriteLine("[InternetShortcut]");
-				string launcherPath = Path.Combine("LaunchTrigger", "Trigger.exe");
-				writer.WriteLine($"URL=file:///{launcherPath} --launch=\'{gameData.name}\'");
-				writer.WriteLine("IconIndex=0");
-				string iconPath = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
-				writer.WriteLine("IconFile=" + iconPath);
-			}
+				"[InternetShortcut]",
+				"URL=file:///" + $"{fileUrl}",
+				"IconIndex=0",
+				$"IconFile={iconPath}"
+			};
+			File.WriteAllLines(shortcutPath, shortcutLines);
 		}
 
 		public void LoadAssets(GameHandler.GameData _gameData)

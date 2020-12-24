@@ -177,5 +177,12 @@ namespace NALStudio.GameLauncher.Cards
 			gridLayout.spacing = new Vector2(gridLayout.spacing.x, verticalSpacing);
 			CalculateRectHeight();
 		}
+
+		void OnRectTransformDimensionsChange()
+		{
+			if (gridLayout == null)
+				return;
+			CalculateCellSize();
+		}
 	}
 }

@@ -11,8 +11,6 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,10 +20,7 @@ using NALStudio.GameLauncher.Constants;
 using NALStudio.GameLauncher.Games;
 using TMPro;
 using NALStudio.Encryption;
-using static NALStudio.GameLauncher.Games.GameHandler;
 using NALStudio.GameLauncher;
-using System;
-using NALStudio.Coroutines;
 
 public class StorePage : MonoBehaviour
 {
@@ -47,7 +42,7 @@ public class StorePage : MonoBehaviour
 	public ToggleButton downloadsButton;
 	public GameHandler gameHandler;
 
-	GameData openedGamedata;
+	GameHandler.GameData openedGamedata;
 
 	public void Open(CardHandler.CardData cardData)
 	{
@@ -68,12 +63,12 @@ public class StorePage : MonoBehaviour
 		price.text = priceText;
 
 		buttonMode = ButtonMode.Install;
-		string gameDataPath = Path.Combine(Constants.GamesPath, cardData.title, GameHandler.gamedataFileName);
+		string gameDataPath = Path.Combine(Constants.GamesPath, cardData.title, GameHandler.gamedataFilePath);
 		if (File.Exists(gameDataPath))
 		{
 			string encrypted = File.ReadAllText(gameDataPath);
 			string decrypted = EncryptionHelper.DecryptString(encrypted);
-			openedGamedata = JsonUtility.FromJson<GameData>(decrypted);
+			openedGamedata = JsonUtility.FromJson<GameHandler.GameData>(decrypted);
 
 			if (cardData.version != openedGamedata.version)
 				buttonMode = ButtonMode.Update;
