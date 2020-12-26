@@ -54,22 +54,30 @@ namespace NALStudio.GameLauncher.Cards
             else
             {
                 yield return new WaitWhile(() => wr.downloadProgress < 1f);
-                cardData.thumbnailTexture = texDl.texture;
+				#region Thumbnail
+				cardData.thumbnailTexture = texDl.texture;
                 thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = cardData.thumbnailTexture.width / (float)cardData.thumbnailTexture.height;
                 thumbnail.texture = cardData.thumbnailTexture;
-
-                title.text = cardData.title;
-
-                string developer = cardData.developer;
+                #endregion
+                yield return null;
+                #region Title
+				title.text = cardData.title;
+                #endregion
+                yield return null;
+                #region Developer
+				string developer = cardData.developer;
                 if (developer != cardData.publisher)
                     developer += $" | {cardData.publisher}";
                 devPub.text = developer;
-
-                string priceText = $"€{cardData.price}";
+                #endregion
+                yield return null;
+                #region Price
+				string priceText = $"€{cardData.price}";
                 if (cardData.price == 0)
                     priceText = Lean.Localization.LeanLocalization.GetTranslationText("pricing-free", "Free");
                 price.text = priceText;
-            }
-        }
+				#endregion
+			}
+		}
     }
 }

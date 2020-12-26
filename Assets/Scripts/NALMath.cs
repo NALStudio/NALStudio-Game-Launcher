@@ -25,6 +25,11 @@ namespace NALStudio.Math
             return (double)value / 1024 / 1024;
         }
 
+		public static double BytesToMB(long value)
+		{
+			return (double)value / 1024 / 1024;
+		}
+
         public static float BytesToMB(int value)
 		{
             return (float)value / 1024 / 1024;

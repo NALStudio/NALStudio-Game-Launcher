@@ -38,7 +38,10 @@ namespace NALStudio.GameLauncher
 		public TextMeshProUGUI queuedCountText;
 		public RectTransform downloadSpeedRect;
 		public RectTransform LineArea;
-		public GameObject[] hideOnSleep;
+		public GameObject downloadingAssets;
+		public GameObject extractingAssets;
+		bool extracting = false;
+		public Color progressBarExtracting;
 		[Space(10f)]
 		public int maxDataPoints;
 		[Range(0, 1)]
@@ -52,7 +55,6 @@ namespace NALStudio.GameLauncher
 		public Image progressBarBackground;
 		public Image progressBarFill;
 		public Color errorProgressColor;
-		public Color errorProgressFillColor;
 		Color progressNormalColor;
 		Color progressFillNormalColor;
 		bool downloadError;
@@ -70,6 +72,8 @@ namespace NALStudio.GameLauncher
 		{
 			progressNormalColor = progressBarBackground.color;
 			progressFillNormalColor = progressBarFill.color;
+			queuedCountText.text =
+				$"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {Queue.Count()}";
 		}
 
 		public class QueueHandler
@@ -134,13 +138,27 @@ namespace NALStudio.GameLauncher
 
 		void FixedUpdate()
 		{
-			if (updateGraphs && Application.targetFrameRate != 1 && request != null)
+			if (updateGraphs && Application.targetFrameRate != 1 && request != null && !extracting)
 			{
-				foreach (GameObject _object in hideOnSleep)
-					_object.SetActive(true);
+				downloadingAssets.SetActive(true);
+				progressBar.gameObject.SetActive(true);
 
 				if (downloadsMenu.opened)
 				{
+					#region Error Assets
+					if (downloadError)
+					{
+						downloadSpeedText.text = "[ERROR]";
+						progressBarBackground.color = errorProgressColor;
+						progressBarFill.color = new Color(0, 0, 0, 0);
+					}
+					else if(progressBarBackground.color != progressNormalColor)
+					{
+						progressBarBackground.color = progressNormalColor;
+						progressBarFill.color = progressFillNormalColor;
+					}
+					#endregion
+
 					#region Progress Bar
 					progressBar.value = request.downloadProgress;
 					#endregion
@@ -203,17 +221,6 @@ namespace NALStudio.GameLauncher
 
 					oldDownloadedBytes = request.downloadedBytes;
 
-					if (downloadError)
-					{
-						downloadSpeedText.text = "[ERROR]";
-						progressBarBackground.color = errorProgressColor;
-						progressBarFill.color = errorProgressFillColor;
-					}
-					else if(progressBarBackground.color != progressNormalColor)
-					{
-						progressBarBackground.color = progressNormalColor;
-						progressBarFill.color = progressFillNormalColor;
-					}
 				}
 				else
 				{
@@ -224,8 +231,9 @@ namespace NALStudio.GameLauncher
 			}
 			else
 			{
-				foreach (GameObject _object in hideOnSleep)
-					_object.SetActive(false);
+				downloadingAssets.SetActive(false);
+				if (!extracting)
+					progressBar.gameObject.SetActive(false);
 				dataPoints.Clear();
 				oldDownloadedBytes = 0;
 				lineRenderer.Points = new Vector2[] { Vector2.zero };
@@ -303,7 +311,20 @@ namespace NALStudio.GameLauncher
 					{
 						request = null;
 						if (downloadInProgress)
+						{
+							extracting = true;
+							downloadingAssets.SetActive(false);
+							extractingAssets.SetActive(true);
+							progressBarBackground.color = progressBarExtracting;
+							progressBarFill.color = new Color(0, 0, 0, 0);
 							StartCoroutine(Extractor(downloadDir, downloadPath, cardData));
+							gameHandler.LoadGames();
+							yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
+							extractingAssets.SetActive(false);
+							progressBar.gameObject.SetActive(false);
+							extracting = false;
+							downloadInProgress = false;
+						}
 					}
 				}
 			}
@@ -314,15 +335,19 @@ namespace NALStudio.GameLauncher
 			string extractPath = Path.Combine(downloadDir, "extraction");
 			if (Directory.Exists(extractPath))
 				Directory.Delete(extractPath, true);
+			yield return null;
 			ZipFile.ExtractToDirectory(zipPath, extractPath);
+			yield return null;
 			string gamePath = Path.Combine(Constants.Constants.GamesPath, cardData.title);
 			gameHandler.Uninstall(cardData.title);
+			yield return null;
 			if (Directory.GetDirectories(extractPath).Length == 1 && Directory.GetFiles(extractPath).Length < 1)
 				Directory.Move(Directory.GetDirectories(extractPath)[0], gamePath);
 			else
 				Directory.Move(extractPath, gamePath);
-
+			yield return null;
 			Directory.Delete(downloadDir, true);
+			yield return null;
 
 			string gamedataPath = Path.Combine(gamePath, GameHandler.gamedataFilePath);
 			GameHandler.GameData gamedata;
@@ -333,6 +358,7 @@ namespace NALStudio.GameLauncher
 				gamedata = JsonUtility.FromJson<GameHandler.GameData>(unencrypted);
 				gamedata.version = cardData.version;
 				gamedata.executable_path = cardData.executable_path;
+				yield return null;
 			}
 			else
 			{
@@ -348,11 +374,7 @@ namespace NALStudio.GameLauncher
 			if (!Directory.Exists(GameHandler.launcherDataFilePath))
 				Directory.CreateDirectory(Path.Combine(gamePath, GameHandler.launcherDataFilePath));
 			File.WriteAllText(Path.Combine(gamePath, GameHandler.gamedataFilePath), gamedataEncrypted);
-
-			gameHandler.LoadGames();
-
-			yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
-			downloadInProgress = false;
+			yield return null;
 		}
 	}
 }

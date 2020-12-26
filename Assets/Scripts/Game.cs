@@ -31,11 +31,13 @@ namespace NALStudio.GameLauncher.Games
 		[HideInInspector]
 		public CardHandler.CardData cardData;
 		public RawImage thumbnail;
-		[Space(10f)]
+		public TextMeshProUGUI nameText;
+		[Header("More Page")]
 		public GameObject morePage;
 		public Toggle morePageToggle;
-		public TextMeshProUGUI nameText;
+		[Header("More Page Stats")]
 		public TextMeshProUGUI playtimeText;
+		public TextMeshProUGUI sizeText;
 		public TextMeshProUGUI versionText;
 
 		[HideInInspector]
@@ -91,11 +93,25 @@ namespace NALStudio.GameLauncher.Games
 			File.WriteAllLines(shortcutPath, shortcutLines);
 		}
 
-		public void LoadAssets(GameHandler.GameData _gameData)
+		public IEnumerator LoadAssets(GameHandler.GameData _gameData)
 		{
 			gameData = _gameData;
 			nameText.text = gameData.name;
+			yield return null;
+			#region Game Size
+			long gameSize = 0;
+			DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(Constants.Constants.GamesPath, gameData.name));
+			foreach (FileInfo fi in dirInfo.GetFiles("*", SearchOption.AllDirectories))
+			{
+				gameSize += fi.Length;
+				yield return null;
+			}
+			sizeText.text = $"{Math.Convert.BytesToMB(gameSize):0.0}MB";
+			#endregion
+			yield return null;
+			#region Version
 			versionText.text = gameData.version;
+			#endregion
 		}
 
 		public void StartGame()
@@ -107,6 +123,7 @@ namespace NALStudio.GameLauncher.Games
 		{
 			if (open)
 			{
+				#region Playtime
 				string playtimeFormat = LeanLocalization.GetTranslationText("units-minutes", "Minutes");
 				float time = PlayerPrefs.GetFloat($"playtime/{gameData.name}", 0);
 				if (time >= 60)
@@ -115,6 +132,7 @@ namespace NALStudio.GameLauncher.Games
 					playtimeFormat = LeanLocalization.GetTranslationText("units-hours", "Hours");
 				}
 				playtimeText.text = $"{time:0.0} {playtimeFormat}";
+				#endregion
 			}
 			morePageToggle.isOn = open;
 			morePage.SetActive(open);
