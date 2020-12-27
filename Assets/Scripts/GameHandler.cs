@@ -54,7 +54,6 @@ namespace NALStudio.GameLauncher.Games
 
 		Dictionary<string, float> playtimesToSave = new Dictionary<string, float>();
 
-
 		public class GameData
 		{
 			public string name;
