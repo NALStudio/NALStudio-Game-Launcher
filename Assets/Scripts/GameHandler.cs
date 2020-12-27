@@ -42,7 +42,9 @@ namespace NALStudio.GameLauncher.Games
 		[HideInInspector]
 		public List<GameData> gameDatas = new List<GameData>();
 		[HideInInspector]
-		public List<Game> gameScripts = new List<Game>();
+		public List<Game> gameScripts = new List<Game>();	
+		[HideInInspector]
+		public List<string> uninstalling = new List<string>();
 
 		List<GameObject> games = new List<GameObject>();
 		List<UITweener> gameTweeners = new List<UITweener>();
@@ -79,39 +81,50 @@ namespace NALStudio.GameLauncher.Games
 		}
 #endif
 
-		IEnumerator Uninstaller(string path)
+		IEnumerator Uninstaller(string path, Action onComplete = null)
 		{
-			byte tries = 0;
-			while (Directory.Exists(path))
+			if (Directory.Exists(path))
 			{
-				tries++;
-				try
-				{
-					Directory.Delete(path, true);
-				}
-				catch (IOException e)
-				{
-					Debug.LogWarning(e.Message);
-				}
-				if (tries > 10)
-				{
-					Debug.LogError($"Could not delete game at path {path}");
-					break;
-				}
-				yield return null;
+				bool deleted = false;
+				StartCoroutine(IO.Directory.RemoveCoroutine(path, () => deleted = true));
+				yield return new WaitWhile(() => !deleted);
+				LoadGames();
 			}
-			yield return null;
-			LoadGames();
+			onComplete.Invoke();
 		}
 
-		public void Uninstall(GameData game)
+		public IEnumerator Uninstall(GameData game, Action onComplete = null)
 		{
-			StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, game.name)));
+			if (!uninstalling.Contains(game.name))
+			{
+				uninstalling.Add(game.name);
+				bool uninstalled = false;
+				StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, game.name), () => uninstalled = true));
+				yield return new WaitWhile(() => !uninstalled);
+				uninstalling.Remove(game.name);
+			}
+			else
+			{
+				Debug.LogError($"{game.name} is already in the uninstalling queue!");
+			}
+			onComplete?.Invoke();
 		}
 
-		public void Uninstall(string gameName)
+		public IEnumerator Uninstall(string gameName, Action onComplete = null)
 		{
-			StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, gameName)));
+			if (!uninstalling.Contains(gameName))
+			{
+				uninstalling.Add(gameName);
+				bool uninstalled = false;
+				StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, gameName), () => uninstalled = true));
+				yield return new WaitWhile(() => !uninstalled);
+				uninstalling.Remove(gameName);
+			}
+			else
+			{
+				Debug.LogError($"{gameName} is already in the uninstalling queue!");
+			}
+			onComplete?.Invoke();
 		}
 
 		void AddGames()
@@ -141,31 +154,23 @@ namespace NALStudio.GameLauncher.Games
 
 		public void LoadGames()
 		{
-			try
-			{
-				foreach (string path in Directory.EnumerateFiles(Constants.Constants.GamesPath))
-					File.Delete(path);
+			foreach (string path in Directory.EnumerateFiles(Constants.Constants.GamesPath))
+				File.Delete(path);
 
-				gameDatas = new List<GameData>();
-				foreach (string path in Directory.EnumerateDirectories(Constants.Constants.GamesPath))
-				{
-					string gamedataPath = Path.Combine(path, gamedataFilePath);
-					if (File.Exists(gamedataPath))
-					{
-						string encrypted = File.ReadAllText(gamedataPath);
-						string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
-						gameDatas.Add(JsonUtility.FromJson<GameData>(unencrypted));
-					}
-					else
-					{
-						if (path != Constants.Constants.DownloadPath)
-							Directory.Delete(path, true);
-					}
-				}
-			}
-			catch (IOException e)
+			gameDatas = new List<GameData>();
+			foreach (string path in Directory.EnumerateDirectories(Constants.Constants.GamesPath))
 			{
-				Debug.LogError(e.Message);
+				string gamedataPath = Path.Combine(path, gamedataFilePath);
+				if (File.Exists(gamedataPath))
+				{
+					string encrypted = File.ReadAllText(gamedataPath);
+					string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
+					gameDatas.Add(JsonUtility.FromJson<GameData>(unencrypted));
+				}
+				else if (path != Constants.Constants.DownloadPath)
+				{
+					StartCoroutine(IO.Directory.RemoveCoroutine(path));
+				}
 			}
 			AddGames();
 		}

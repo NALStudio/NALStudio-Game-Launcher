@@ -65,7 +65,7 @@ namespace NALStudio.GameLauncher.Games
 
 		public void Uninstall()
 		{
-			gameHandler.Uninstall(gameData);
+			StartCoroutine(gameHandler.Uninstall(gameData));
 		}
 
 		public void CreateShortcut()
@@ -106,7 +106,7 @@ namespace NALStudio.GameLauncher.Games
 				gameSize += fi.Length;
 				yield return null;
 			}
-			sizeText.text = $"{Math.Convert.BytesToMB(gameSize):0.0}MB";
+			sizeText.text = $"{Math.Convert.BytesToMB(gameSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}";
 			#endregion
 			yield return null;
 			#region Version

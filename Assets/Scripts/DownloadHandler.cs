@@ -25,6 +25,7 @@ using NALStudio.GameLauncher.Games;
 using Lean.Localization;
 using NALStudio.Math;
 using NALStudio.Coroutines;
+using System;
 
 namespace NALStudio.GameLauncher
 {
@@ -36,6 +37,7 @@ namespace NALStudio.GameLauncher
 		public TextMeshProUGUI downloadSpeedText;
 		public TextMeshProUGUI downloadProgressText;
 		public TextMeshProUGUI queuedCountText;
+		public TextMeshProUGUI uninstallingCountText;
 		public RectTransform downloadSpeedRect;
 		public RectTransform LineArea;
 		public GameObject downloadingAssets;
@@ -138,6 +140,19 @@ namespace NALStudio.GameLauncher
 
 		void FixedUpdate()
 		{
+			#region Uninstall Count
+			if (gameHandler.uninstalling.Count > 0)
+			{
+				uninstallingCountText.gameObject.SetActive(true);
+				uninstallingCountText.text =
+					$"{LeanLocalization.GetTranslationText("downloads-uninstalling", "Uninstalling")}: {gameHandler.uninstalling.Count}";
+			}
+			else
+			{
+				uninstallingCountText.gameObject.SetActive(false);
+			}
+			#endregion
+
 			if (updateGraphs && Application.targetFrameRate != 1 && request != null && !extracting)
 			{
 				downloadingAssets.SetActive(true);
@@ -201,7 +216,7 @@ namespace NALStudio.GameLauncher
 					#endregion
 
 					#region Download Speed
-					downloadSpeedText.text = $"{Convert.BitsToMb(Mathf.RoundToInt(dataPoints.Last() * 8)):0.0}{LeanLocalization.GetTranslationText("units-megabits_per_second-short", "Mb/s")}";
+					downloadSpeedText.text = $"{Math.Convert.BitsToMb(Mathf.RoundToInt(dataPoints.Last() * 8)):0.0}{LeanLocalization.GetTranslationText("units-megabits_per_second-short", "Mb/s")}";
 					downloadSpeedRect.anchoredPosition = new Vector2((lineRenderer.Points.Last().x * LineArea.rect.width) + lineRenderer.LineThickness + 5, downloadSpeedRect.anchoredPosition.y);
 					#endregion
 
@@ -210,8 +225,8 @@ namespace NALStudio.GameLauncher
 					if (double.IsNaN(downloadSize))
 						downloadSize = 0;
 					downloadProgressText.text =
-						$"{Convert.BytesToMB(request.downloadedBytes):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")} / " +
-						$"{Convert.BytesToMB(downloadSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short")}";
+						$"{Math.Convert.BytesToMB(request.downloadedBytes):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")} / " +
+						$"{Math.Convert.BytesToMB(downloadSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short")}";
 					#endregion
 
 					#region Queued Count
@@ -317,7 +332,9 @@ namespace NALStudio.GameLauncher
 							extractingAssets.SetActive(true);
 							progressBarBackground.color = progressBarExtracting;
 							progressBarFill.color = new Color(0, 0, 0, 0);
-							StartCoroutine(Extractor(downloadDir, downloadPath, cardData));
+							bool extractionCompleted = false;
+							StartCoroutine(Extractor(downloadDir, downloadPath, cardData, () => extractionCompleted = true));
+							yield return new WaitWhile(() => !extractionCompleted);
 							gameHandler.LoadGames();
 							yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
 							extractingAssets.SetActive(false);
@@ -330,24 +347,30 @@ namespace NALStudio.GameLauncher
 			}
 		}
 
-		IEnumerator Extractor(string downloadDir, string zipPath, Cards.CardHandler.CardData cardData)
+		IEnumerator Extractor(string downloadDir, string zipPath, Cards.CardHandler.CardData cardData, Action onComplete = null)
 		{
 			string extractPath = Path.Combine(downloadDir, "extraction");
+			bool deleted = true;
 			if (Directory.Exists(extractPath))
-				Directory.Delete(extractPath, true);
-			yield return null;
+			{
+				deleted = false;
+				StartCoroutine(IO.Directory.RemoveCoroutine(extractPath, () => deleted = true));
+			}
+			yield return new WaitWhile(() => !deleted);
 			ZipFile.ExtractToDirectory(zipPath, extractPath);
 			yield return null;
 			string gamePath = Path.Combine(Constants.Constants.GamesPath, cardData.title);
-			gameHandler.Uninstall(cardData.title);
-			yield return null;
+			bool uninstalled = false;
+			StartCoroutine(gameHandler.Uninstall(cardData.title, () => uninstalled = true));
+			yield return new WaitWhile(() => !uninstalled);
 			if (Directory.GetDirectories(extractPath).Length == 1 && Directory.GetFiles(extractPath).Length < 1)
 				Directory.Move(Directory.GetDirectories(extractPath)[0], gamePath);
 			else
 				Directory.Move(extractPath, gamePath);
 			yield return null;
-			Directory.Delete(downloadDir, true);
-			yield return null;
+			deleted = false;
+			StartCoroutine(IO.Directory.RemoveCoroutine(downloadDir, () => deleted = true));
+			yield return new WaitWhile(() => !deleted);
 
 			string gamedataPath = Path.Combine(gamePath, GameHandler.gamedataFilePath);
 			GameHandler.GameData gamedata;
@@ -375,6 +398,7 @@ namespace NALStudio.GameLauncher
 				Directory.CreateDirectory(Path.Combine(gamePath, GameHandler.launcherDataFilePath));
 			File.WriteAllText(Path.Combine(gamePath, GameHandler.gamedataFilePath), gamedataEncrypted);
 			yield return null;
+			onComplete?.Invoke();
 		}
 	}
 }

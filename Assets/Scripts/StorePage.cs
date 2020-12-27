@@ -116,7 +116,7 @@ public class StorePage : MonoBehaviour
 				downloadHandler.Cancel(openedData);
 				break;
 			case ButtonMode.Uninstall:
-				gameHandler.Uninstall(openedGamedata);
+				StartCoroutine(gameHandler.Uninstall(openedGamedata));
 				openDownloads = false;
 				break;
 		}
