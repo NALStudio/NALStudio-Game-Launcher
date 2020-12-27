@@ -72,6 +72,15 @@
       "source": "builtin",
       "dependencies": {}
     },
+    "com.unity.analytics": {
+      "version": "3.5.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.burst": {
       "version": "1.4.3",
       "depth": 0,
@@ -137,6 +146,15 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.recorder": {
+      "version": "2.5.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.timeline": "1.2.17"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {

@@ -17,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.UI;
 
 namespace NALStudio.GameLauncher.Games
@@ -107,23 +108,35 @@ namespace NALStudio.GameLauncher.Games
 				Debug.LogError($"{game.name} is already in the uninstalling queue!");
 			}
 			onComplete?.Invoke();
+			AnalyticsEvent.Custom("game_uninstalled", new Dictionary<string, object>
+			{
+				{ "name", game.name },
+				{ "version", game.version },
+				{ "playtime", PlayerPrefs.GetFloat($"playtime/{game.name}", 0) }
+			});
 		}
 
-		public IEnumerator Uninstall(string gameName, Action onComplete = null)
+		public IEnumerator UpdateUninstall(Cards.CardHandler.CardData card, Action onComplete = null)
 		{
-			if (!uninstalling.Contains(gameName))
+			if (!uninstalling.Contains(card.title))
 			{
-				uninstalling.Add(gameName);
+				uninstalling.Add(card.title);
 				bool uninstalled = false;
-				StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, gameName), () => uninstalled = true));
+				StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, card.title), () => uninstalled = true));
 				yield return new WaitWhile(() => !uninstalled);
-				uninstalling.Remove(gameName);
+				uninstalling.Remove(card.title);
 			}
 			else
 			{
-				Debug.LogError($"{gameName} is already in the uninstalling queue!");
+				Debug.LogError($"{card.title} is already in the uninstalling queue!");
 			}
 			onComplete?.Invoke();
+			AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
+			{
+				{ "name", card.title },
+				{ "version", card.version },
+				{ "playtime", PlayerPrefs.GetFloat($"playtime/{card.title}", 0) }
+			});
 		}
 
 		void AddGames()
