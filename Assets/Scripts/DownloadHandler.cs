@@ -351,13 +351,9 @@ namespace NALStudio.GameLauncher
 		IEnumerator Extractor(string downloadDir, string zipPath, Cards.CardHandler.CardData cardData, Action onComplete = null)
 		{
 			string extractPath = Path.Combine(downloadDir, "extraction");
-			bool deleted = true;
 			if (Directory.Exists(extractPath))
-			{
-				deleted = false;
-				StartCoroutine(IO.Directory.RemoveCoroutine(extractPath, () => deleted = true));
-			}
-			yield return new WaitWhile(() => !deleted);
+				Directory.Delete(extractPath, true);
+			yield return null;
 			ZipFile.ExtractToDirectory(zipPath, extractPath);
 			yield return null;
 			string gamePath = Path.Combine(Constants.Constants.GamesPath, cardData.title);
@@ -369,9 +365,9 @@ namespace NALStudio.GameLauncher
 			else
 				Directory.Move(extractPath, gamePath);
 			yield return null;
-			deleted = false;
-			StartCoroutine(IO.Directory.RemoveCoroutine(downloadDir, () => deleted = true));
-			yield return new WaitWhile(() => !deleted);
+			if (Directory.Exists(downloadDir))
+				Directory.Delete(downloadDir);
+			yield return null;
 
 			string gamedataPath = Path.Combine(gamePath, GameHandler.gamedataFilePath);
 			GameHandler.GameData gamedata;

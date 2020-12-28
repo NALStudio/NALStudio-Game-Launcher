@@ -83,14 +83,33 @@ namespace NALStudio.GameLauncher.Games
 
 		IEnumerator Uninstaller(string path, Action onComplete = null)
 		{
-			if (Directory.Exists(path))
+			int tries = 0;
+			string dPath = Path.Combine(path, gamedataFilePath);
+			while (File.Exists(dPath))
 			{
-				bool deleted = false;
-				StartCoroutine(IO.Directory.RemoveCoroutine(path, () => deleted = true));
-				yield return new WaitWhile(() => !deleted);
-				LoadGames();
+				try
+				{
+					tries++;
+					File.Delete(dPath);
+					if (tries > 10)
+						break;
+				}
+				catch (Exception e)
+				{
+					Debug.LogWarning($"Could not delete file {dPath}!\n{e.Message}");
+				}
 			}
-			onComplete.Invoke();
+			yield return null;
+			while (Directory.Exists(path))
+			{
+				if (Directory.Exists(path))
+				{
+					Directory.Delete(path, true);
+					yield return null;
+					LoadGames();
+				}
+			}
+			onComplete?.Invoke();
 		}
 
 		public IEnumerator Uninstall(GameData game, Action onComplete = null)
@@ -112,7 +131,7 @@ namespace NALStudio.GameLauncher.Games
 			{
 				{ "name", game.name },
 				{ "version", game.version },
-				{ "playtime", PlayerPrefs.GetFloat($"playtime/{game.name}", 0) }
+				{ "playtime", PlayerPrefs.GetFloat($"playtime/{game.name}", 0f) }
 			});
 		}
 
@@ -135,7 +154,7 @@ namespace NALStudio.GameLauncher.Games
 			{
 				{ "name", card.title },
 				{ "version", card.version },
-				{ "playtime", PlayerPrefs.GetFloat($"playtime/{card.title}", 0) }
+				{ "playtime", PlayerPrefs.GetFloat($"playtime/{card.title}", 0f) }
 			});
 		}
 
@@ -181,7 +200,7 @@ namespace NALStudio.GameLauncher.Games
 				}
 				else if (path != Constants.Constants.DownloadPath)
 				{
-					StartCoroutine(IO.Directory.RemoveCoroutine(path));
+					Directory.Delete(path, true);
 				}
 			}
 			AddGames();

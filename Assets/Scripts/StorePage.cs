@@ -32,6 +32,8 @@ public class StorePage : MonoBehaviour
 	public TextMeshProUGUI title;
 	public TextMeshProUGUI developer;
 	public TextMeshProUGUI publisher;
+	public TextMeshProUGUI releaseDate;
+	public TextMeshProUGUI version;
 	public TextMeshProUGUI price;
 	public Button button;
 	public enum ButtonMode { Install, Update, Uninstall, Queued, Downloading }
@@ -57,6 +59,8 @@ public class StorePage : MonoBehaviour
 		title.text = cardData.title;
 		developer.text = cardData.developer;
 		publisher.text = cardData.publisher;
+		releaseDate.text = cardData.release_date;
+		version.text = cardData.version;
 		string priceText = $"€{cardData.price}";
 		if (cardData.price == 0)
 			priceText = Lean.Localization.LeanLocalization.GetTranslationText("pricing-free", "Free");

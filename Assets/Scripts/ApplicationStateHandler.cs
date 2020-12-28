@@ -17,20 +17,26 @@ using UnityEngine;
 public class ApplicationStateHandler : MonoBehaviour
 {
     public GameHandler gameHandler;
+#if UNITY_EDITOR
 	public bool EditorOverride;
+	public int overrideFPS;
+#endif
 
-    void OnApplicationFocus(bool hasFocus)
+	void OnApplicationFocus(bool hasFocus)
 	{
+#if UNITY_EDITOR
+			if (EditorOverride)
+			{
+				Application.targetFrameRate = overrideFPS;
+				return;
+			}
+#endif
 		if (hasFocus)
 		{
 			Application.targetFrameRate = -1;
 		}
 		else
 		{
-#if UNITY_EDITOR
-			if (EditorOverride)
-				return;
-#endif
 			if (gameHandler.GetActiveData() != null)
 				Application.targetFrameRate = 1;
 			else
