@@ -11,16 +11,21 @@ public class RightOfText : MonoBehaviour
 
     void Start()
     {
-		LeanLocalization.OnLocalizationChanged += DelayedCalculate;
-        DelayedCalculate();
+		LeanLocalization.OnLocalizationChanged += DelayedUpdatePosition;
+        DelayedUpdatePosition();
     }
 
 	void OnDestroy()
 	{
-        LeanLocalization.OnLocalizationChanged -= DelayedCalculate;
+        LeanLocalization.OnLocalizationChanged -= DelayedUpdatePosition;
 	}
 
-	void DelayedCalculate()
+    public void UpdatePosition()
+	{
+        toMove.anchoredPosition = new Vector2(text.textBounds.size.x + offset, toMove.anchoredPosition.y);
+    }
+
+	public void DelayedUpdatePosition()
 	{
         StartCoroutine(Delay());
 	}
@@ -28,6 +33,6 @@ public class RightOfText : MonoBehaviour
     IEnumerator Delay()
 	{
         yield return null;
-        toMove.anchoredPosition = new Vector2(text.textBounds.size.x + offset, toMove.anchoredPosition.y);
+        UpdatePosition();
     }
 }

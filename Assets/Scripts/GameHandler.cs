@@ -16,6 +16,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.UI;
@@ -24,6 +25,8 @@ namespace NALStudio.GameLauncher.Games
 {
 	public class GameHandler : MonoBehaviour
 	{
+		public enum SortingMode { recent, alphabetical }
+
 		public float gridHeight;
 		public float verticalSpacing;
 		[Space(10f)]
@@ -36,7 +39,10 @@ namespace NALStudio.GameLauncher.Games
 		public StorePage storePage;
 		public float cardAnimationBasedelay;
 		public float cardAnimationDuration = 0.5f;
-		[HideInInspector]
+		[Space(10f)]
+		public SortingMode sortingMode;
+		public TMPro.TMP_Dropdown sortDropdown;
+
 		public const string launcherDataFilePath = "launcher-data";
 		public const string gamedataFilePath = "launcher-data/data.nal";
 		public const string gameLaunchFilePath = "launcher-data/launch.exe";
@@ -60,6 +66,7 @@ namespace NALStudio.GameLauncher.Games
 			public string name;
 			public string version;
 			public string executable_path;
+			public long last_interest;
 		}
 
 		void Start()
@@ -67,9 +74,22 @@ namespace NALStudio.GameLauncher.Games
 			gridLayout = GetComponent<GridLayoutGroup>();
 			rectTransform = GetComponent<RectTransform>();
 
+			sortingMode = (SortingMode)PlayerPrefs.GetInt("sorting/games", 0);
+			sortDropdown.value = (int)sortingMode;
+
 			LoadGames();
 
 			StartCoroutine(CheckForStartRequest());
+		}
+
+		public void SortGames(int index)
+		{
+			if ((SortingMode)index != sortingMode)
+			{
+				PlayerPrefs.SetInt("sorting/games", index);
+				sortingMode = (SortingMode)index;
+				LoadGames();
+			}
 		}
 
 #if UNITY_EDITOR
@@ -166,6 +186,14 @@ namespace NALStudio.GameLauncher.Games
 			gameScripts.Clear();
 			gameTweeners.Clear();
 
+			switch (sortingMode)
+			{
+				case SortingMode.recent:
+					gameDatas = gameDatas.OrderBy(g => g.last_interest).ToList();
+					gameDatas.Reverse();
+					break;
+			}
+
 			for (int i = 0; i < gameDatas.Count; i++)
 			{
 				GameObject instantiated = Instantiate(gamePrefab, transform);
@@ -210,7 +238,20 @@ namespace NALStudio.GameLauncher.Games
 		{
 			if (gameRunningProcess != null)
 				return;
+
 			string path = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
+
+			#region Set Start Time
+			string gdPath = Path.Combine(Constants.Constants.GamesPath, gameData.name, gamedataFilePath);
+			string encrypted = File.ReadAllText(gdPath);
+			string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
+			GameData tmp = JsonUtility.FromJson<GameData>(unencrypted);
+			tmp.last_interest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
+			unencrypted = JsonUtility.ToJson(tmp, true);
+			encrypted = Encryption.EncryptionHelper.EncryptString(unencrypted);
+			File.WriteAllText(gdPath, encrypted);
+			#endregion
+
 			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
 			{
 				FileName = path,
@@ -225,6 +266,9 @@ namespace NALStudio.GameLauncher.Games
 			gameRunningData = gameData;
 			gameRunningStartTime = DateTime.UtcNow;
 			gameRunningProcess.Start();
+
+			if (sortingMode == SortingMode.recent)
+				LoadGames();
 		}
 
 		void Update()

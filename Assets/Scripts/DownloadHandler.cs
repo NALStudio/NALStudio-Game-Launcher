@@ -186,12 +186,8 @@ namespace NALStudio.GameLauncher
 					dataPoints.Add((request.downloadedBytes - oldDownloadedBytes) / Time.fixedUnscaledDeltaTime);
 					if (dataPoints.Count > 1)
 					{
-						if (dataPoints[dataPoints.Count - 1] == 0f)
-						{
+						if (dataPoints[dataPoints.Count - 1] == 0f && Application.internetReachability != NetworkReachability.NotReachable)
 							dataPoints[dataPoints.Count - 1] = dataPoints[dataPoints.Count - 2];
-							if (dataPoints.TrueForAll(i => i == 0f))
-								dataPoints[dataPoints.Count - 1] = 0f;
-						}
 						if (lineSmoothing > 0)
 							dataPoints[dataPoints.Count - 1] = Mathf.Lerp(dataPoints[dataPoints.Count - 2], dataPoints[dataPoints.Count - 1], 1f - lineSmoothing);
 					}
@@ -366,7 +362,7 @@ namespace NALStudio.GameLauncher
 				Directory.Move(extractPath, gamePath);
 			yield return null;
 			if (Directory.Exists(downloadDir))
-				Directory.Delete(downloadDir);
+				Directory.Delete(downloadDir, true);
 			yield return null;
 
 			string gamedataPath = Path.Combine(gamePath, GameHandler.gamedataFilePath);
@@ -378,6 +374,7 @@ namespace NALStudio.GameLauncher
 				gamedata = JsonUtility.FromJson<GameHandler.GameData>(unencrypted);
 				gamedata.version = cardData.version;
 				gamedata.executable_path = cardData.executable_path;
+				gamedata.last_interest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
 				yield return null;
 			}
 			else
@@ -386,10 +383,11 @@ namespace NALStudio.GameLauncher
 				{
 					name = cardData.title,
 					version = cardData.version,
-					executable_path = cardData.executable_path
+					executable_path = cardData.executable_path,
+					last_interest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds()
 				};
 			}
-			string gamedataJson = JsonUtility.ToJson(gamedata);
+			string gamedataJson = JsonUtility.ToJson(gamedata, true);
 			string gamedataEncrypted = Encryption.EncryptionHelper.EncryptString(gamedataJson);
 			if (!Directory.Exists(GameHandler.launcherDataFilePath))
 				Directory.CreateDirectory(Path.Combine(gamePath, GameHandler.launcherDataFilePath));

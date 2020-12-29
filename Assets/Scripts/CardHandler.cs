@@ -22,11 +22,13 @@ using NALStudio.JSON;
 using NALStudio.UI;
 using NALStudio.Encryption;
 using NALStudio.GameLauncher.Games;
+using System.Linq;
 
 namespace NALStudio.GameLauncher.Cards
 {
 	public class CardHandler : MonoBehaviour
 	{
+		public enum SortingMode { relevance, alphabetical }
 		#region Variables
 
 		public float gridHeight;
@@ -40,6 +42,8 @@ namespace NALStudio.GameLauncher.Cards
 		public StorePage storePage;
 		public GameHandler gameHandler;
 		[Space(10)]
+		public SortingMode sortingMode;
+		public TMPro.TMP_Dropdown sortDropdown;
 		[HideInInspector]
 		public List<GameObject> cards = new List<GameObject>();
 		[HideInInspector]
@@ -74,7 +78,20 @@ namespace NALStudio.GameLauncher.Cards
 			gridLayout = GetComponent<GridLayoutGroup>();
 			rectTransform = GetComponent<RectTransform>();
 
+			sortingMode = (SortingMode)PlayerPrefs.GetInt("sorting/cards", 0);
+			sortDropdown.value = (int)sortingMode;
+
 			StartCoroutine(LoadCards());
+		}
+
+		public void SortCards(int index)
+		{
+			if ((SortingMode)index != sortingMode)
+			{
+				PlayerPrefs.SetInt("sorting/cards", index);
+				sortingMode = (SortingMode)index;
+				StartCoroutine(LoadCards());
+			}
 		}
 
 		public void AddToGames()
@@ -101,6 +118,13 @@ namespace NALStudio.GameLauncher.Cards
 			cardTweeners.Clear();
 
 			CardData[] cardDatas = JsonHelper.FromJsonArray<CardData>(json);
+			switch (sortingMode)
+			{
+				case SortingMode.alphabetical:
+					cardDatas = cardDatas.OrderBy(c => c.title).ToArray();
+					break;
+			}
+
 			for (int i = 0; i < cardDatas.Length; i++)
 			{
 				GameObject instantiated = Instantiate(cardPrefab, transform);
