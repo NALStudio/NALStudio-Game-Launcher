@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using TMPro;
+using System;
 
 namespace NALStudio.GameLauncher.Cards
 {
@@ -43,6 +44,11 @@ namespace NALStudio.GameLauncher.Cards
 
 		IEnumerator SetContent()
         {
+            if (cardData.thumbnail.StartsWith("https://imgur.com/", StringComparison.OrdinalIgnoreCase) || cardData.thumbnail.StartsWith("https://i.imgur.com/", StringComparison.OrdinalIgnoreCase))
+			{
+                if (!cardData.thumbnail.EndsWith("l.png", StringComparison.OrdinalIgnoreCase))
+                    cardData.thumbnail = cardData.thumbnail.Insert(cardData.thumbnail.Length - 4, "l");
+			}
             UnityWebRequest wr = new UnityWebRequest(cardData.thumbnail);
             DownloadHandlerTexture texDl = new DownloadHandlerTexture(true);
             wr.downloadHandler = texDl;

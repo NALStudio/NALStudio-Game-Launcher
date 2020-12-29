@@ -1126,6 +1126,7 @@ GameObject:
   - component: {fileID: 2428305271127268700}
   - component: {fileID: 2428305271127268701}
   - component: {fileID: 2428305271127268702}
+  - component: {fileID: 757226051226937683}
   m_Layer: 5
   m_Name: GameCard
   m_TagString: Untagged
@@ -1282,6 +1283,32 @@ MonoBehaviour:
   versionText: {fileID: 2428305271469578000}
   gameHandler: {fileID: 0}
   storePage: {fileID: 0}
+--- !u!114 &757226051226937683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2428305271127268703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5ed1543c8cdf74c8b96acddbb4ade6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToAnimate: {fileID: 2428305271127268703}
+  animationType: 1
+  easeType: 18
+  duration: 0
+  delay: 0
+  loop: 0
+  pingpong: 0
+  startPositionOffset: 0
+  from: {x: 0, y: 0, z: 0}
+  endPositionOffset: 0
+  to: {x: 1, y: 1, z: 1}
+  startOnEnable: 0
+  stopOnDisable: 0
+  debugLogs: 0
 --- !u!1 &2428305271180245204
 GameObject:
   m_ObjectHideFlags: 0

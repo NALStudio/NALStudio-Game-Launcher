@@ -203,7 +203,7 @@ namespace NALStudio.GameLauncher.Games
 				insGame.storePage = storePage;
 				StartCoroutine(insGame.LoadAssets(gameDatas[i]));
 				gameScripts.Add(insGame);
-				UITweener insTweener = instantiated.AddComponent<UITweener>();
+				UITweener insTweener = instantiated.GetComponent<UITweener>();
 				insTweener.duration = cardAnimationDuration;
 				insTweener.delay = cardAnimationBasedelay + (i / 10f);
 				gameTweeners.Add(insTweener);

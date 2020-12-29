@@ -27,7 +27,8 @@ public class RightOfText : MonoBehaviour
 
 	public void DelayedUpdatePosition()
 	{
-        StartCoroutine(Delay());
+        if (gameObject.activeInHierarchy)
+            StartCoroutine(Delay());
 	}
 
     IEnumerator Delay()
