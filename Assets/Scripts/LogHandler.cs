@@ -43,6 +43,7 @@ I==========[ SYSTEM INFO ]==========I
 - CPU:          {SystemInfo.processorType} [{SystemInfo.processorCount} cores]
 - RAM:          {SystemInfo.systemMemorySize}MB
 - OS:           {SystemInfo.operatingSystem} [{SystemInfo.deviceType}]
+- Internet:     {Application.internetReachability != NetworkReachability.NotReachable}
 I==========[ SYSTEM INFO ]==========I";
 			using (StreamWriter sw = new StreamWriter(logFilePath))
 			{

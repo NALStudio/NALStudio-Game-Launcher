@@ -21,7 +21,19 @@ SpriteAtlasAsset:
       readable: 0
       crunchedCompression: 0
       sRGB: 1
-    platformSettings: []
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 8192
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 2
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
       padding: 2
@@ -32,6 +44,7 @@ SpriteAtlasAsset:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
+    - {fileID: 2800000, guid: 7556822f62c04134986fa78c61da7abf, type: 3}
     - {fileID: 2800000, guid: bc43e1a97a255f24db149cce5f85300b, type: 3}
     - {fileID: 2800000, guid: 579761a689f5d6b4e97ea61b3d14c5e7, type: 3}
     - {fileID: 2800000, guid: 6f747e285dee5ad48a393970ccdd25d4, type: 3}
@@ -44,6 +57,16 @@ SpriteAtlasAsset:
     - {fileID: 2800000, guid: 4ae2db1ed3433ed43bdd4f71d810f41e, type: 3}
     - {fileID: 2800000, guid: da076cfbee136d64fae775e70460ba32, type: 3}
     - {fileID: 2800000, guid: 2f14c76f345b3c44387c98f099de8c8c, type: 3}
+    - {fileID: 2800000, guid: 0d4f45c1e23c68844a8ffc1a0063bc28, type: 3}
+    - {fileID: 2800000, guid: 45b14f0e58f38954ea6551ccdf7dd90b, type: 3}
+    - {fileID: 2800000, guid: 25ba12ebf2801024dbbc65f2dd571710, type: 3}
+    - {fileID: 2800000, guid: 120c1f74d787f3c45b94b657a79edfcd, type: 3}
+    - {fileID: 2800000, guid: e07561ef890fca14989198b1c12ee0bf, type: 3}
+    - {fileID: 2800000, guid: 5cfaa52ab4713d744a9eac824c7dba8e, type: 3}
+    - {fileID: 2800000, guid: 3a6a7c6493c9c2949ae99cf043001b2b, type: 3}
+    - {fileID: 2800000, guid: 4a23b9a4dcd7eea46a79a1ebac546293, type: 3}
+    - {fileID: 2800000, guid: f28a6b98bef567644afee70c9d54c4e9, type: 3}
+    - {fileID: 2800000, guid: a8cb4e1039ad3384d82f7d4b27469c96, type: 3}
     totalSpriteSurfaceArea: 0
     bindAsDefault: 1
     isAtlasV2: 1
