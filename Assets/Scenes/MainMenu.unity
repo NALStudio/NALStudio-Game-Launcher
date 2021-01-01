@@ -4097,7 +4097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultLanguage: English
-  DetectLanguage: 1
+  DetectLanguage: 0
   SaveLanguage: 1
   languages:
   - name: English
