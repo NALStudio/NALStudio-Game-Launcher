@@ -78,8 +78,6 @@ namespace NALStudio.GameLauncher.Games
 			sortDropdown.value = (int)sortingMode;
 
 			LoadGames();
-
-			StartCoroutine(CheckForStartRequest());
 		}
 
 		public void SortGames(int index)
@@ -280,6 +278,8 @@ namespace NALStudio.GameLauncher.Games
 				PlayerPrefs.SetFloat($"playtime/{kv.Key}", added);
 			}
 			playtimesToSave.Clear();
+
+			CheckForStartRequest();
 		}
 
 		void GameCloseHandler(object sender, EventArgs e)
@@ -334,40 +334,41 @@ namespace NALStudio.GameLauncher.Games
 				tweener.DoTween();
 		}
 
-		IEnumerator CheckForStartRequest()
+		void CheckForStartRequest()
 		{
-			while (true)
+			if (gameRunningProcess == null)
 			{
-				yield return new WaitForSeconds(5f);
-				if (gameRunningProcess == null)
+				if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
 				{
-					if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+					string launchApp = Environment.GetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", EnvironmentVariableTarget.User);
+					if (launchApp != null)
 					{
-						string launchApp = Environment.GetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", EnvironmentVariableTarget.User);
-						if (launchApp != null)
+						GameData correctData = null;
+						foreach (GameData gd in gameDatas)
 						{
-							GameData correctData = null;
-							foreach (GameData gd in gameDatas)
+							if (gd.name == launchApp)
 							{
-								if (gd.name == launchApp)
-								{
-									correctData = gd;
-								}
+								correctData = gd;
 							}
-							if (correctData != null)
-								StartGame(correctData);
-							else
-								Debug.LogError($"Game name not found in gameDatas! GameDatas count: {gameDatas.Count}, GameName: {launchApp}");
-
-							Environment.SetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", null, EnvironmentVariableTarget.User);
 						}
-					}
-					else
-					{
-						throw new PlatformNotSupportedException("Shortcuts currently support only Windows NT or newer!");
+						if (correctData != null)
+							StartGame(correctData);
+						else
+							Debug.LogError($"Game name not found in gameDatas! GameDatas count: {gameDatas.Count}, GameName: {launchApp}");
+
+						Environment.SetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", null, EnvironmentVariableTarget.User);
 					}
 				}
+				else
+				{
+					throw new PlatformNotSupportedException("Shortcuts currently support only Windows NT or newer!");
+				}
 			}
+		}
+
+		void OnApplicationQuit()
+		{
+			Environment.SetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", null, EnvironmentVariableTarget.User);
 		}
 	}
 }
