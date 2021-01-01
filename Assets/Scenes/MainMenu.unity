@@ -2679,7 +2679,7 @@ MonoBehaviour:
   buttonLogos:
   - {fileID: 21300000, guid: f18ad4c953f75f0478b68a7c84588467, type: 3}
   - {fileID: 21300000, guid: 5cfaa52ab4713d744a9eac824c7dba8e, type: 3}
-  - {fileID: 21300000, guid: 3a6a7c6493c9c2949ae99cf043001b2b, type: 3}
+  - {fileID: 21300000, guid: a8d4bb792ef207a4b914b49a3dbd43b9, type: 3}
   - {fileID: 21300000, guid: 120c1f74d787f3c45b94b657a79edfcd, type: 3}
   buttonColor: {r: 0.7529412, g: 0.7529412, b: 0.7529412, a: 1}
   ButtonHighlightedColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
@@ -7764,6 +7764,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 22415034, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -163.56982
+      objectReference: {fileID: 0}
+    - target: {fileID: 22415034, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -269.80005
+      objectReference: {fileID: 0}
     - target: {fileID: 22424132, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -0.20019531
@@ -7883,6 +7891,10 @@ PrefabInstance:
     - target: {fileID: 22477518, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -0.20019531
+      objectReference: {fileID: 0}
+    - target: {fileID: 22493042, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -163.56982
       objectReference: {fileID: 0}
     - target: {fileID: 224000010243477314, guid: 0abab5bb77339e4428787a870eb31bd3, type: 3}
       propertyPath: m_AnchoredPosition.x

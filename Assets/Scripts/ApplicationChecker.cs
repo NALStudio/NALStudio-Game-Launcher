@@ -40,7 +40,7 @@ public class ApplicationChecker : MonoBehaviour
 
 	IEnumerator CheckForUpdate()
 	{
-		UnityWebRequest req = UnityWebRequest.Get("https://api.github.com/repos/NALStudio/Test-Repo/releases/latest");
+		UnityWebRequest req = UnityWebRequest.Get("https://api.github.com/repos/NALStudio/NALStudio-Game-Launcher/releases/latest");
 		yield return req.SendWebRequest();
 		if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.DataProcessingError || req.result == UnityWebRequest.Result.ProtocolError)
 		{
@@ -52,7 +52,10 @@ public class ApplicationChecker : MonoBehaviour
 			string json = req.downloadHandler.text;
 			JSONNode node = JSON.Parse(json);
 			if (node["tag_name"] != Application.version)
+			{
+				Debug.Log($"Found an update for version: {node["tag_name"]}. Current Version: {Application.version}");
 				OnUpdateAvailable?.Invoke();
+			}
 		}
 	}
 }
