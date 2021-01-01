@@ -101,17 +101,16 @@ public class NewsGroup : MonoBehaviour
 		startFixer.transform.SetAsLastSibling();
 	}
 
+	void OnEnable()
+	{
+		startFixer.transform.SetAsLastSibling();
+	}
+
 	void Update()
 	{
 		NewsButton button = buttons[index];
 		if (button.progress.value < button.progress.maxValue)
 		{
-			if (index > 0 && startFixer != null)
-			{
-				Destroy(startFixer);
-				startFixer = null;
-			}
-
 			button.progress.value += Time.deltaTime;
 			button.Highlight();
 			for (int i = 0; i < banners.Count; i++)
