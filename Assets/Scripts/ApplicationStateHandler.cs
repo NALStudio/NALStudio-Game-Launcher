@@ -12,11 +12,13 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
 using NALStudio.GameLauncher.Games;
+using NALStudio.UI;
 using UnityEngine;
 
 public class ApplicationStateHandler : MonoBehaviour
 {
     public GameHandler gameHandler;
+	public TabGroup tabGroup;
 #if UNITY_EDITOR
 	public bool EditorOverride;
 	public int overrideFPS;
@@ -38,9 +40,16 @@ public class ApplicationStateHandler : MonoBehaviour
 		else
 		{
 			if (gameHandler.GetActiveData() != null)
+			{
 				Application.targetFrameRate = 1;
+			}
 			else
-				Application.targetFrameRate = Mathf.CeilToInt(1 / Time.fixedUnscaledDeltaTime);
+			{
+				if (tabGroup.SelectedButton == tabGroup.tabButtons[0])
+					Application.targetFrameRate = 25;
+				else
+					Application.targetFrameRate = Mathf.CeilToInt(1 / Time.fixedUnscaledDeltaTime);
+			}
 		}
 	}
 }

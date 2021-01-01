@@ -66,8 +66,8 @@ namespace NALStudio.UI
 
 		void Awake()
 		{
-            canvasGroup = GetComponent<CanvasGroup>();
-            rect = GetComponent<RectTransform>();
+            canvasGroup = objectToAnimate.GetComponent<CanvasGroup>();
+            rect = objectToAnimate.GetComponent<RectTransform>();
 		}
 
 		void OnEnable()
@@ -118,6 +118,9 @@ namespace NALStudio.UI
 
         void HandleTween()
         {
+            if (rect == null)
+                rect = objectToAnimate.GetComponent<RectTransform>();
+
             switch (animationType)
             {
                 case AnimationType.Fade:
