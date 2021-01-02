@@ -142,8 +142,15 @@ namespace NALStudio.GameLauncher.Cards
 			CalculateCellSize();
 		}
 
+		void ReloadCards()
+		{
+			StartCoroutine(LoadCards());
+			Debug.Log("Application has been running for a day. Reloading cards...");
+		}
+
 		IEnumerator LoadCards()
 		{
+			Invoke(nameof(ReloadCards), 86400f);
 			string dataDirPath = Path.Combine(Cache.Cache.Path, "data");
 			string fileName = EncryptionHelper.ToMD5Hex(DateTime.UtcNow.ToString("ddMMyyyy"));
 			string filePath = Path.Combine(dataDirPath, $"{fileName}.nal");
