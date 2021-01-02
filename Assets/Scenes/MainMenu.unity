@@ -10039,7 +10039,6 @@ GameObject:
   - component: {fileID: 1105370800}
   - component: {fileID: 1105370798}
   - component: {fileID: 1105370797}
-  - component: {fileID: 1105370799}
   m_Layer: 0
   m_Name: Global Scripts
   m_TagString: Untagged
@@ -10075,18 +10074,6 @@ MonoBehaviour:
   tabGroup: {fileID: 1014071508}
   EditorOverride: 0
   overrideFPS: -1
---- !u!114 &1105370799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105370796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12d27481739684d458dd2678aa9db156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1105370800
 Transform:
   m_ObjectHideFlags: 0
