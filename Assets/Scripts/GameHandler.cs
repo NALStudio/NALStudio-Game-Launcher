@@ -151,29 +151,42 @@ namespace NALStudio.GameLauncher.Games
 				{ "version", game.version },
 				{ "playtime", PlayerPrefs.GetFloat($"playtime/{game.name}", 0f) }
 			});
+			AnalyticsEvent.Custom($"{game.name}_uninstalled", new Dictionary<string, object>
+			{
+				{ "version", game.version },
+				{ "playtime", PlayerPrefs.GetFloat($"playtime/{game.name}", 0f) }
+			});
 		}
 
 		public IEnumerator UpdateUninstall(Cards.CardHandler.CardData card, Action onComplete = null)
 		{
-			if (!uninstalling.Contains(card.title))
+			if (Directory.Exists(Path.Combine(Constants.Constants.GamesPath, card.title)))
 			{
-				uninstalling.Add(card.title);
-				bool uninstalled = false;
-				StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, card.title), () => uninstalled = true));
-				yield return new WaitWhile(() => !uninstalled);
-				uninstalling.Remove(card.title);
-			}
-			else
-			{
-				Debug.LogError($"{card.title} is already in the uninstalling queue!");
+				if (!uninstalling.Contains(card.title))
+				{
+					uninstalling.Add(card.title);
+					bool uninstalled = false;
+					StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, card.title), () => uninstalled = true));
+					yield return new WaitWhile(() => !uninstalled);
+					uninstalling.Remove(card.title);
+				}
+				else
+				{
+					Debug.LogError($"{card.title} is already in the uninstalling queue!");
+				}
+				AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
+				{
+					{ "name", card.title },
+					{ "version", card.version },
+					{ "playtime", PlayerPrefs.GetFloat($"playtime/{card.title}", 0f) }
+				});
+				AnalyticsEvent.Custom($"{card.title}_update", new Dictionary<string, object>
+				{
+					{ "version", card.version },
+					{ "playtime", PlayerPrefs.GetFloat($"playtime/{card.title}", 0f) }
+				});
 			}
 			onComplete?.Invoke();
-			AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
-			{
-				{ "name", card.title },
-				{ "version", card.version },
-				{ "playtime", PlayerPrefs.GetFloat($"playtime/{card.title}", 0f) }
-			});
 		}
 
 		void AddGames()

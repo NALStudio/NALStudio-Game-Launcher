@@ -104,6 +104,8 @@ public class NewsGroup : MonoBehaviour
 	void OnEnable()
 	{
 		startFixer.transform.SetAsLastSibling();
+		foreach (NewsButton b in buttons)
+			b.background.canvasRenderer.SetColor(buttonColor);
 	}
 
 	void Update()

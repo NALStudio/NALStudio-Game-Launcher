@@ -396,9 +396,14 @@ namespace NALStudio.GameLauncher
 			onComplete?.Invoke();
 			AnalyticsEvent.Custom("game_installed", new Dictionary<string, object>
 			{
-				{ "name", cardData.title },
+				{ "name", cardData.title},
 				{ "version", cardData.version },
 				{ "playtime", PlayerPrefs.GetFloat($"playtime/{cardData.title}", 0) }
+			});
+			AnalyticsEvent.Custom($"{cardData.title}_installed", new Dictionary<string, object>
+			{
+				{ "version", cardData.version },
+				{ "playtime", PlayerPrefs.GetFloat($"playtime/{cardData.title}", 0f) }
 			});
 		}
 	}
