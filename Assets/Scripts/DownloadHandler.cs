@@ -103,6 +103,11 @@ namespace NALStudio.GameLauncher
 				return queued.Count;
 			}
 
+			public void Clear()
+			{
+				queued.Clear();
+			}
+
 			public Cards.CardHandler.CardData GetNextDownload()
 			{
 				if (queued.Count > 0)
@@ -272,7 +277,7 @@ namespace NALStudio.GameLauncher
 					}
 					if (tries > 10)
 					{
-						Debug.LogError($"Could not delete download files at path {Constants.Constants.DownloadPath}");
+						Debug.LogError($"Could not delete download files at path {Constants.Constants.DownloadPath}.");
 						break;
 					}
 				}
@@ -340,6 +345,33 @@ namespace NALStudio.GameLauncher
 							downloadInProgress = false;
 						}
 					}
+				}
+			}
+		}
+
+		void OnApplicationQuit()
+		{
+			Queue.Clear();
+			StopAllCoroutines();
+
+			request?.Abort();
+
+			int tries = 0;
+			while (Directory.Exists(Constants.Constants.DownloadPath))
+			{
+				tries++;
+				try
+				{
+					Directory.Delete(Constants.Constants.DownloadPath, true);
+				}
+				catch (IOException e)
+				{
+					Debug.LogWarning(e.Message);
+				}
+				if (tries > 10)
+				{
+					Debug.LogError($"Could not delete download files on exit at path {Constants.Constants.DownloadPath}.");
+					break;
 				}
 			}
 		}
