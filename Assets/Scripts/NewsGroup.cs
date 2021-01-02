@@ -97,7 +97,9 @@ public class NewsGroup : MonoBehaviour
 			#endregion
 		}
 		Destroy(banner);
+		banner = null;
 		Destroy(button);
+		button = null;
 		startFixer.transform.SetAsLastSibling();
 	}
 
@@ -113,8 +115,8 @@ public class NewsGroup : MonoBehaviour
 		NewsButton button = buttons[index];
 		if (button.progress.value < button.progress.maxValue)
 		{
+			button.Select();
 			button.progress.value += Time.deltaTime;
-			button.Highlight();
 			for (int i = 0; i < banners.Count; i++)
 			{
 				if (i == index)
@@ -136,8 +138,7 @@ public class NewsGroup : MonoBehaviour
 		else if (!button.pointerInside)
 		{
 			lastBanner = banners[index];
-			button.progress.value = 0f;
-			button.UnHighlight();
+			button.Unselect();
 			index++;
 			if (index >= buttons.Count)
 				index = 0;
@@ -146,12 +147,13 @@ public class NewsGroup : MonoBehaviour
 
 	public void SetPage(NewsButton newsButton)
 	{
+		if (newsButton == buttons[index])
+			return;
 		if (buttons.IndexOf(newsButton) == banners.IndexOf(lastBanner))
 			lastBanner.gameObject.SetActive(false);
 		lastBanner = banners[index];
 		NewsButton button = buttons[index];
+		button.Unselect();
 		index = buttons.IndexOf(newsButton);
-		button.progress.value = 0f;
-		button.UnHighlight();
 	}
 }

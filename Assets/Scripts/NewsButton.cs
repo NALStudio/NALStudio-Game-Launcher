@@ -38,16 +38,34 @@ public class NewsButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 	public bool pointerInside;
 	[HideInInspector]
 	public NewsGroup newsGroup;
+
+	LTDescr progressTween;
 	#endregion
 
-	public void Highlight()
+	void TweenSet(float value, float ratio)
 	{
+		progress.value = value;
+	}
+
+	public void Select()
+	{
+		if (progressTween != null)
+		{
+			LeanTween.cancel(progressTween.id);
+			progressTween = null;
+		}
         if (background.color != selectedColor)
             background.CrossFadeColor(selectedColor, AnimationSpeed, true, true);
 	}
 
-	public void UnHighlight()
+	public void Unselect()
 	{
+		if (progress.value != 0f)
+		{
+			progressTween = LeanTween.value(gameObject, TweenSet, progress.value, progress.minValue, AnimationSpeed);
+			progressTween.setEase(LeanTweenType.easeOutExpo);
+			progressTween.setOnComplete(() => progressTween = null);
+		}
         if (background.color != normalColor)
             background.CrossFadeColor(normalColor, AnimationSpeed, true, true);
 	}
