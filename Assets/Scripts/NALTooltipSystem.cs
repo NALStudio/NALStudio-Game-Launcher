@@ -1,4 +1,4 @@
-﻿/*
+/*
  ██████   █████   █████████   █████        █████████   █████                   █████  ███          
 ░░██████ ░░███   ███░░░░░███ ░░███        ███░░░░░███ ░░███                   ░░███  ░░░           
  ░███░███ ░███  ░███    ░███  ░███       ░███    ░░░  ███████   █████ ████  ███████  ████   ██████ 
@@ -11,33 +11,33 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
-using NALStudio.GameLauncher.Games;
-using NALStudio.UI;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class ApplicationStateHandler : MonoBehaviour
+namespace NALStudio.UI
 {
-    public GameHandler gameHandler;
-	public TabGroup tabGroup;
-#if UNITY_EDITOR
-	public bool EditorOverride;
-	public int overrideFPS;
-#endif
-
-	void OnApplicationFocus(bool hasFocus)
+	public class NALTooltipSystem : MonoBehaviour
 	{
-#if UNITY_EDITOR
-			if (EditorOverride)
-			{
-				Application.targetFrameRate = overrideFPS;
-				return;
-			}
-#endif
-		if (hasFocus)
-			Application.targetFrameRate = -1;
-		else if (gameHandler.GetActiveData() != null)
-			Application.targetFrameRate = 1;
-		else
-			Application.targetFrameRate = Mathf.CeilToInt(1 / Time.fixedUnscaledDeltaTime);
+		#region Variables
+		static NALTooltipSystem current;
+		public NALTooltip tooltip;
+		#endregion
+
+		void Awake()
+		{
+			current = this;
+		}
+
+		public static void Show(string content, string header = "")
+		{
+			current.tooltip.SetText(content, header);
+			current.tooltip.gameObject.SetActive(true);
+		}
+
+		public static void Hide()
+		{
+			current.tooltip.gameObject.SetActive(false);
+		}
 	}
 }

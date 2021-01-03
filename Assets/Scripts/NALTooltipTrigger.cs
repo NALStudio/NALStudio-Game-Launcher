@@ -1,4 +1,4 @@
-﻿/*
+/*
  ██████   █████   █████████   █████        █████████   █████                   █████  ███          
 ░░██████ ░░███   ███░░░░░███ ░░███        ███░░░░░███ ░░███                   ░░███  ░░░           
  ░███░███ ░███  ░███    ░███  ░███       ░███    ░░░  ███████   █████ ████  ███████  ████   ██████ 
@@ -11,33 +11,37 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
-using NALStudio.GameLauncher.Games;
-using NALStudio.UI;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class ApplicationStateHandler : MonoBehaviour
+namespace NALStudio.UI
 {
-    public GameHandler gameHandler;
-	public TabGroup tabGroup;
-#if UNITY_EDITOR
-	public bool EditorOverride;
-	public int overrideFPS;
-#endif
-
-	void OnApplicationFocus(bool hasFocus)
+	public class NALTooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	{
-#if UNITY_EDITOR
-			if (EditorOverride)
-			{
-				Application.targetFrameRate = overrideFPS;
-				return;
-			}
-#endif
-		if (hasFocus)
-			Application.targetFrameRate = -1;
-		else if (gameHandler.GetActiveData() != null)
-			Application.targetFrameRate = 1;
-		else
-			Application.targetFrameRate = Mathf.CeilToInt(1 / Time.fixedUnscaledDeltaTime);
+		#region Variables
+		public string header;
+		[TextArea]
+		public string content;
+		public float delay = 0.5f;
+		#endregion
+
+		public void OnPointerEnter(PointerEventData eventData)
+		{
+			StartCoroutine(Show());
+		}
+
+		public void OnPointerExit(PointerEventData eventData)
+		{
+			StopAllCoroutines();
+			NALTooltipSystem.Hide();
+		}
+
+		IEnumerator Show()
+		{
+			yield return new WaitForSeconds(delay);
+			NALTooltipSystem.Show(content, header);
+		}
 	}
 }

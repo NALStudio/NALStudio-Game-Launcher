@@ -35,10 +35,12 @@ namespace NALStudio.GameLauncher.Games
 		[Header("More Page")]
 		public GameObject morePage;
 		public Toggle morePageToggle;
-		[Header("More Page Stats")]
 		public TextMeshProUGUI playtimeText;
 		public TextMeshProUGUI sizeText;
 		public TextMeshProUGUI versionText;
+		[Header("Update Tooltip")]
+		public GameObject updateAvailable;
+		public NALTooltipTrigger tooltipTrigger;
 
 		[HideInInspector]
 		public GameHandler gameHandler;
@@ -53,6 +55,7 @@ namespace NALStudio.GameLauncher.Games
 					cardData.thumbnailTexture.width / (float)cardData.thumbnailTexture.height;
 				thumbnail.texture = cardData.thumbnailTexture;
 			}
+			updateAvailable.SetActive(cardData?.version != gameData?.version);
 		}
 
 		public void OpenStorePage()

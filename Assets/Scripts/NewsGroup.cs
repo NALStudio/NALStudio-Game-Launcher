@@ -26,6 +26,7 @@ public class NewsGroup : MonoBehaviour
 	public Color ButtonHighlightedColor;
 	public List<Color> buttonColors;
 	public List<string> titles;
+	[TextArea]
 	public List<string> texts;
 	public List<Color> textColors;
 	[Header("Settings")]
