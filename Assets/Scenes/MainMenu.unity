@@ -10552,8 +10552,6 @@ MonoBehaviour:
   gameHandler: {fileID: 1246525250}
   tabGroup: {fileID: 1014071508}
   downloadsMenu: {fileID: 271946582}
-  EditorOverride: 0
-  overrideFPS: -1
 --- !u!4 &1105370800
 Transform:
   m_ObjectHideFlags: 0
