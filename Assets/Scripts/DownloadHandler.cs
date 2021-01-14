@@ -386,7 +386,12 @@ namespace NALStudio.GameLauncher
 			yield return null;
 			string gamePath = Path.Combine(Constants.Constants.GamesPath, cardData.title);
 			bool uninstalled = false;
-			StartCoroutine(gameHandler.UpdateUninstall(cardData, () => uninstalled = true));
+			bool updated = false;
+			StartCoroutine(gameHandler.UpdateUninstall(cardData, (u) =>
+			{
+				uninstalled = true;
+				updated = u;
+			}));
 			yield return new WaitWhile(() => !uninstalled);
 			if (Directory.GetDirectories(extractPath).Length == 1 && Directory.GetFiles(extractPath).Length < 1)
 				Directory.Move(Directory.GetDirectories(extractPath)[0], gamePath);
@@ -426,17 +431,21 @@ namespace NALStudio.GameLauncher
 			File.WriteAllText(Path.Combine(gamePath, GameHandler.gamedataFilePath), gamedataEncrypted);
 			yield return null;
 			onComplete?.Invoke();
-			AnalyticsEvent.Custom("game_installed", new Dictionary<string, object>
+			if (!updated)
 			{
-				{ "name", cardData.title},
-				{ "version", cardData.version },
-				{ "playtime", PlayerPrefs.GetFloat($"playtime/{cardData.title}", 0) }
-			});
-			AnalyticsEvent.Custom($"{cardData.title}_installed", new Dictionary<string, object>
-			{
-				{ "version", cardData.version },
-				{ "playtime", PlayerPrefs.GetFloat($"playtime/{cardData.title}", 0f) }
-			});
+				Debug.Log($"Installed game: {cardData.title}");
+				AnalyticsEvent.Custom("game_installed", new Dictionary<string, object>
+				{
+					{ "name", cardData.title},
+					{ "version", cardData.version },
+					{ "playtime", PlayerPrefs.GetFloat($"playtime/{cardData.title}", 0) }
+				});
+				AnalyticsEvent.Custom($"{cardData.title}_installed", new Dictionary<string, object>
+				{
+					{ "version", cardData.version },
+					{ "playtime", PlayerPrefs.GetFloat($"playtime/{cardData.title}", 0f) }
+				});
+			}
 		}
 	}
 }

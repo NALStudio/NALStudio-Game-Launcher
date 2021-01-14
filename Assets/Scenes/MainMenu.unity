@@ -10518,6 +10518,7 @@ GameObject:
   - component: {fileID: 1105370800}
   - component: {fileID: 1105370798}
   - component: {fileID: 1105370797}
+  - component: {fileID: 1105370799}
   m_Layer: 0
   m_Name: Global Scripts
   m_TagString: Untagged
@@ -10552,6 +10553,18 @@ MonoBehaviour:
   gameHandler: {fileID: 1246525250}
   tabGroup: {fileID: 1014071508}
   downloadsMenu: {fileID: 271946582}
+--- !u!114 &1105370799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105370796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3205d5345166d67449098960880e38fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1105370800
 Transform:
   m_ObjectHideFlags: 0

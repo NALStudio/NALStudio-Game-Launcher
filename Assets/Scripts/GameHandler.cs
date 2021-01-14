@@ -145,6 +145,7 @@ namespace NALStudio.GameLauncher.Games
 				Debug.LogError($"{game.name} is already in the uninstalling queue!");
 			}
 			onComplete?.Invoke();
+			Debug.Log($"Uninstalled game: {game.name}");
 			AnalyticsEvent.Custom("game_uninstalled", new Dictionary<string, object>
 			{
 				{ "name", game.name },
@@ -158,7 +159,7 @@ namespace NALStudio.GameLauncher.Games
 			});
 		}
 
-		public IEnumerator UpdateUninstall(Cards.CardHandler.CardData card, Action onComplete = null)
+		public IEnumerator UpdateUninstall(Cards.CardHandler.CardData card, Action<bool> onComplete = null)
 		{
 			if (Directory.Exists(Path.Combine(Constants.Constants.GamesPath, card.title)))
 			{
@@ -174,6 +175,7 @@ namespace NALStudio.GameLauncher.Games
 				{
 					Debug.LogError($"{card.title} is already in the uninstalling queue!");
 				}
+				Debug.Log($"Updated game: {card.title}");
 				AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
 				{
 					{ "name", card.title },
@@ -185,8 +187,12 @@ namespace NALStudio.GameLauncher.Games
 					{ "version", card.version },
 					{ "playtime", PlayerPrefs.GetFloat($"playtime/{card.title}", 0f) }
 				});
+				onComplete?.Invoke(true);
 			}
-			onComplete?.Invoke();
+			else
+			{
+				onComplete?.Invoke(false);
+			}
 		}
 
 		void AddGames()
