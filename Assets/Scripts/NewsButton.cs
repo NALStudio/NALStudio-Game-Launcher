@@ -64,7 +64,11 @@ public class NewsButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 		{
 			progressTween = LeanTween.value(gameObject, TweenSet, progress.value, progress.minValue, AnimationSpeed);
 			progressTween.setEase(LeanTweenType.easeOutExpo);
-			progressTween.setOnComplete(() => progressTween = null);
+			progressTween.setOnComplete(() =>
+			{
+				progress.value = 0f;
+				progressTween = null;
+			});
 		}
         if (background.color != normalColor)
             background.CrossFadeColor(normalColor, AnimationSpeed, true, true);
