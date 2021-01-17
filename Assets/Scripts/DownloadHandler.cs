@@ -69,7 +69,56 @@ namespace NALStudio.GameLauncher
 		[HideInInspector]
 		public QueueHandler Queue = new QueueHandler();
 		[HideInInspector]
-		public Cards.CardHandler.CardData currentlyDownloading;
+		public DownloadData currentlyDownloading;
+
+		[System.Serializable]
+		public class DownloadData
+		{
+			public string name;
+			public string version;
+			public string download;
+			public string executable_path;
+			public string customPath;
+			public float Playtime
+			{
+				get
+				{
+					return PlayerPrefs.GetFloat($"playtime/{name}", 0f);
+				}
+			}
+
+			public DownloadData Copy()
+			{
+				return new DownloadData()
+				{
+					name = name,
+					version = version,
+					download = download,
+					customPath = customPath
+				};
+			}
+
+			public override bool Equals(object obj)
+			{
+				if ((obj == null) || !GetType().Equals(obj.GetType()))
+					return false;
+
+				DownloadData dd = (DownloadData)obj;
+				return dd.name == name;
+			}
+
+			public override int GetHashCode()
+			{
+				int hashCode = 1307175314;
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(version);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(download);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(executable_path);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(customPath);
+				hashCode = hashCode * -1521134295 + Playtime.GetHashCode();
+				return hashCode;
+			}
+		}
 
 		void Awake()
 		{
@@ -81,19 +130,42 @@ namespace NALStudio.GameLauncher
 
 		public class QueueHandler
 		{
-            List<Cards.CardHandler.CardData> queued = new List<Cards.CardHandler.CardData>();
+            List<DownloadData> queued = new List<DownloadData>();
+
+			public void Add(DownloadData downloadData)
+			{
+				if (!queued.Contains(downloadData))
+					queued.Add(downloadData);
+			}
+
             public void Add(Cards.CardHandler.CardData cardData)
 			{
-                if (!queued.Contains(cardData))
-                    queued.Add(cardData);
+				Add(cardData.ToDownloadData());
+			}
+
+			public void Add(Cards.CardHandler.CardData cardData, string customPath)
+			{
+				DownloadData downloadData = cardData.ToDownloadData();
+				downloadData.customPath = customPath;
+				Add(downloadData);
 			}
 
             public void Remove(Cards.CardHandler.CardData item)
 			{
-                queued.Remove(item);
+                queued.Remove(item.ToDownloadData());
+			}
+
+			public void Remove(DownloadData item)
+			{
+				queued.Remove(item);
 			}
 
 			public bool Contains(Cards.CardHandler.CardData item)
+			{
+				return queued.Contains(item.ToDownloadData());
+			}
+
+			public bool Contains(DownloadData item)
 			{
 				return queued.Contains(item);
 			}
@@ -108,11 +180,11 @@ namespace NALStudio.GameLauncher
 				queued.Clear();
 			}
 
-			public Cards.CardHandler.CardData GetNextDownload()
+			public DownloadData GetNextDownload()
 			{
 				if (queued.Count > 0)
 				{
-					Cards.CardHandler.CardData tmpData = queued[0];
+					DownloadData tmpData = queued[0];
 					queued.RemoveAt(0);
 					return tmpData;
 				}
@@ -259,7 +331,12 @@ namespace NALStudio.GameLauncher
 
 		public void Cancel(Cards.CardHandler.CardData toCancel)
 		{
-			if (currentlyDownloading == toCancel)
+			Cancel(toCancel.ToDownloadData());
+		}
+
+		public void Cancel(DownloadData toCancel)
+		{
+			if (currentlyDownloading.Equals(toCancel))
 			{
 				StopCoroutine(Downloader(currentlyDownloading));
 				request.Abort();
@@ -302,7 +379,7 @@ namespace NALStudio.GameLauncher
 			downloadInProgress = false;
 		}
 
-		IEnumerator Downloader(Cards.CardHandler.CardData cardData)
+		IEnumerator Downloader(DownloadData downloadData)
 		{
 			string downloadDir = Constants.Constants.DownloadPath;
             if (Directory.Exists(downloadDir))
@@ -310,7 +387,7 @@ namespace NALStudio.GameLauncher
 			DirectoryInfo downloadTmp = Directory.CreateDirectory(downloadDir);
 			downloadTmp.Attributes |= FileAttributes.Hidden;
             string downloadPath = Path.Combine(downloadDir, "data.nbf");
-			request = new UnityWebRequest(cardData.download)
+			request = new UnityWebRequest(downloadData.download)
 			{
 				downloadHandler = new DownloadHandlerFile(downloadPath)
 			};
@@ -335,7 +412,7 @@ namespace NALStudio.GameLauncher
 							progressBarBackground.color = progressBarExtracting;
 							progressBarFill.color = new Color(0, 0, 0, 0);
 							bool extractionCompleted = false;
-							StartCoroutine(Extractor(downloadDir, downloadPath, cardData, () => extractionCompleted = true));
+							StartCoroutine(Extractor(downloadDir, downloadData, () => extractionCompleted = true));
 							yield return new WaitWhile(() => !extractionCompleted);
 							gameHandler.LoadGames();
 							yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
@@ -376,18 +453,18 @@ namespace NALStudio.GameLauncher
 			}
 		}
 
-		IEnumerator Extractor(string downloadDir, string zipPath, Cards.CardHandler.CardData cardData, Action onComplete = null)
+		IEnumerator Extractor(string zipPath, DownloadData downloadData, Action onComplete = null)
 		{
-			string extractPath = Path.Combine(downloadDir, "extraction");
+			string extractPath = Path.Combine(Constants.Constants.DownloadPath, "extraction");
 			if (Directory.Exists(extractPath))
 				Directory.Delete(extractPath, true);
 			yield return null;
 			ZipFile.ExtractToDirectory(zipPath, extractPath);
 			yield return null;
-			string gamePath = Path.Combine(Constants.Constants.GamesPath, cardData.title);
+			string gamePath = Path.Combine(Constants.Constants.GamesPath, downloadData.name);
 			bool uninstalled = false;
 			bool updated = false;
-			StartCoroutine(gameHandler.UpdateUninstall(cardData, (u) =>
+			StartCoroutine(gameHandler.UpdateUninstall(downloadData, (u) =>
 			{
 				uninstalled = true;
 				updated = u;
@@ -398,8 +475,8 @@ namespace NALStudio.GameLauncher
 			else
 				Directory.Move(extractPath, gamePath);
 			yield return null;
-			if (Directory.Exists(downloadDir))
-				Directory.Delete(downloadDir, true);
+			if (Directory.Exists(Constants.Constants.DownloadPath))
+				Directory.Delete(Constants.Constants.DownloadPath, true);
 			yield return null;
 
 			string gamedataPath = Path.Combine(gamePath, GameHandler.gamedataFilePath);
@@ -409,8 +486,8 @@ namespace NALStudio.GameLauncher
 				string encrypted = File.ReadAllText(gamedataPath);
 				string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
 				gamedata = JsonUtility.FromJson<GameHandler.GameData>(unencrypted);
-				gamedata.version = cardData.version;
-				gamedata.executable_path = cardData.executable_path;
+				gamedata.version = downloadData.version;
+				gamedata.executable_path = downloadData.executable_path;
 				gamedata.last_interest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
 				yield return null;
 			}
@@ -418,9 +495,9 @@ namespace NALStudio.GameLauncher
 			{
 				gamedata = new GameHandler.GameData
 				{
-					name = cardData.title,
-					version = cardData.version,
-					executable_path = cardData.executable_path,
+					name = downloadData.name,
+					version = downloadData.version,
+					executable_path = downloadData.executable_path,
 					last_interest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds()
 				};
 			}
@@ -433,17 +510,17 @@ namespace NALStudio.GameLauncher
 			onComplete?.Invoke();
 			if (!updated)
 			{
-				Debug.Log($"Installed game: {cardData.title}");
+				Debug.Log($"Installed game: {downloadData.name}");
 				AnalyticsEvent.Custom("game_installed", new Dictionary<string, object>
 				{
-					{ "name", cardData.title},
-					{ "version", cardData.version },
-					{ "playtime", PlayerPrefs.GetFloat($"playtime/{cardData.title}", 0) }
+					{ "name", downloadData.name},
+					{ "version", downloadData.version },
+					{ "playtime", downloadData.Playtime }
 				});
-				AnalyticsEvent.Custom($"{cardData.title}_installed", new Dictionary<string, object>
+				AnalyticsEvent.Custom($"{downloadData.name}_installed", new Dictionary<string, object>
 				{
-					{ "version", cardData.version },
-					{ "playtime", PlayerPrefs.GetFloat($"playtime/{cardData.title}", 0f) }
+					{ "version", downloadData.version },
+					{ "playtime", downloadData.Playtime }
 				});
 			}
 		}

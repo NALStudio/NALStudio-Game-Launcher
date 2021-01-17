@@ -71,6 +71,61 @@ namespace NALStudio.GameLauncher.Cards
 			public string executable_path;
 
 			public Texture2D thumbnailTexture;
+
+			public override bool Equals(object obj)
+			{
+				return obj is CardData data &&
+					   title == data.title &&
+					   developer == data.developer &&
+					   publisher == data.publisher &&
+					   price == data.price &&
+					   version == data.version &&
+					   release_date == data.release_date &&
+					   early_access == data.early_access &&
+					   thumbnail == data.thumbnail &&
+					   download == data.download &&
+					   executable_path == data.executable_path &&
+					   EqualityComparer<Texture2D>.Default.Equals(thumbnailTexture, data.thumbnailTexture);
+			}
+
+			public override int GetHashCode()
+			{
+				int hashCode = 1967636471;
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(title);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(developer);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(publisher);
+				hashCode = hashCode * -1521134295 + price.GetHashCode();
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(version);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(release_date);
+				hashCode = hashCode * -1521134295 + early_access.GetHashCode();
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(thumbnail);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(download);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(executable_path);
+				hashCode = hashCode * -1521134295 + EqualityComparer<Texture2D>.Default.GetHashCode(thumbnailTexture);
+				return hashCode;
+			}
+
+			public static bool operator ==(CardData lhs, CardData rhs)
+			{
+				return lhs.Equals(rhs);
+			}
+
+			public static bool operator !=(CardData lhs, CardData rhs)
+			{
+				return !lhs.Equals(rhs);
+			}
+
+			public DownloadHandler.DownloadData ToDownloadData()
+			{
+				return new DownloadHandler.DownloadData()
+				{
+					name = title,
+					version = version,
+					download = download,
+					executable_path = executable_path,
+					customPath = null
+				};
+			}
 		}
 
 		void Start()

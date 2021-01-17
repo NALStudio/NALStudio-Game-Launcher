@@ -128,7 +128,7 @@ namespace NALStudio.GameLauncher.Games
 			{
 				#region Playtime
 				string playtimeFormat = LeanLocalization.GetTranslationText("units-minutes", "Minutes");
-				float time = PlayerPrefs.GetFloat($"playtime/{gameData.name}", 0);
+				float time = gameData.Playtime;
 				if (time >= 60)
 				{
 					time /= 60f;

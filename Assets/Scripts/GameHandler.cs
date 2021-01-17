@@ -67,6 +67,42 @@ namespace NALStudio.GameLauncher.Games
 			public string version;
 			public string executable_path;
 			public long last_interest;
+			public float Playtime
+			{
+				get
+				{
+					return PlayerPrefs.GetFloat($"playtime/{name}", 0f);
+				}
+			}
+
+			public override bool Equals(object obj)
+			{
+				return obj is GameData data &&
+					   name == data.name &&
+					   version == data.version &&
+					   executable_path == data.executable_path &&
+					   last_interest == data.last_interest;
+			}
+
+			public override int GetHashCode()
+			{
+				int hashCode = 628906282;
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(version);
+				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(executable_path);
+				hashCode = hashCode * -1521134295 + last_interest.GetHashCode();
+				return hashCode;
+			}
+
+			public static bool operator ==(GameData lhs, GameData rhs)
+			{
+				return lhs.Equals(rhs);
+			}
+
+			public static bool operator !=(GameData lhs, GameData rhs)
+			{
+				return !lhs.Equals(rhs);
+			}
 		}
 
 		void Start()
@@ -150,42 +186,42 @@ namespace NALStudio.GameLauncher.Games
 			{
 				{ "name", game.name },
 				{ "version", game.version },
-				{ "playtime", PlayerPrefs.GetFloat($"playtime/{game.name}", 0f) }
+				{ "playtime", game.Playtime }
 			});
 			AnalyticsEvent.Custom($"{game.name}_uninstalled", new Dictionary<string, object>
 			{
 				{ "version", game.version },
-				{ "playtime", PlayerPrefs.GetFloat($"playtime/{game.name}", 0f) }
+				{ "playtime", game.Playtime }
 			});
 		}
 
-		public IEnumerator UpdateUninstall(Cards.CardHandler.CardData card, Action<bool> onComplete = null)
+		public IEnumerator UpdateUninstall(DownloadHandler.DownloadData download, Action<bool> onComplete = null)
 		{
-			if (Directory.Exists(Path.Combine(Constants.Constants.GamesPath, card.title)))
+			if (Directory.Exists(Path.Combine(Constants.Constants.GamesPath, download.name)))
 			{
-				if (!uninstalling.Contains(card.title))
+				if (!uninstalling.Contains(download.name))
 				{
-					uninstalling.Add(card.title);
+					uninstalling.Add(download.name);
 					bool uninstalled = false;
-					StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, card.title), () => uninstalled = true));
+					StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, download.name), () => uninstalled = true));
 					yield return new WaitWhile(() => !uninstalled);
-					uninstalling.Remove(card.title);
+					uninstalling.Remove(download.name);
 				}
 				else
 				{
-					Debug.LogError($"{card.title} is already in the uninstalling queue!");
+					Debug.LogError($"{download.name} is already in the uninstalling queue!");
 				}
-				Debug.Log($"Updated game: {card.title}");
+				Debug.Log($"Updated game: {download.name}");
 				AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
 				{
-					{ "name", card.title },
-					{ "version", card.version },
-					{ "playtime", PlayerPrefs.GetFloat($"playtime/{card.title}", 0f) }
+					{ "name", download.name },
+					{ "version", download.version },
+					{ "playtime", download.Playtime }
 				});
-				AnalyticsEvent.Custom($"{card.title}_update", new Dictionary<string, object>
+				AnalyticsEvent.Custom($"{download.name}_update", new Dictionary<string, object>
 				{
-					{ "version", card.version },
-					{ "playtime", PlayerPrefs.GetFloat($"playtime/{card.title}", 0f) }
+					{ "version", download.version },
+					{ "playtime", download.Playtime }
 				});
 				onComplete?.Invoke(true);
 			}

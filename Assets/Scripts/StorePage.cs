@@ -21,6 +21,7 @@ using NALStudio.GameLauncher.Games;
 using TMPro;
 using NALStudio.Encryption;
 using NALStudio.GameLauncher;
+using System.Collections;
 
 public class StorePage : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class StorePage : MonoBehaviour
 	public DownloadHandler downloadHandler;
 	public ToggleButton downloadsButton;
 	public GameHandler gameHandler;
+	public InstallDirHandler dirHandler;
 
 	GameHandler.GameData openedGamedata;
 
@@ -81,7 +83,7 @@ public class StorePage : MonoBehaviour
 		}
 		if (downloadHandler.Queue.Contains(cardData))
 			buttonMode = ButtonMode.Queued;
-		else if (downloadHandler.currentlyDownloading == cardData)
+		else if (downloadHandler.currentlyDownloading.Equals(cardData.ToDownloadData()))
 			buttonMode = ButtonMode.Downloading;
 
 		switch (buttonMode)
@@ -106,12 +108,36 @@ public class StorePage : MonoBehaviour
 		tweener.DoTween();
 	}
 
+	IEnumerator Install()
+	{
+		bool finished = false;
+		bool success = false;
+		string path = null;
+		StartCoroutine(dirHandler.Prompt(openedData, (bool f, bool s, string p) =>
+		{
+			finished = f;
+			success = s;
+			path = p;
+		}));
+		yield return new WaitWhile(() => finished);
+		if (success)
+		{
+			DownloadHandler.DownloadData dd = openedData.ToDownloadData();
+			dd.customPath = path;
+			downloadHandler.Queue.Add(dd);
+		}
+		Close();
+	}
+
 	public void ButtonClick()
 	{
 		bool openDownloads = true;
 		switch (buttonMode)
 		{
 			case ButtonMode.Install:
+				StartCoroutine(Install());
+				openDownloads = false;
+				break;
 			case ButtonMode.Update:
 				downloadHandler.Queue.Add(openedData);
 				break;
