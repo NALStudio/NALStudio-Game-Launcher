@@ -16,7 +16,7 @@ namespace NALStudio.GameLauncher.Constants
 {
 	public static class Constants
 	{
-		static readonly string gamesPath = Path.GetFullPath("Games");
+		static readonly string gamesPath = Path.GetFullPath("Games").Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 		public static string GamesPath
 		{
 			get

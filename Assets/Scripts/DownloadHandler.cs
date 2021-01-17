@@ -100,11 +100,7 @@ namespace NALStudio.GameLauncher
 
 			public override bool Equals(object obj)
 			{
-				if ((obj == null) || !GetType().Equals(obj.GetType()))
-					return false;
-
-				DownloadData dd = (DownloadData)obj;
-				return dd.name == name;
+				return obj is DownloadData data && name == data.name;
 			}
 
 			public override int GetHashCode()
@@ -462,6 +458,11 @@ namespace NALStudio.GameLauncher
 			ZipFile.ExtractToDirectory(zipPath, extractPath);
 			yield return null;
 			string gamePath = Path.Combine(Constants.Constants.GamesPath, downloadData.name);
+			if (downloadData.customPath != null)
+			{
+				gamePath = Path.Combine(downloadData.customPath, downloadData.name);
+				// Extra prosessointi kakkaa
+			}
 			bool uninstalled = false;
 			bool updated = false;
 			StartCoroutine(gameHandler.UpdateUninstall(downloadData, (u) =>
@@ -518,6 +519,21 @@ namespace NALStudio.GameLauncher
 					{ "playtime", downloadData.Playtime }
 				});
 				AnalyticsEvent.Custom($"{downloadData.name}_installed", new Dictionary<string, object>
+				{
+					{ "version", downloadData.version },
+					{ "playtime", downloadData.Playtime }
+				});
+			}
+			else
+			{
+				Debug.Log($"Updated game: {downloadData.name}");
+				AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
+				{
+					{ "name", downloadData.name },
+					{ "version", downloadData.version },
+					{ "playtime", downloadData.Playtime }
+				});
+				AnalyticsEvent.Custom($"{downloadData.name}_update", new Dictionary<string, object>
 				{
 					{ "version", downloadData.version },
 					{ "playtime", downloadData.Playtime }

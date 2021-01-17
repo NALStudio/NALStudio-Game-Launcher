@@ -77,7 +77,7 @@ namespace NALStudio.UI
         }
 #endif
 
-        void Start()
+        void OnEnable()
         {
             if (IsOn)
                 graphic.canvasRenderer.SetColor(selectedColor);

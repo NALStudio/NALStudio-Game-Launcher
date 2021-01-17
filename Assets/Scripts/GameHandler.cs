@@ -74,35 +74,6 @@ namespace NALStudio.GameLauncher.Games
 					return PlayerPrefs.GetFloat($"playtime/{name}", 0f);
 				}
 			}
-
-			public override bool Equals(object obj)
-			{
-				return obj is GameData data &&
-					   name == data.name &&
-					   version == data.version &&
-					   executable_path == data.executable_path &&
-					   last_interest == data.last_interest;
-			}
-
-			public override int GetHashCode()
-			{
-				int hashCode = 628906282;
-				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
-				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(version);
-				hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(executable_path);
-				hashCode = hashCode * -1521134295 + last_interest.GetHashCode();
-				return hashCode;
-			}
-
-			public static bool operator ==(GameData lhs, GameData rhs)
-			{
-				return lhs.Equals(rhs);
-			}
-
-			public static bool operator !=(GameData lhs, GameData rhs)
-			{
-				return !lhs.Equals(rhs);
-			}
 		}
 
 		void Start()
@@ -146,7 +117,10 @@ namespace NALStudio.GameLauncher.Games
 					tries++;
 					File.Delete(dPath);
 					if (tries > 10)
+					{
+						Debug.LogError($"Could not delete file {dPath}! Tries: {tries}");
 						break;
+					}
 				}
 				catch (Exception e)
 				{
@@ -154,15 +128,26 @@ namespace NALStudio.GameLauncher.Games
 				}
 			}
 			yield return null;
+			tries = 0;
 			while (Directory.Exists(path))
 			{
-				if (Directory.Exists(path))
+				try
 				{
+					tries++;
 					Directory.Delete(path, true);
-					yield return null;
-					LoadGames();
+					if (tries > 10)
+					{
+						Debug.LogError($"Could not delete directory {path}! Tries: {tries}");
+					}
+				}
+				catch (Exception e)
+				{
+					Debug.LogWarning($"Could not delete directory {path}!\n{e.Message}");
 				}
 			}
+			yield return null;
+			//Will clear invalid game folders as well...
+			LoadGames();
 			onComplete?.Invoke();
 		}
 
@@ -197,6 +182,8 @@ namespace NALStudio.GameLauncher.Games
 
 		public IEnumerator UpdateUninstall(DownloadHandler.DownloadData download, Action<bool> onComplete = null)
 		{
+			if (download.customPath != null && Directory.Exists(Path.Combine(download.customPath, download.name)))
+				Directory.Delete(Path.Combine(download.customPath, download.name), true);
 			if (Directory.Exists(Path.Combine(Constants.Constants.GamesPath, download.name)))
 			{
 				if (!uninstalling.Contains(download.name))
@@ -211,18 +198,6 @@ namespace NALStudio.GameLauncher.Games
 				{
 					Debug.LogError($"{download.name} is already in the uninstalling queue!");
 				}
-				Debug.Log($"Updated game: {download.name}");
-				AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
-				{
-					{ "name", download.name },
-					{ "version", download.version },
-					{ "playtime", download.Playtime }
-				});
-				AnalyticsEvent.Custom($"{download.name}_update", new Dictionary<string, object>
-				{
-					{ "version", download.version },
-					{ "playtime", download.Playtime }
-				});
 				onComplete?.Invoke(true);
 			}
 			else

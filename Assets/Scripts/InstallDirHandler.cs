@@ -40,10 +40,13 @@ public class InstallDirHandler : MonoBehaviour
 	bool close;
 	bool success;
 
+	string path;
+
 	CardHandler.CardData cardData;
 
 	public IEnumerator Prompt(CardHandler.CardData cData, Action<bool, bool, string> onComplete)
 	{
+		cardData = cData;
 		gameObject.SetActive(true);
 		pathInput.text = Constants.GamesPath;
 		yield return new WaitWhile(() => !close);
@@ -52,20 +55,22 @@ public class InstallDirHandler : MonoBehaviour
 		bool finished = false;
 		tweener.OnComplete += () => finished = true;
 		yield return new WaitWhile(() => !finished);
-		onComplete.Invoke(true, success, pathText.text == Constants.GamesPath ? null : pathText.text);
+		onComplete.Invoke(true, success, path == Constants.GamesPath ? null : path);
 		gameObject.SetActive(false);
-		cardData = cData;
 	}
 
 	public void Close(bool _success)
 	{
 		close = true;
-		success = _success;
+		if (!_success)
+			success = false;
+		else
+			success = PathValid(path);
 	}
 
 	public void CustomLocation()
 	{
-		string[] locations = StandaloneFileBrowser.OpenFolderPanel(null, Constants.GamesPath, false);
+		string[] locations = StandaloneFileBrowser.OpenFolderPanel(null, null, false);
 		if (locations.Length > 0 && !string.IsNullOrEmpty(locations[0]))
 		{
 			pathInput.text = locations[0];
@@ -76,14 +81,9 @@ public class InstallDirHandler : MonoBehaviour
 	{
 		try
 		{
-			Path.GetFullPath(path);
-			if (Path.IsPathRooted(path))
+			if (Path.IsPathRooted(path) && Directory.Exists(path))
 			{
-				foreach (DriveInfo di in DriveInfo.GetDrives())
-				{
-					if (di.Name == path.Substring(0, 3))
-						return true;
-				}
+				return NALStudio.IO.NALDirectory.HasWriteAccess(path);
 			}
 			return false;
 		}
@@ -95,14 +95,13 @@ public class InstallDirHandler : MonoBehaviour
 
 	void Update()
 	{
-		string path = pathInput.text;
+		path = pathInput.text;
 		path = path.Replace('\\', '/');
 		path = Regex.Replace(path, @"\/+", "/");
 		path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-		path = Path.Combine(path ?? "[ERROR]", cardData?.title ?? "[ERROR]");
 		bool pValid = PathValid(path);
 		invalidPath.SetActive(!pValid);
 		installButton.interactable = pValid;
-		pathText.text = path;
+		pathText.text = Path.Combine(path, cardData != null ? cardData.title : "[ERROR]");
 	}
 }

@@ -36,7 +36,6 @@ public class StorePage : MonoBehaviour
 	public TextMeshProUGUI releaseDate;
 	public TextMeshProUGUI version;
 	public TextMeshProUGUI price;
-	public Button button;
 	public enum ButtonMode { Install, Update, Uninstall, Queued, Downloading }
 	public ButtonMode buttonMode;
 	public TextMeshProUGUI buttonText;
@@ -108,12 +107,12 @@ public class StorePage : MonoBehaviour
 		tweener.DoTween();
 	}
 
-	IEnumerator Install()
+	IEnumerator InstallCustomDir(CardHandler.CardData data)
 	{
 		bool finished = false;
 		bool success = false;
 		string path = null;
-		StartCoroutine(dirHandler.Prompt(openedData, (bool f, bool s, string p) =>
+		StartCoroutine(dirHandler.Prompt(data, (bool f, bool s, string p) =>
 		{
 			finished = f;
 			success = s;
@@ -122,34 +121,39 @@ public class StorePage : MonoBehaviour
 		yield return new WaitWhile(() => !finished);
 		if (success)
 		{
-			DownloadHandler.DownloadData dd = openedData.ToDownloadData();
+			DownloadHandler.DownloadData dd = data.ToDownloadData();
 			dd.customPath = path;
 			downloadHandler.Queue.Add(dd);
 		}
-		Close();
+		Close(success);
 	}
 
-	public void ButtonClick()
+	public void ButtonClick(bool rightClick = false)
 	{
-		bool openDownloads = true;
-		switch (buttonMode)
+		if (!rightClick)
 		{
-			case ButtonMode.Install:
-				StartCoroutine(Install());
-				return;
-			case ButtonMode.Update:
-				downloadHandler.Queue.Add(openedData);
-				break;
-			case ButtonMode.Queued:
-			case ButtonMode.Downloading:
-				downloadHandler.Cancel(openedData);
-				break;
-			case ButtonMode.Uninstall:
-				StartCoroutine(gameHandler.Uninstall(openedGamedata));
-				openDownloads = false;
-				break;
+			bool openDownloads = true;
+			switch (buttonMode)
+			{
+				case ButtonMode.Install:
+				case ButtonMode.Update:
+					downloadHandler.Queue.Add(openedData);
+					break;
+				case ButtonMode.Queued:
+				case ButtonMode.Downloading:
+					downloadHandler.Cancel(openedData);
+					break;
+				case ButtonMode.Uninstall:
+					StartCoroutine(gameHandler.Uninstall(openedGamedata));
+					openDownloads = false;
+					break;
+			}
+			Close(openDownloads);
 		}
-		Close(openDownloads);
+		else if (buttonMode == ButtonMode.Install)
+		{
+			StartCoroutine(InstallCustomDir(openedData));
+		}
 	}
 
 	public void Close()
