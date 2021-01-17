@@ -53,7 +53,7 @@ public class ApplicationChecker : MonoBehaviour
 			JSONNode node = JSON.Parse(json);
 			if (node["tag_name"] != Application.version)
 			{
-				Debug.Log($"Found an update for version: {node["tag_name"]}. Current Version: {Application.version}");
+				Debug.Log($"Found an update for version: {node["tag_name"]}. Current Version: \"{Application.version}\"");
 				OnUpdateAvailable?.Invoke();
 			}
 		}
