@@ -24,6 +24,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using NALStudio.GameLauncher.Cards;
 using System.Text.RegularExpressions;
+using NALStudio.UI;
 
 public class InstallDirHandler : MonoBehaviour
 {
@@ -34,7 +35,10 @@ public class InstallDirHandler : MonoBehaviour
 
 	public Button installButton;
 
-	KeyValuePair<bool, bool> CloseSuccess = new KeyValuePair<bool, bool>(false, false);
+	public UITweener tweener;
+
+	bool close;
+	bool success;
 
 	CardHandler.CardData cardData;
 
@@ -42,16 +46,21 @@ public class InstallDirHandler : MonoBehaviour
 	{
 		gameObject.SetActive(true);
 		pathInput.text = Constants.GamesPath;
-		yield return new WaitWhile(() => !CloseSuccess.Key);
-		CloseSuccess = new KeyValuePair<bool, bool>(false, false);
-		onComplete.Invoke(true, CloseSuccess.Value, pathText.text == Constants.GamesPath ? null : pathText.text);
+		yield return new WaitWhile(() => !close);
+		close = false;
+		tweener.DoTween(true);
+		bool finished = false;
+		tweener.OnComplete += () => finished = true;
+		yield return new WaitWhile(() => !finished);
+		onComplete.Invoke(true, success, pathText.text == Constants.GamesPath ? null : pathText.text);
 		gameObject.SetActive(false);
 		cardData = cData;
 	}
 
-	public void Close(bool success)
+	public void Close(bool _success)
 	{
-		CloseSuccess = new KeyValuePair<bool, bool>(true, success);
+		close = true;
+		success = _success;
 	}
 
 	public void CustomLocation()

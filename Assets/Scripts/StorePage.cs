@@ -83,7 +83,7 @@ public class StorePage : MonoBehaviour
 		}
 		if (downloadHandler.Queue.Contains(cardData))
 			buttonMode = ButtonMode.Queued;
-		else if (downloadHandler.currentlyDownloading.Equals(cardData.ToDownloadData()))
+		else if (downloadHandler.currentlyDownloading != null && downloadHandler.currentlyDownloading.Equals(cardData.ToDownloadData()))
 			buttonMode = ButtonMode.Downloading;
 
 		switch (buttonMode)
@@ -119,7 +119,7 @@ public class StorePage : MonoBehaviour
 			success = s;
 			path = p;
 		}));
-		yield return new WaitWhile(() => finished);
+		yield return new WaitWhile(() => !finished);
 		if (success)
 		{
 			DownloadHandler.DownloadData dd = openedData.ToDownloadData();
@@ -136,8 +136,7 @@ public class StorePage : MonoBehaviour
 		{
 			case ButtonMode.Install:
 				StartCoroutine(Install());
-				openDownloads = false;
-				break;
+				return;
 			case ButtonMode.Update:
 				downloadHandler.Queue.Add(openedData);
 				break;
