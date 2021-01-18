@@ -126,7 +126,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.memoryprofiler": {
-      "version": "0.2.7-preview.1",
+      "version": "0.2.8-preview.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -178,7 +178,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.4.5",
+      "version": "1.4.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {

@@ -39,6 +39,7 @@ namespace NALStudio.GameLauncher
 		public TextMeshProUGUI downloadProgressText;
 		public TextMeshProUGUI queuedCountText;
 		public TextMeshProUGUI uninstallingCountText;
+		public TextMeshProUGUI extractingText;
 		public RectTransform downloadSpeedRect;
 		public RectTransform LineArea;
 		public GameObject downloadingAssets;
@@ -60,6 +61,8 @@ namespace NALStudio.GameLauncher
 		public Color errorProgressColor;
 		Color progressNormalColor;
 		Color progressFillNormalColor;
+		Color extractingNormalColor;
+		string extractingNormalText;
 		bool downloadError;
 		[Space(10f)]
 		public GameHandler gameHandler;
@@ -120,6 +123,8 @@ namespace NALStudio.GameLauncher
 		{
 			progressNormalColor = progressBarBackground.color;
 			progressFillNormalColor = progressBarFill.color;
+			extractingNormalColor = extractingText.color;
+			extractingNormalText = extractingText.text;
 			queuedCountText.text =
 				$"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {Queue.Count()}";
 		}
@@ -234,14 +239,14 @@ namespace NALStudio.GameLauncher
 
 				if (downloadsMenu.opened)
 				{
-					#region Error Assets
+					#region Download Error
 					if (downloadError)
 					{
 						downloadSpeedText.text = "[ERROR]";
 						progressBarBackground.color = errorProgressColor;
 						progressBarFill.color = new Color(0, 0, 0, 0);
 					}
-					else if(progressBarBackground.color != progressNormalColor)
+					else if (progressBarBackground.color != progressNormalColor)
 					{
 						progressBarBackground.color = progressNormalColor;
 						progressBarFill.color = progressFillNormalColor;
@@ -375,6 +380,11 @@ namespace NALStudio.GameLauncher
 			downloadInProgress = false;
 		}
 
+		IEnumerator DownloadError(Exception error)
+		{
+			yield return DownloadError($"{error.Message}\n{error.StackTrace}");
+		}
+
 		IEnumerator Downloader(DownloadData downloadData)
 		{
 			string downloadDir = Constants.Constants.DownloadPath;
@@ -408,11 +418,15 @@ namespace NALStudio.GameLauncher
 							progressBarBackground.color = progressBarExtracting;
 							progressBarFill.color = new Color(0, 0, 0, 0);
 							bool extractionCompleted = false;
-							StartCoroutine(Extractor(downloadDir, downloadData, () => extractionCompleted = true));
+							StartCoroutine(Extractor(downloadPath, downloadData, () => extractionCompleted = true));
 							yield return new WaitWhile(() => !extractionCompleted);
 							gameHandler.LoadGames();
 							yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
 							extractingAssets.SetActive(false);
+							extractingText.color = extractingNormalColor;
+							extractingText.text = extractingNormalText;
+							progressBarBackground.color = progressNormalColor;
+							progressBarFill.color = progressFillNormalColor;
 							progressBar.gameObject.SetActive(false);
 							extracting = false;
 							downloadInProgress = false;
@@ -451,17 +465,29 @@ namespace NALStudio.GameLauncher
 
 		IEnumerator Extractor(string zipPath, DownloadData downloadData, Action onComplete = null)
 		{
+			bool extractError = false;
+
 			string extractPath = Path.Combine(Constants.Constants.DownloadPath, "extraction");
 			if (Directory.Exists(extractPath))
 				Directory.Delete(extractPath, true);
+
 			yield return null;
+
 			ZipFile.ExtractToDirectory(zipPath, extractPath);
+
 			yield return null;
+
 			string gamePath = Path.Combine(Constants.Constants.GamesPath, downloadData.name);
 			if (downloadData.customPath != null)
 			{
 				gamePath = Path.Combine(downloadData.customPath, downloadData.name);
 				// Extra prosessointi kakkaa
+				if (!SettingsManager.Settings.customGamePaths.Contains(gamePath))
+					SettingsManager.Settings.customGamePaths.Add(gamePath);
+				else
+					Debug.LogWarning($"Custom path \"{gamePath}\" for game \"{downloadData.name}\" exists already!");
+
+				SettingsManager.Save();
 			}
 			bool uninstalled = false;
 			bool updated = false;
@@ -470,11 +496,26 @@ namespace NALStudio.GameLauncher
 				uninstalled = true;
 				updated = u;
 			}));
+
 			yield return new WaitWhile(() => !uninstalled);
-			if (Directory.GetDirectories(extractPath).Length == 1 && Directory.GetFiles(extractPath).Length < 1)
-				Directory.Move(Directory.GetDirectories(extractPath)[0], gamePath);
-			else
-				Directory.Move(extractPath, gamePath);
+
+			try
+			{
+				if (Directory.GetDirectories(extractPath).Length == 1 && Directory.GetFiles(extractPath).Length < 1)
+					Directory.Move(Directory.GetDirectories(extractPath)[0], gamePath);
+				else
+					Directory.Move(extractPath, gamePath);
+			}
+			catch (Exception e)
+			{
+				StartCoroutine(DownloadError(e));
+				extractError = true;
+				extractingText.color = errorProgressColor;
+				extractingText.text = "[ERROR]";
+				progressBarBackground.color = errorProgressColor;
+				progressBarFill.color = new Color(0, 0, 0, 0);
+			}
+
 			yield return null;
 			if (Directory.Exists(Constants.Constants.DownloadPath))
 				Directory.Delete(Constants.Constants.DownloadPath, true);
@@ -490,6 +531,7 @@ namespace NALStudio.GameLauncher
 				gamedata.version = downloadData.version;
 				gamedata.executable_path = downloadData.executable_path;
 				gamedata.last_interest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
+
 				yield return null;
 			}
 			else
@@ -504,40 +546,60 @@ namespace NALStudio.GameLauncher
 			}
 			string gamedataJson = JsonUtility.ToJson(gamedata, true);
 			string gamedataEncrypted = Encryption.EncryptionHelper.EncryptString(gamedataJson);
-			if (!Directory.Exists(GameHandler.launcherDataFilePath))
-				Directory.CreateDirectory(Path.Combine(gamePath, GameHandler.launcherDataFilePath));
-			File.WriteAllText(Path.Combine(gamePath, GameHandler.gamedataFilePath), gamedataEncrypted);
-			yield return null;
-			onComplete?.Invoke();
-			if (!updated)
+
+			try
 			{
-				Debug.Log($"Installed game: {downloadData.name}");
-				AnalyticsEvent.Custom("game_installed", new Dictionary<string, object>
+				if (!Directory.Exists(GameHandler.launcherDataFilePath))
+					Directory.CreateDirectory(Path.Combine(gamePath, GameHandler.launcherDataFilePath));
+				File.WriteAllText(Path.Combine(gamePath, GameHandler.gamedataFilePath), gamedataEncrypted);
+			}
+			catch (Exception e)
+			{
+				StartCoroutine(DownloadError(e));
+				extractError = true;
+				extractingText.color = errorProgressColor;
+				extractingText.text = "[ERROR]";
+				progressBarBackground.color = errorProgressColor;
+				progressBarFill.color = new Color(0, 0, 0, 0);
+			}
+
+			yield return null;
+
+			if (extractError)
+				yield return new WaitForSeconds(5);
+			onComplete?.Invoke();
+			if (!extractError)
+			{
+				if (!updated)
+				{
+					Debug.Log($"Installed game: {downloadData.name}");
+					AnalyticsEvent.Custom("game_installed", new Dictionary<string, object>
 				{
 					{ "name", downloadData.name},
 					{ "version", downloadData.version },
 					{ "playtime", downloadData.Playtime }
 				});
-				AnalyticsEvent.Custom($"{downloadData.name}_installed", new Dictionary<string, object>
+					AnalyticsEvent.Custom($"{downloadData.name}_installed", new Dictionary<string, object>
 				{
 					{ "version", downloadData.version },
 					{ "playtime", downloadData.Playtime }
 				});
-			}
-			else
-			{
-				Debug.Log($"Updated game: {downloadData.name}");
-				AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
+				}
+				else
+				{
+					Debug.Log($"Updated game: {downloadData.name}");
+					AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
 				{
 					{ "name", downloadData.name },
 					{ "version", downloadData.version },
 					{ "playtime", downloadData.Playtime }
 				});
-				AnalyticsEvent.Custom($"{downloadData.name}_update", new Dictionary<string, object>
+					AnalyticsEvent.Custom($"{downloadData.name}_update", new Dictionary<string, object>
 				{
 					{ "version", downloadData.version },
 					{ "playtime", downloadData.Playtime }
 				});
+				}
 			}
 		}
 	}

@@ -120,13 +120,16 @@ public class ButtonAwareButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 		switch (eventData.button)
 		{
 			case PointerEventData.InputButton.Left:
-				onLeftClick?.Invoke();
+				if (LEnabled)
+					onLeftClick?.Invoke();
 				break;
 			case PointerEventData.InputButton.Middle:
-				onMiddleClick?.Invoke();
+				if (MEnabled)
+					onMiddleClick?.Invoke();
 				break;
 			case PointerEventData.InputButton.Right:
-				onRightClick?.Invoke();
+				if (REnabled)
+					onRightClick?.Invoke();
 				break;
 		}
 	}

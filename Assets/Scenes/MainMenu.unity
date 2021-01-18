@@ -3293,6 +3293,7 @@ MonoBehaviour:
   downloadProgressText: {fileID: 534703968}
   queuedCountText: {fileID: 730534122}
   uninstallingCountText: {fileID: 434296895}
+  extractingText: {fileID: 488797842}
   downloadSpeedRect: {fileID: 2100322158}
   LineArea: {fileID: 192289381}
   downloadingAssets: {fileID: 2061381857}

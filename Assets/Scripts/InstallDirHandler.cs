@@ -14,7 +14,6 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 using NALStudio.GameLauncher.Constants;
 using SFB;
 using System;
-using System.Security.Permissions;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -79,18 +78,16 @@ public class InstallDirHandler : MonoBehaviour
 
 	bool PathValid(string path)
 	{
+		return true;
 		try
 		{
-			if (Path.IsPathRooted(path) && Directory.Exists(path))
-			{
-				return NALStudio.IO.NALDirectory.HasWriteAccess(path);
-			}
-			return false;
+			// Attempt to get a list of security permissions from the folder. 
+			// This will raise an exception if the path is read only or do not have access to view the permissions. 
+			System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(path);
+			return Path.IsPathRooted(path) && Directory.Exists(path);
 		}
-		catch
-		{
-			return false;
-		}
+		catch { }
+		return false;
 	}
 
 	void Update()
