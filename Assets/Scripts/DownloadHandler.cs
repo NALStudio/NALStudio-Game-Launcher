@@ -477,18 +477,6 @@ namespace NALStudio.GameLauncher
 
 			yield return null;
 
-			string gamePath = Path.Combine(Constants.Constants.GamesPath, downloadData.name);
-			if (downloadData.customPath != null)
-			{
-				gamePath = Path.Combine(downloadData.customPath, downloadData.name);
-				// Extra prosessointi kakkaa
-				if (!SettingsManager.Settings.customGamePaths.Contains(gamePath))
-					SettingsManager.Settings.customGamePaths.Add(gamePath);
-				else
-					Debug.LogWarning($"Custom path \"{gamePath}\" for game \"{downloadData.name}\" exists already!");
-
-				SettingsManager.Save();
-			}
 			bool uninstalled = false;
 			bool updated = false;
 			StartCoroutine(gameHandler.UpdateUninstall(downloadData, (u) =>
@@ -496,6 +484,19 @@ namespace NALStudio.GameLauncher
 				uninstalled = true;
 				updated = u;
 			}));
+
+			string gamePath = Path.Combine(Constants.Constants.GamesPath, downloadData.name);
+			if (downloadData.customPath != null)
+			{
+				gamePath = Path.Combine(downloadData.customPath, downloadData.name);
+				// Extra prosessointi kakkaa
+				if (!SettingsManager.Settings.customGamePaths.Keys.Contains(downloadData.name))
+					SettingsManager.Settings.customGamePaths.Add(downloadData.name, gamePath);
+				else
+					Debug.LogWarning($"Custom path \"{gamePath}\" for game \"{downloadData.name}\" exists already!");
+
+				SettingsManager.Save();
+			}
 
 			yield return new WaitWhile(() => !uninstalled);
 

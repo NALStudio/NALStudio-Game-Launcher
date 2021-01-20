@@ -21,6 +21,7 @@ namespace NALStudio.UI
 	public class NALTooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	{
 		#region Variables
+		public bool interactable = true;
 		public string header;
 		[TextArea]
 		public string content;
@@ -29,7 +30,8 @@ namespace NALStudio.UI
 
 		public void OnPointerEnter(PointerEventData eventData)
 		{
-			StartCoroutine(Show());
+			if (interactable)
+				StartCoroutine(Show());
 		}
 
 		public void OnPointerExit(PointerEventData eventData)

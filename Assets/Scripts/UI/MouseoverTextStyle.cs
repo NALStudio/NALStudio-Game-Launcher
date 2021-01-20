@@ -19,7 +19,8 @@ using UnityEngine.EventSystems;
 
 public class MouseoverTextStyle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    #region Variables
+	#region Variables
+	public bool interactable = true;
     public TextMeshProUGUI text;
     public FontStyles normalStyle;
     public FontStyles highlightedStyle;
@@ -41,7 +42,10 @@ public class MouseoverTextStyle : MonoBehaviour, IPointerEnterHandler, IPointerE
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		text.fontStyle = highlightedStyle;
+		if (interactable)
+			text.fontStyle = highlightedStyle;
+		else
+			text.fontStyle = normalStyle;
 	}
 
 	public void OnPointerExit(PointerEventData eventData)

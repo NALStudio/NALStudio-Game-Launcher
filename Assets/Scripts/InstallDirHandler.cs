@@ -78,7 +78,6 @@ public class InstallDirHandler : MonoBehaviour
 
 	bool PathValid(string path)
 	{
-		return true;
 		try
 		{
 			// Attempt to get a list of security permissions from the folder. 

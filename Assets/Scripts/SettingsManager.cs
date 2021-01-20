@@ -14,6 +14,7 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class SettingsManager : MonoBehaviour
@@ -47,12 +48,46 @@ public class SettingsManager : MonoBehaviour
 
 	public class SettingsHolder
 	{
-		public List<string> customGamePaths = new List<string>();
+		public Dictionary<string, string> customGamePaths = new Dictionary<string, string>();
+		public bool disableLogging = false;
+		public bool allowInstallsDuringGameplay = true;
+
+		public ParsableSettingsHolder ToParsable()
+		{
+			ParsableSettingsHolder parsable = new ParsableSettingsHolder();
+			parsable.customGamePathKeys = customGamePaths.Keys.ToArray();
+			parsable.customGamePathValues = customGamePaths.Values.ToArray();
+			parsable.allowInstallsDuringGameplay = allowInstallsDuringGameplay;
+			parsable.disableLogging = disableLogging;
+			return parsable;
+		}
+	}
+
+	[System.Serializable]
+	public class ParsableSettingsHolder
+	{
+		public string[] customGamePathKeys = new string[0];
+		public string[] customGamePathValues = new string[0];
+		public bool allowInstallsDuringGameplay = true;
+		public bool disableLogging = false;
+
+		public SettingsHolder ToUsable()
+		{
+			SettingsHolder usable = new SettingsHolder();
+			usable.customGamePaths = new Dictionary<string, string>();
+			for (int i = 0; i < Mathf.Min(customGamePathKeys.Length, customGamePathValues.Length); i++)
+			{
+				usable.customGamePaths.Add(customGamePathKeys[i], customGamePathValues[i]);
+			}
+			usable.disableLogging = disableLogging;
+			usable.allowInstallsDuringGameplay = allowInstallsDuringGameplay;
+			return usable;
+		}
 	}
 
 	public static void Save()
 	{
-		File.WriteAllText(path, JsonUtility.ToJson(Settings, true));
+		File.WriteAllText(path, JsonUtility.ToJson(Settings.ToParsable(), true));
 	}
 
 	public static void Load()
@@ -64,8 +99,11 @@ public class SettingsManager : MonoBehaviour
 		}
 		else
 		{
-			Settings = JsonUtility.FromJson<SettingsHolder>(File.ReadAllText(path));
-			if (Settings == null)
+			try
+			{
+				Settings = JsonUtility.FromJson<ParsableSettingsHolder>(File.ReadAllText(path)).ToUsable();
+			}
+			catch 
 			{
 				Settings = new SettingsHolder();
 				Save();

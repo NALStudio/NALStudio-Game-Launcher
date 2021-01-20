@@ -69,6 +69,9 @@ public class StorePage : MonoBehaviour
 
 		buttonMode = ButtonMode.Install;
 		string gameDataPath = Path.Combine(Constants.GamesPath, cardData.title, GameHandler.gamedataFilePath);
+		if (SettingsManager.Settings.customGamePaths.ContainsKey(cardData.title))
+			gameDataPath = Path.Combine(SettingsManager.Settings.customGamePaths[cardData.title], GameHandler.gamedataFilePath);
+		
 		if (File.Exists(gameDataPath))
 		{
 			string encrypted = File.ReadAllText(gameDataPath);

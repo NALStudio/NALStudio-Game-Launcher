@@ -41,6 +41,12 @@ namespace NALStudio.GameLauncher.Games
 		[Header("Update Tooltip")]
 		public GameObject updateAvailable;
 		public NALTooltipTrigger tooltipTrigger;
+		[Header("Shortcut")]
+		public Button ShortcutButton;
+		public TextMeshProUGUI ShortcutText;
+		public Color ShortcutTextNormal;
+		public Color ShortcutTextDisabled;
+		public NALTooltipTrigger ShortcutTooltip;
 
 		[HideInInspector]
 		public GameHandler gameHandler;
@@ -82,7 +88,11 @@ namespace NALStudio.GameLauncher.Games
 			}
 
 			string fileUrl = Path.Combine(Constants.Constants.GamesPath, gameData.name, GameHandler.gameLaunchFilePath);
-			File.Copy(Path.Combine(Application.streamingAssetsPath, "NALStudioGameLauncherLaunch.exe"), fileUrl, true);
+			if (SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name))
+			{
+				fileUrl = Path.Combine(SettingsManager.Settings.customGamePaths[gameData.name], GameHandler.gameLaunchFilePath);
+			}
+			File.Copy(Path.Combine(Application.streamingAssetsPath, "ShortcutLaunch.exe"), fileUrl, true);
 
 			string iconPath = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
 
@@ -103,7 +113,7 @@ namespace NALStudio.GameLauncher.Games
 			yield return null;
 			#region Game Size
 			long gameSize = 0;
-			DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(Constants.Constants.GamesPath, gameData.name));
+			DirectoryInfo dirInfo = new DirectoryInfo(!SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name) ? Path.Combine(Constants.Constants.GamesPath, gameData.name) : SettingsManager.Settings.customGamePaths[gameData.name]);
 			foreach (FileInfo fi in dirInfo.GetFiles("*", SearchOption.AllDirectories))
 			{
 				gameSize += fi.Length;
@@ -135,6 +145,20 @@ namespace NALStudio.GameLauncher.Games
 					playtimeFormat = LeanLocalization.GetTranslationText("units-hours", "Hours");
 				}
 				playtimeText.text = $"{time:0.0} {playtimeFormat}";
+				#endregion
+				#region Shortcut
+				if (SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name))
+				{
+					ShortcutButton.interactable = false;
+					ShortcutText.color = ShortcutTextDisabled;
+					ShortcutTooltip.interactable = true;
+				}
+				else
+				{
+					ShortcutButton.interactable = true;
+					ShortcutText.color = ShortcutTextNormal;
+					ShortcutTooltip.interactable = false;
+				}
 				#endregion
 			}
 			morePageToggle.isOn = open;

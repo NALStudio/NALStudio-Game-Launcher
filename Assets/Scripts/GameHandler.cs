@@ -157,7 +157,14 @@ namespace NALStudio.GameLauncher.Games
 			{
 				uninstalling.Add(game.name);
 				bool uninstalled = false;
-				StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, game.name), () => uninstalled = true));
+				string uninstallPath = Path.Combine(Constants.Constants.GamesPath, game.name);
+				if (SettingsManager.Settings.customGamePaths.ContainsKey(game.name))
+				{
+					uninstallPath = SettingsManager.Settings.customGamePaths[game.name];
+					SettingsManager.Settings.customGamePaths.Remove(game.name);
+					SettingsManager.Save();
+				}
+				StartCoroutine(Uninstaller(uninstallPath, () => uninstalled = true));
 				yield return new WaitWhile(() => !uninstalled);
 				uninstalling.Remove(game.name);
 			}
@@ -184,19 +191,46 @@ namespace NALStudio.GameLauncher.Games
 		{
 			if (download.customPath != null && Directory.Exists(Path.Combine(download.customPath, download.name)))
 				Directory.Delete(Path.Combine(download.customPath, download.name), true);
-			if (Directory.Exists(Path.Combine(Constants.Constants.GamesPath, download.name)))
+
+			string uninstallPath = Path.Combine(Constants.Constants.GamesPath, download.name);
+			if (SettingsManager.Settings.customGamePaths.ContainsKey(download.name))
 			{
-				if (!uninstalling.Contains(download.name))
+				uninstallPath = SettingsManager.Settings.customGamePaths[download.name];
+				SettingsManager.Settings.customGamePaths.Remove(download.name);
+				SettingsManager.Save();
+			}
+
+			if (Directory.Exists(uninstallPath))
+			{
+				bool loop = true;
+				bool looped = false;
+				while (loop)
 				{
-					uninstalling.Add(download.name);
-					bool uninstalled = false;
-					StartCoroutine(Uninstaller(Path.Combine(Constants.Constants.GamesPath, download.name), () => uninstalled = true));
-					yield return new WaitWhile(() => !uninstalled);
-					uninstalling.Remove(download.name);
-				}
-				else
-				{
-					Debug.LogError($"{download.name} is already in the uninstalling queue!");
+					if (!uninstalling.Contains(download.name))
+					{
+						uninstalling.Add(download.name);
+						bool uninstalled = false;
+						StartCoroutine(Uninstaller(uninstallPath, () => uninstalled = true));
+						yield return new WaitWhile(() => !uninstalled);
+						uninstalling.Remove(download.name);
+					}
+					else
+					{
+						Debug.LogError($"{download.name} is already in the uninstalling queue!");
+					}
+
+					string oldUninstallPath = uninstallPath;
+					uninstallPath = Path.Combine(Constants.Constants.GamesPath, download.name);
+					if (!looped)
+					{
+						loop = Directory.Exists(uninstallPath);
+						Debug.Log($"Uninstalled base game of \"{download.name}\". New custom path location: \"{oldUninstallPath}\"");
+						looped = true;
+					}
+					else
+					{
+						loop = false;
+					}
 				}
 				onComplete?.Invoke(true);
 			}
@@ -245,6 +279,34 @@ namespace NALStudio.GameLauncher.Games
 				File.Delete(path);
 
 			gameDatas = new List<GameData>();
+
+			List<string> keysToRemove = new List<string>();
+			foreach (KeyValuePair<string, string> custom in SettingsManager.Settings.customGamePaths)
+			{
+				string gamedataPath = Path.Combine(custom.Value, gamedataFilePath);
+				if (File.Exists(gamedataPath))
+				{
+					string encrypted = File.ReadAllText(gamedataPath);
+					string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
+					GameData tmpData = JsonUtility.FromJson<GameData>(unencrypted);
+					string tmpPath;
+					if (Directory.Exists(tmpPath = Path.Combine(Constants.Constants.GamesPath, tmpData.name)))
+						Directory.Delete(tmpPath);
+
+					gameDatas.Add(JsonUtility.FromJson<GameData>(unencrypted));
+				}
+				else
+				{
+					Debug.LogWarning($"Custom path \"{custom.Value}\" of game \"{custom.Key}\" not found.");
+					keysToRemove.Add(custom.Key);
+				}
+			}
+			foreach (string k in keysToRemove)
+			{
+				SettingsManager.Settings.customGamePaths.Remove(k);
+			}
+			SettingsManager.Save();
+
 			foreach (string path in Directory.EnumerateDirectories(Constants.Constants.GamesPath))
 			{
 				string gamedataPath = Path.Combine(path, gamedataFilePath);
@@ -268,9 +330,13 @@ namespace NALStudio.GameLauncher.Games
 				return;
 
 			string path = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
+			if (SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name))
+				path = Path.Combine(SettingsManager.Settings.customGamePaths[gameData.name], gameData.executable_path);
 
 			#region Set Start Time
 			string gdPath = Path.Combine(Constants.Constants.GamesPath, gameData.name, gamedataFilePath);
+			if (SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name))
+				gdPath = Path.Combine(SettingsManager.Settings.customGamePaths[gameData.name], gamedataFilePath);
 			string encrypted = File.ReadAllText(gdPath);
 			string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
 			GameData tmp = JsonUtility.FromJson<GameData>(unencrypted);
@@ -283,7 +349,7 @@ namespace NALStudio.GameLauncher.Games
 			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
 			{
 				FileName = path,
-				WorkingDirectory = Path.Combine(Constants.Constants.GamesPath, gameData.name)
+				WorkingDirectory = !SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name) ? Path.Combine(Constants.Constants.GamesPath, gameData.name) : SettingsManager.Settings.customGamePaths[gameData.name]
 			};
 			gameRunningProcess = new System.Diagnostics.Process
 			{
