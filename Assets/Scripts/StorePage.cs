@@ -121,7 +121,7 @@ public class StorePage : MonoBehaviour
 			success = s;
 			path = p;
 		}));
-		yield return new WaitWhile(() => !finished);
+		yield return new WaitUntil(() => finished);
 		if (success)
 		{
 			DownloadHandler.DownloadData dd = data.ToDownloadData();

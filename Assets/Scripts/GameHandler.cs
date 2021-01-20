@@ -29,7 +29,8 @@ namespace NALStudio.GameLauncher.Games
 
 		public float gridHeight;
 		public float verticalSpacing;
-		[Space(10f)]
+
+		public bool gameRunning { get; private set; }
 		GameData gameRunningData;
 		DateTime gameRunningStartTime;
 		System.Diagnostics.Process gameRunningProcess;
@@ -165,7 +166,7 @@ namespace NALStudio.GameLauncher.Games
 					SettingsManager.Save();
 				}
 				StartCoroutine(Uninstaller(uninstallPath, () => uninstalled = true));
-				yield return new WaitWhile(() => !uninstalled);
+				yield return new WaitUntil(() => uninstalled);
 				uninstalling.Remove(game.name);
 			}
 			else
@@ -211,7 +212,7 @@ namespace NALStudio.GameLauncher.Games
 						uninstalling.Add(download.name);
 						bool uninstalled = false;
 						StartCoroutine(Uninstaller(uninstallPath, () => uninstalled = true));
-						yield return new WaitWhile(() => !uninstalled);
+						yield return new WaitUntil(() => uninstalled);
 						uninstalling.Remove(download.name);
 					}
 					else
@@ -360,6 +361,7 @@ namespace NALStudio.GameLauncher.Games
 			gameRunningData = gameData;
 			gameRunningStartTime = DateTime.UtcNow;
 			gameRunningProcess.Start();
+			gameRunning = true;
 
 			if (sortingMode == SortingMode.recent)
 				LoadGames();
@@ -385,19 +387,12 @@ namespace NALStudio.GameLauncher.Games
 				TimeSpan playTime = DateTime.UtcNow - gameRunningStartTime;
 				if (playTime.TotalMinutes > 0)
 					playtimesToSave.Add(gameRunningData.name, (float)playTime.TotalMinutes);
-				gameRunningData = null;
-				gameRunningProcess = null;
 			}
-			catch (Exception ex)
-			{
-				gameRunningData = null;
-				gameRunningProcess = null;
-				Debug.LogError(ex.Message);
-			}
+			catch (Exception ex) { Debug.LogError(ex.Message); }
+			gameRunningData = null;
+			gameRunningProcess = null;
+			gameRunning = false;
 		}
-
-		public System.Diagnostics.Process GetActiveProcess() { return gameRunningProcess; }
-		public GameData GetActiveData() { return gameRunningData; }
 
 		public void StopActiveGame()
 		{

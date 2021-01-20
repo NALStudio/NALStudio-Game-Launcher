@@ -48,12 +48,12 @@ public class InstallDirHandler : MonoBehaviour
 		cardData = cData;
 		gameObject.SetActive(true);
 		pathInput.text = Constants.GamesPath;
-		yield return new WaitWhile(() => !close);
+		yield return new WaitUntil(() => close);
 		close = false;
 		tweener.DoTween(true);
 		bool finished = false;
 		tweener.OnComplete += () => finished = true;
-		yield return new WaitWhile(() => !finished);
+		yield return new WaitUntil(() => finished);
 		onComplete.Invoke(true, success, path == Constants.GamesPath ? null : path);
 		gameObject.SetActive(false);
 	}

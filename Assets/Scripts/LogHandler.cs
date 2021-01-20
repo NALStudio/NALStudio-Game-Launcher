@@ -24,8 +24,18 @@ namespace NALStudio.Logging
 		string logDir;
 		string logFilePath;
 
-		void init()
+		IEnumerator DelayedInit()
 		{
+			yield return new WaitUntil(() => SettingsManager.Loaded);
+
+			Init();
+		}
+
+		void Init()
+		{
+			if (SettingsManager.Settings.disableLogging)
+				return;
+
 			logDir = Path.Combine(Application.persistentDataPath, "logs");
 			if (!Directory.Exists(logDir))
 				Directory.CreateDirectory(logDir);
@@ -53,37 +63,31 @@ I==========[ SYSTEM INFO ]==========I";
 
 		void Awake()
 		{
-			if (logFilePath == null)
-				init();
+			StartCoroutine(DelayedInit());
 			Application.logMessageReceivedThreaded += Log;
 		}
 
 		void Log(string logString, string stackTrace, LogType logType)
 		{
+			if (SettingsManager.Settings.disableLogging)
+				return;
+
 			if (logFilePath == null)
-				init();
-			string typeString;
-			switch (logType)
 			{
-				case LogType.Error:
-					typeString = "ERROR";
-					break;
-				case LogType.Assert:
-					typeString = "ASSERT";
-					break;
-				case LogType.Warning:
-					typeString = "WARNING";
-					break;
-				case LogType.Log:
-					typeString = "DEBUG";
-					break;
-				case LogType.Exception:
-					typeString = "EXCEPTION";
-					break;
-				default:
-					typeString = "null";
-					break;
+				StopAllCoroutines();
+				Init();
 			}
+
+			string typeString = logType switch
+			{
+				LogType.Error => "ERROR",
+				LogType.Assert => "ASSERT",
+				LogType.Warning => "WARNING",
+				LogType.Log => "DEBUG",
+				LogType.Exception => "EXCEPTION",
+				_ => "null",
+			};
+
 			using (StreamWriter sw = new StreamWriter(logFilePath, true))
 			{
 				sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") +

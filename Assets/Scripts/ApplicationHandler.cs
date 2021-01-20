@@ -18,6 +18,8 @@ using UnityEngine.Analytics;
 
 public class ApplicationHandler : MonoBehaviour
 {
+	public static bool hasFocus { get; private set; }
+
 	void Start()
 	{
 		AnalyticsEvent.Custom("Application Start", new Dictionary<string, object>()
@@ -31,5 +33,10 @@ public class ApplicationHandler : MonoBehaviour
 			{ "OS", SystemInfo.operatingSystem },
 			{ "Internet", Application.internetReachability != NetworkReachability.NotReachable }
 		});
+	}
+
+	void OnApplicationFocus(bool focus)
+	{
+		hasFocus = focus;
 	}
 }

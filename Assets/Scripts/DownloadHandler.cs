@@ -419,7 +419,7 @@ namespace NALStudio.GameLauncher
 							progressBarFill.color = new Color(0, 0, 0, 0);
 							bool extractionCompleted = false;
 							StartCoroutine(Extractor(downloadPath, downloadData, () => extractionCompleted = true));
-							yield return new WaitWhile(() => !extractionCompleted);
+							yield return new WaitUntil(() => extractionCompleted);
 							gameHandler.LoadGames();
 							yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
 							extractingAssets.SetActive(false);
@@ -465,6 +465,9 @@ namespace NALStudio.GameLauncher
 
 		IEnumerator Extractor(string zipPath, DownloadData downloadData, Action onComplete = null)
 		{
+			if (!SettingsManager.Settings.allowInstallsDuringGameplay)
+				yield return new WaitUntil(() => !gameHandler.gameRunning || ApplicationHandler.hasFocus || SettingsManager.Settings.allowInstallsDuringGameplay);
+
 			bool extractError = false;
 
 			string extractPath = Path.Combine(Constants.Constants.DownloadPath, "extraction");
@@ -498,7 +501,7 @@ namespace NALStudio.GameLauncher
 				SettingsManager.Save();
 			}
 
-			yield return new WaitWhile(() => !uninstalled);
+			yield return new WaitUntil(() => uninstalled);
 
 			try
 			{
