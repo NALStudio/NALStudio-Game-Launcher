@@ -13,6 +13,7 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,7 +48,9 @@ namespace NALStudio.UI
 
             contentField.text = content;
 
-            layoutElement.enabled = headerField.text.Length > characterWrapLimit || contentField.text.Length > characterWrapLimit;
+            bool headerOK = headerField.text.Split('\n').Any((string s) => s.Length > characterWrapLimit);
+            bool contentOK = contentField.text.Split('\n').Any((string s) => s.Length > characterWrapLimit);
+            layoutElement.enabled = headerOK || contentOK;
         }
 
         void Move()

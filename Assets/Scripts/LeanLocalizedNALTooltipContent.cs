@@ -10,7 +10,7 @@ namespace Lean.Localization
 	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Localized NALTooltipContent")]
 	public class LeanLocalizedNALTooltipContent : LeanLocalizedBehaviour
 	{
-		[Tooltip("If PhraseName couldn't be found, this text will be used")]
+		[Tooltip("If PhraseName couldn't be found, this text will be used"), TextArea]
 		public string FallbackText;
 
 		// This gets called every time the translation needs updating

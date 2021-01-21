@@ -694,7 +694,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 44
+  m_RootOrder: 45
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &65863360
 MonoBehaviour:
@@ -4877,10 +4877,14 @@ Transform:
   - {fileID: 2007982967}
   - {fileID: 923645594}
   - {fileID: 2120863215}
-  - {fileID: 65863359}
   - {fileID: 778309475}
+  - {fileID: 65863359}
   - {fileID: 1837685481}
   - {fileID: 225991513}
+  - {fileID: 877834825}
+  - {fileID: 2107117505}
+  - {fileID: 586400625}
+  - {fileID: 1291017125}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6657,6 +6661,8 @@ GameObject:
   - component: {fileID: 567964752}
   - component: {fileID: 567964754}
   - component: {fileID: 567964755}
+  - component: {fileID: 567964756}
+  - component: {fileID: 567964757}
   m_Layer: 5
   m_Name: Limit FPS
   m_TagString: Untagged
@@ -6774,10 +6780,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   header: Limit FPS When Unfocused
-  content: 'Limit application''s FPS (Frames per Second) when unfocused.
+  content: 'Limit application''s frame rate when unfocused.
 
-    [Default:
-    On]'
+    [Default: On]'
   delay: 0.5
 --- !u!114 &567964755
 MonoBehaviour:
@@ -6795,6 +6800,36 @@ MonoBehaviour:
   text: {fileID: 1353677659}
   normalStyle: 0
   highlightedStyle: 4
+--- !u!114 &567964756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567964750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd48fc39df1a4f49a7acbdf3ff02152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: settings-limit_fps_tooltip_content
+  FallbackText: 'Limit application''s frame rate when unfocused.
+
+    [Default: On]'
+--- !u!114 &567964757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567964750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6075f2e91375ab247938b557d2b2f7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: settings-limit_fps
+  FallbackText: Limit FPS When Unfocused
 --- !u!1 &577716647
 GameObject:
   m_ObjectHideFlags: 0
@@ -6978,6 +7013,63 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Finnish
     Text: LADATAAN...
+    Object: {fileID: 0}
+--- !u!1 &586400624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 586400625}
+  - component: {fileID: 586400626}
+  m_Layer: 0
+  m_Name: settings-limit_fps_tooltip_content
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &586400625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586400624}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 50
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &586400626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586400624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: 'Limit application''s frame rate
+
+      when unfocused.
+
+      [Default:
+      On]'
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: "Rajoita sovelluksen kuvataajuutta,\nkun siihen ei olla kohdistettu.\n[Oletus:
+      P\xE4\xE4ll\xE4]"
     Object: {fileID: 0}
 --- !u!1 &593071291
 GameObject:
@@ -9099,7 +9191,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 45
+  m_RootOrder: 44
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &778309476
 MonoBehaviour:
@@ -10164,6 +10256,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 869205997}
   m_CullTransparentMesh: 1
+--- !u!1 &877834824
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 877834825}
+  - component: {fileID: 877834826}
+  m_Layer: 0
+  m_Name: settings-allow_installs_gameplay_tooltip_content
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &877834825
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877834824}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 48
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &877834826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877834824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: 'Allows installation of games while a game is running
+
+      and user is
+      not focused to the Launcher''s window.
+
+      [Default: On]'
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: "Sallii pelien asennuksen, kun peli on k\xE4ynniss\xE4\neik\xE4 k\xE4ytt\xE4j\xE4
+      ole kohdistanut Launcher:in ikkunaan.\n[Oletus: P\xE4\xE4ll\xE4]"
+    Object: {fileID: 0}
 --- !u!1 &885333375
 GameObject:
   m_ObjectHideFlags: 0
@@ -14103,6 +14252,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
+--- !u!1 &1291017124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1291017125}
+  - component: {fileID: 1291017126}
+  m_Layer: 0
+  m_Name: settings-low_perf_mode_tooltip_content
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1291017125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291017124}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 51
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1291017126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291017124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: 'Limit application''s frame rate more aggressively
+
+      when unfocused.
+
+      [Default:
+      Off]'
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: 'Rajoita sovelluksen kuvataajuutta aggressiivisemmin,
+
+      kun siihen
+      ei olla kohdistettu.
+
+      [Oletus: Pois]'
+    Object: {fileID: 0}
 --- !u!1 &1295087550
 GameObject:
   m_ObjectHideFlags: 0
@@ -18828,6 +19038,8 @@ GameObject:
   - component: {fileID: 1693817066}
   - component: {fileID: 1693817065}
   - component: {fileID: 1693817067}
+  - component: {fileID: 1693817070}
+  - component: {fileID: 1693817069}
   - component: {fileID: 1693817068}
   m_Layer: 5
   m_Name: Allow Installs During Gameplay
@@ -18969,6 +19181,39 @@ MonoBehaviour:
   text: {fileID: 1110455420}
   normalStyle: 0
   highlightedStyle: 4
+--- !u!114 &1693817069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693817063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd48fc39df1a4f49a7acbdf3ff02152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: settings-allow_installs_gameplay_tooltip_content
+  FallbackText: 'Allows installation of games while a game is running
+
+    and user
+    is not focused to the Launcher''s window.
+
+    [Default: On]'
+--- !u!114 &1693817070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693817063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6075f2e91375ab247938b557d2b2f7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: settings-allow_installs_gameplay
+  FallbackText: Allow Installs During Gameplay
 --- !u!1 &1699669935
 GameObject:
   m_ObjectHideFlags: 0
@@ -21571,6 +21816,8 @@ GameObject:
   - component: {fileID: 1890409184}
   - component: {fileID: 1890409185}
   - component: {fileID: 1890409186}
+  - component: {fileID: 1890409187}
+  - component: {fileID: 1890409188}
   m_Layer: 5
   m_Name: Disable Logging
   m_TagString: Untagged
@@ -21709,6 +21956,37 @@ MonoBehaviour:
   text: {fileID: 1767323735}
   normalStyle: 0
   highlightedStyle: 4
+--- !u!114 &1890409187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890409181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd48fc39df1a4f49a7acbdf3ff02152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: settings-disable_logging_tooltip_content
+  FallbackText: 'Disables all logs that would be saved in the log file.
+
+    [Default:
+    Off]'
+--- !u!114 &1890409188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890409181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6075f2e91375ab247938b557d2b2f7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: settings-disable_logging
+  FallbackText: Disable Debug Logging
 --- !u!1 &1893093320
 GameObject:
   m_ObjectHideFlags: 0
@@ -23403,6 +23681,8 @@ GameObject:
   - component: {fileID: 2046987571}
   - component: {fileID: 2046987573}
   - component: {fileID: 2046987574}
+  - component: {fileID: 2046987576}
+  - component: {fileID: 2046987575}
   m_Layer: 5
   m_Name: Low Performance Mode
   m_TagString: Untagged
@@ -23520,12 +23800,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   header: Low Performance Mode
-  content: 'Limit application''s FPS (Frames per Second)
+  content: 'Limit application''s frame rate
 
-    more aggressively when
-    unfocused.
+    more aggressively when unfocused.
 
-    [Default: Off]'
+    [Default:
+    Off]'
   delay: 0.5
 --- !u!114 &2046987574
 MonoBehaviour:
@@ -23543,6 +23823,39 @@ MonoBehaviour:
   text: {fileID: 1477443814}
   normalStyle: 0
   highlightedStyle: 4
+--- !u!114 &2046987575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046987569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd48fc39df1a4f49a7acbdf3ff02152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: settings-low_perf_mode_tooltip_content
+  FallbackText: 'Limit application''s frame rate
+
+    more aggressively when unfocused.
+
+    [Default:
+    Off]'
+--- !u!114 &2046987576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046987569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6075f2e91375ab247938b557d2b2f7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: settings-low_perf_mode
+  FallbackText: Low Performance Mode
 --- !u!1 &2052670622
 GameObject:
   m_ObjectHideFlags: 0
@@ -24389,6 +24702,61 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -5}
   m_SizeDelta: {x: 0, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &2107117504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2107117505}
+  - component: {fileID: 2107117506}
+  m_Layer: 0
+  m_Name: settings-disable_logging_tooltip_content
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2107117505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107117504}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 49
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2107117506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107117504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: 'Disables all logs that would be saved in the log file.
+
+      [Default:
+      Off]'
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: "Poistaa k\xE4yt\xF6st\xE4 kaikki lokit, jotka olisivat tallentuneet lokitiedostoon.\n[Oletus:
+      Pois]"
+    Object: {fileID: 0}
 --- !u!1 &2108483365
 GameObject:
   m_ObjectHideFlags: 0
