@@ -88,13 +88,13 @@ namespace NALStudio.GameLauncher.Games
 			}
 
 			string fileUrl = Path.Combine(Constants.Constants.GamesPath, gameData.name, GameHandler.gameLaunchFilePath);
+			string iconPath = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
 			if (SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name))
 			{
 				fileUrl = Path.Combine(SettingsManager.Settings.customGamePaths[gameData.name], GameHandler.gameLaunchFilePath);
+				iconPath = Path.Combine(SettingsManager.Settings.customGamePaths[gameData.name], gameData.executable_path);
 			}
 			File.Copy(Path.Combine(Application.streamingAssetsPath, "ShortcutLaunch.exe"), fileUrl, true);
-
-			string iconPath = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
 
 			string[] shortcutLines = new string[]
 			{

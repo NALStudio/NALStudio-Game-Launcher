@@ -32,6 +32,7 @@ public class SettingsTogglesFunctions : MonoBehaviour
 	public TogglesSetTypes[] setTypes;
 	[Header("FPS Limit Disable UI")]
 	public TextMeshProUGUI lowPerfText;
+	public Graphic lowPerfCheckmark;
 	Color lowPerfTextNormalColor;
 	public Color limitDisabledColor;
 	public Toggle lowPerfToggle;
@@ -72,6 +73,7 @@ public class SettingsTogglesFunctions : MonoBehaviour
 		SettingsManager.Settings.limitFPS = limit;
 
 		lowPerfText.CrossFadeColor(!limit ? limitDisabledColor : lowPerfTextNormalColor, fadeDuration, true, true);
+		lowPerfCheckmark.CrossFadeColor(!limit ? limitDisabledColor : lowPerfTextNormalColor, fadeDuration, true, true);
 		lowPerfToggle.interactable = limit;
 		if (!limit)
 			lowPerfToggle.GetComponent<ToggleCheckmarkSprite>().SetToggle(false);
