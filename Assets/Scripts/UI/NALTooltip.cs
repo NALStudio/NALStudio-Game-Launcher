@@ -48,8 +48,8 @@ namespace NALStudio.UI
 
             contentField.text = content;
 
-            bool headerOK = headerField.text.Split('\n').Any((string s) => s.Length > characterWrapLimit);
-            bool contentOK = contentField.text.Split('\n').Any((string s) => s.Length > characterWrapLimit);
+            bool headerOK = headerField.text.Split('\n').Any(s => s.Length > characterWrapLimit);
+            bool contentOK = contentField.text.Split('\n').Any(s => s.Length > characterWrapLimit);
             layoutElement.enabled = headerOK || contentOK;
         }
 
