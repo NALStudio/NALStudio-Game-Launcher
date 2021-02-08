@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
+  m_Name: RemoteConfigDataStoreAsset
+  m_EditorClassIdentifier: 
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b564ae3b-1b92-4486-8a36-38bf69c01edb\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
+    \"type\": \"json\",\r\n      \"value\": {\r\n        \"title\": \"Koponen Dating
+    Simulator\",\r\n        \"developer\": \"KL Corporation\",\r\n        \"publisher\":
+    \"KL Corporation\",\r\n        \"price\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n       
+    \"release_date\": \"TBA\",\r\n        \"early_access\": true,\r\n        \"thumbnail\":
+    \"https://i.imgur.com/kVjnUHx.png\",\r\n        \"download\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.6-dev/KoponenDatingSimulator.zip\",\r\n       
+    \"executable_path\": \"KoponenDatingSimulator.exe\"\r\n      }\r\n    }\r\n 
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"3720fd57-90a0-418e-ba8c-ab6492fe3e10\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
+    \"value\": {\r\n        \"title\": \"Rise and Fall\",\r\n        \"developer\":
+    \"Pentti Kaalimaa\",\r\n        \"publisher\": \"Kaalimaa Productions\",\r\n       
+    \"price\": 0,\r\n        \"version\": \"0.2.0\",\r\n        \"release_date\":
+    \"Someday\",\r\n        \"early_access\": true,\r\n        \"thumbnail\": \"https://i.imgur.com/eQw5ewd.png\",\r\n       
+    \"download\": \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
+    \"executable_path\": \"Peli_VAL.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n   
+    \"metadata\": {\r\n      \"entityId\": \"e74b504e-b8bf-4ca6-a4f1-4253023c3233\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n     
+    \"value\": {\r\n        \"title\": \"Mastermind\",\r\n        \"developer\":
+    \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
+    \"price\": 0,\r\n        \"version\": \"1.0.1\",\r\n        \"release_date\":
+    \"16.1.2021\",\r\n        \"early_access\": false,\r\n        \"thumbnail\":
+    \"https://i.imgur.com/rusrxcv.png\",\r\n        \"download\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
+    \"executable_path\": \"Mastermind.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n   
+    \"metadata\": {\r\n      \"entityId\": \"c03ba958-5f60-4516-94c9-34aa5750e591\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\":
+    \"json\",\r\n      \"value\": {\r\n        \"title\": \"KDS Level Builder\",\r\n       
+    \"developer\": \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
+    \"price\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"release_date\":
+    \"TBA\",\r\n        \"early_access\": false,\r\n        \"thumbnail\": \"https://i.imgur.com/25abZCf.png\",\r\n       
+    \"download\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/LevelBuilder.zip\",\r\n       
+    \"executable_path\": \"LevelBuilder.exe\"\r\n      }\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b564ae3b-1b92-4486-8a36-38bf69c01edb\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
+    \"type\": \"json\",\r\n      \"value\": {\r\n        \"title\": \"Koponen Dating
+    Simulator\",\r\n        \"developer\": \"KL Corporation\",\r\n        \"publisher\":
+    \"KL Corporation\",\r\n        \"price\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n       
+    \"release_date\": \"TBA\",\r\n        \"early_access\": true,\r\n        \"thumbnail\":
+    \"https://i.imgur.com/kVjnUHx.png\",\r\n        \"download\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.6-dev/KoponenDatingSimulator.zip\",\r\n       
+    \"executable_path\": \"KoponenDatingSimulator.exe\"\r\n      }\r\n    }\r\n 
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"3720fd57-90a0-418e-ba8c-ab6492fe3e10\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
+    \"value\": {\r\n        \"title\": \"Rise and Fall\",\r\n        \"developer\":
+    \"Pentti Kaalimaa\",\r\n        \"publisher\": \"Kaalimaa Productions\",\r\n       
+    \"price\": 0,\r\n        \"version\": \"0.2.0\",\r\n        \"release_date\":
+    \"Someday\",\r\n        \"early_access\": true,\r\n        \"thumbnail\": \"https://i.imgur.com/eQw5ewd.png\",\r\n       
+    \"download\": \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
+    \"executable_path\": \"Peli_VAL.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n   
+    \"metadata\": {\r\n      \"entityId\": \"e74b504e-b8bf-4ca6-a4f1-4253023c3233\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n     
+    \"value\": {\r\n        \"title\": \"Mastermind\",\r\n        \"developer\":
+    \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
+    \"price\": 0,\r\n        \"version\": \"1.0.1\",\r\n        \"release_date\":
+    \"16.1.2021\",\r\n        \"early_access\": false,\r\n        \"thumbnail\":
+    \"https://i.imgur.com/rusrxcv.png\",\r\n        \"download\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
+    \"executable_path\": \"Mastermind.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n   
+    \"metadata\": {\r\n      \"entityId\": \"c03ba958-5f60-4516-94c9-34aa5750e591\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\":
+    \"json\",\r\n      \"value\": {\r\n        \"title\": \"KDS Level Builder\",\r\n       
+    \"developer\": \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
+    \"price\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"release_date\":
+    \"TBA\",\r\n        \"early_access\": false,\r\n        \"thumbnail\": \"https://i.imgur.com/25abZCf.png\",\r\n       
+    \"download\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/LevelBuilder.zip\",\r\n       
+    \"executable_path\": \"LevelBuilder.exe\"\r\n      }\r\n    }\r\n  }\r\n]"
+  _environments: "[\r\n  {\r\n    \"projectId\": \"36939bee-afea-4b49-a55d-cfba83548ea4\",\r\n   
+    \"name\": \"Production\",\r\n    \"id\": \"08fedb44-fa53-49fc-88dd-81bbbcc55193\",\r\n   
+    \"createdAt\": \"2021-02-07T13:30:47Z\",\r\n    \"updatedAt\": \"2021-02-07T15:10:46Z\",\r\n   
+    \"isDefault\": false\r\n  },\r\n  {\r\n    \"projectId\": \"36939bee-afea-4b49-a55d-cfba83548ea4\",\r\n   
+    \"name\": \"Testing\",\r\n    \"id\": \"03dfe905-cd6b-47f5-8a2d-ca5087b6e065\",\r\n   
+    \"createdAt\": \"2021-02-07T14:25:00Z\",\r\n    \"updatedAt\": \"2021-02-07T15:17:47Z\",\r\n   
+    \"isDefault\": true\r\n  }\r\n]"
+  _rulesList: '[]'
+  _lastCachedRulesList: '[]'

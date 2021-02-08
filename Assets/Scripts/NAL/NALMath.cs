@@ -36,6 +36,11 @@ namespace NALStudio.Math
 		{
             return value / (1024f * 1024f);
         }
+
+		public static float BitsToMb(float value)
+		{
+			return value / (1024f * 1024f);
+		}
 		#endregion
 	}
 }

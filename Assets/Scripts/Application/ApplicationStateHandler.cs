@@ -17,7 +17,7 @@ using UnityEngine;
 
 public class ApplicationStateHandler : MonoBehaviour
 {
-    public GameHandler gameHandler;
+	public GameHandler gameHandler;
 	public TabGroup tabGroup;
 	public DownloadsMenu downloadsMenu;
 
@@ -35,7 +35,7 @@ public class ApplicationStateHandler : MonoBehaviour
 		else if (!downloadsMenu.trueOpened)
 			Application.targetFrameRate = 1;
 		else
-			Application.targetFrameRate = Mathf.CeilToInt(1 / Time.fixedUnscaledDeltaTime);
+			Application.targetFrameRate = Mathf.CeilToInt(1 / Time.deltaTime);
 		#endregion
 	}
 }
