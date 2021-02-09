@@ -71,6 +71,11 @@ public class SettingsManager : MonoBehaviour
 
     public static void ReloadRemote()
     {
+        if (!Debug.isDebugBuild)
+            ConfigManager.SetEnvironmentID("08fedb44-fa53-49fc-88dd-81bbbcc55193");
+        else
+            ConfigManager.SetEnvironmentID("03dfe905-cd6b-47f5-8a2d-ca5087b6e065");
+
         RemoteLoaded = false;
         ConfigManager.FetchConfigs<userAttributes, appAttributes>(new userAttributes(), new appAttributes());
     }

@@ -33,7 +33,7 @@ namespace NALStudio.GameLauncher.Games
 		public bool gameRunning { get; private set; }
 		GameData gameRunningData;
 		DateTime gameRunningStartTime;
-		System.Diagnostics.Process gameRunningProcess;
+		public System.Diagnostics.Process gameRunningProcess { get; private set; }
 		[Space(10f)]
 		public GameObject gamePrefab;
 		public Cards.CardHandler cardHandler;

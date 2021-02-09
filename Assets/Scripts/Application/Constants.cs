@@ -27,6 +27,19 @@ namespace NALStudio.GameLauncher.Constants
 			}
 		}
 
+		/*
+		static readonly string screenshotsPath = Path.GetFullPath("Screenshots").Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+		public static string ScreenshotsPath
+		{
+			get
+			{
+				if (!Directory.Exists(screenshotsPath))
+					Directory.CreateDirectory(screenshotsPath);
+				return screenshotsPath;
+			}
+		}
+		*/
+
 		public static readonly string DownloadPath = Path.Combine(GamesPath, "download");
 	}
 }

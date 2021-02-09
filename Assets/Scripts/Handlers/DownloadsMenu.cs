@@ -46,6 +46,9 @@ public class DownloadsMenu : MonoBehaviour
 		canvasGroup.interactable = true;
 		canvasGroup.blocksRaycasts = true;
 		tweener.DoTween();
+		inputIntercepterTweener.StopTween();
+		if (inputIntercepterTweener.gameObject.activeSelf)
+			inputIntercepterTweener.gameObject.SetActive(false);
 		inputIntercepterTweener.gameObject.SetActive(true);
 	}
 
