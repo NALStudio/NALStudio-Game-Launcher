@@ -63,13 +63,14 @@ namespace NALStudio.GameLauncher.Cards
             public string title;
             public string developer;
             public string publisher;
-            public int price;
+            public long price;
             public string version;
             public string release_date;
             public bool early_access;
             public string thumbnail;
             public string download;
             public string executable_path;
+            public long order;
 
             public Texture2D thumbnailTexture;
 
@@ -140,6 +141,9 @@ namespace NALStudio.GameLauncher.Cards
             {
                 case SortingMode.alphabetical:
                     cardDatas = cardDatas.OrderBy(c => c.title).ToList();
+                    break;
+                case SortingMode.relevance:
+                    cardDatas = cardDatas.OrderBy(c => c.order).ToList();
                     break;
             }
 
