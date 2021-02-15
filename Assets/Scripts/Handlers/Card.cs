@@ -11,7 +11,7 @@ namespace NALStudio.GameLauncher.Cards
 {
     public class Card : MonoBehaviour
     {
-        public CardHandler.CardData cardData;
+        public UniversalData data;
         public RawImage thumbnail;
         public TextMeshProUGUI title;
         public TextMeshProUGUI devPub;
@@ -20,20 +20,20 @@ namespace NALStudio.GameLauncher.Cards
         [HideInInspector]
         public StorePage storePage;
 
-        public void LoadAssets(CardHandler.CardData cData)
+        public void LoadAssets(UniversalData _data)
         {
-            cardData = cData;
+            data = _data;
             StartCoroutine(SetContent());
         }
 
         public void OpenStorePage()
         {
-            storePage.Open(cardData);
+            storePage.Open(data);
         }
 
         void LanguageChange()
 		{
-            if (cardData.price == 0)
+            if (data.Price == 0)
                 price.text = Lean.Localization.LeanLocalization.GetTranslationText("pricing-free", "Free");
         }
 
@@ -44,46 +44,26 @@ namespace NALStudio.GameLauncher.Cards
 
 		IEnumerator SetContent()
         {
-            if (cardData.thumbnail.StartsWith("https://imgur.com/", StringComparison.OrdinalIgnoreCase) || cardData.thumbnail.StartsWith("https://i.imgur.com/", StringComparison.OrdinalIgnoreCase))
-			{
-                if (!cardData.thumbnail.EndsWith("l.png", StringComparison.OrdinalIgnoreCase))
-                    cardData.thumbnail = cardData.thumbnail.Insert(cardData.thumbnail.Length - 4, "l");
-			}
-            UnityWebRequest wr = new UnityWebRequest(cardData.thumbnail);
-            DownloadHandlerTexture texDl = new DownloadHandlerTexture(true);
-            wr.downloadHandler = texDl;
-            yield return wr.SendWebRequest();
-            if (wr.result == UnityWebRequest.Result.ConnectionError || wr.result == UnityWebRequest.Result.DataProcessingError || wr.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.LogError(wr.error);
-            }
-            else
-            {
-                yield return new WaitWhile(() => wr.downloadProgress < 1f);
-				#region Thumbnail
-				cardData.thumbnailTexture = texDl.texture;
-                thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = cardData.thumbnailTexture.width / (float)cardData.thumbnailTexture.height;
-                thumbnail.texture = cardData.thumbnailTexture;
-                #endregion
-                yield return null;
-                #region Title
-				title.text = cardData.title;
-                #endregion
-                yield return null;
-                #region Developer
-				string developer = cardData.developer;
-                if (developer != cardData.publisher)
-                    developer += $" | {cardData.publisher}";
-                devPub.text = developer;
-                #endregion
-                yield return null;
-                #region Price
-				string priceText = $"€{cardData.price}";
-                if (cardData.price == 0)
-                    priceText = Lean.Localization.LeanLocalization.GetTranslationText("pricing-free", "Free");
-                price.text = priceText;
-				#endregion
-			}
+            yield return new WaitWhile(() => data.ThumbnailTexture == null);
+			#region Thumbnail
+            thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = data.ThumbnailTexture.width / (float)data.ThumbnailTexture.height;
+            thumbnail.texture = data.ThumbnailTexture;
+            #endregion
+            yield return null;
+            #region Title
+			title.text = data.DisplayName;
+            #endregion
+            yield return null;
+            #region Developer
+			devPub.text = data.Developer == data.Publisher ? data.Developer : $"{data.Developer} | {data.Publisher}";
+            #endregion
+            yield return null;
+            #region Price
+			string priceText = $"€{data.Price}";
+            if (data.Price == 0)
+                priceText = Lean.Localization.LeanLocalization.GetTranslationText("pricing-free", "Free");
+            price.text = priceText;
+			#endregion
 		}
     }
 }

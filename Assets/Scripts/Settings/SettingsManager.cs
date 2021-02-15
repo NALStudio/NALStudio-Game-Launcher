@@ -109,7 +109,7 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
-    [System.Serializable]
+    [Serializable]
     public class ParsableSettingsHolder
     {
         public string[] customGamePathKeys = new string[0];
@@ -151,7 +151,7 @@ public class SettingsManager : MonoBehaviour
             {
                 Settings = JsonUtility.FromJson<ParsableSettingsHolder>(File.ReadAllText(path)).ToUsable();
             }
-            catch 
+            catch
             {
                 Settings = new SettingsHolder();
                 Save();

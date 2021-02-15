@@ -16,7 +16,8 @@ namespace NALStudio.GameLauncher.Constants
 {
 	public static class Constants
 	{
-		static readonly string gamesPath = Path.GetFullPath("Games").Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+		public static readonly string BaseFolder = Path.GetFullPath(".");
+		static readonly string gamesPath = Path.Combine(BaseFolder, "Games").Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 		public static string GamesPath
 		{
 			get
@@ -41,5 +42,9 @@ namespace NALStudio.GameLauncher.Constants
 		*/
 
 		public static readonly string DownloadPath = Path.Combine(GamesPath, "download");
+
+		public const string launcherDataFilePath = "launcher-data";
+		public const string gamedataFilePath = "launcher-data/data.nal";
+		public const string gameLaunchFilePath = "launcher-data/launch.exe";
 	}
 }

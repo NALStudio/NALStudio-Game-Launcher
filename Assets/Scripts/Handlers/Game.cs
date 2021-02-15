@@ -18,7 +18,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,9 +26,7 @@ namespace NALStudio.GameLauncher.Games
 {
 	public class Game : MonoBehaviour
 	{
-		public GameHandler.GameData gameData;
-		[HideInInspector]
-		public CardHandler.CardData cardData;
+		public UniversalData data;
 		public RawImage thumbnail;
 		public TextMeshProUGUI nameText;
 		[Header("More Page")]
@@ -46,7 +43,6 @@ namespace NALStudio.GameLauncher.Games
 		public TextMeshProUGUI ShortcutText;
 		public Color ShortcutTextNormal;
 		public Color ShortcutTextDisabled;
-		public NALTooltipTrigger ShortcutTooltip;
 
 		[HideInInspector]
 		public GameHandler gameHandler;
@@ -55,45 +51,43 @@ namespace NALStudio.GameLauncher.Games
 
 		void Update()
 		{
-			if (cardData.thumbnailTexture != thumbnail.texture && cardData.thumbnailTexture != null)
+			if (data.ThumbnailTexture != thumbnail.texture && data.ThumbnailTexture != null)
 			{
 				thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio =
-					cardData.thumbnailTexture.width / (float)cardData.thumbnailTexture.height;
-				thumbnail.texture = cardData.thumbnailTexture;
+					data.ThumbnailTexture.width / (float)data.ThumbnailTexture.height;
+				thumbnail.texture = data.ThumbnailTexture;
 			}
-			updateAvailable.SetActive(cardData?.version != gameData?.version);
+			if (data == null || data.Remote == null || data.Local == null)
+				updateAvailable.SetActive(false);
+			else
+				updateAvailable.SetActive(data.Remote.Version != data.Local.Version);
 		}
 
 		public void OpenStorePage()
 		{
-			if (cardData != null)
-				storePage.Open(cardData);
+			if (data != null)
+				storePage.Open(data);
 			else
-				Debug.LogError("No CardData specified!");
+				Debug.LogError("No data specified!");
 		}
 
 		public void Uninstall()
 		{
-			StartCoroutine(gameHandler.Uninstall(gameData));
+			StartCoroutine(gameHandler.Uninstall(data));
 		}
 
 		public void CreateShortcut()
 		{
 			string deskDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-			string shortcutPath = Path.Combine(deskDir, $"{gameData.name}.url");
+			string shortcutPath = Path.Combine(deskDir, $"{data.Name}.url");
 			if (File.Exists(shortcutPath))
 			{
 				for (int i = 1; File.Exists(shortcutPath); i++)
-					shortcutPath = Path.Combine(deskDir, $"{gameData.name} ({i}).url");
+					shortcutPath = Path.Combine(deskDir, $"{data.Name} ({i}).url");
 			}
 
-			string fileUrl = Path.Combine(Constants.Constants.GamesPath, gameData.name, GameHandler.gameLaunchFilePath);
-			string iconPath = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
-			if (SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name))
-			{
-				fileUrl = Path.Combine(SettingsManager.Settings.customGamePaths[gameData.name], GameHandler.gameLaunchFilePath);
-				iconPath = Path.Combine(SettingsManager.Settings.customGamePaths[gameData.name], gameData.executable_path);
-			}
+			string fileUrl = Path.Combine(data.Local.LocalsPath, GameHandler.gameLaunchFilePath);
+			string iconPath = Path.Combine(data.Local.LocalsPath, data.Local.ExecutablePath);
 			File.Copy(Path.Combine(Application.streamingAssetsPath, "ShortcutLaunch.exe"), fileUrl, true);
 
 			string[] shortcutLines = new string[]
@@ -106,30 +100,28 @@ namespace NALStudio.GameLauncher.Games
 			File.WriteAllLines(shortcutPath, shortcutLines);
 		}
 
-		public IEnumerator LoadAssets(GameHandler.GameData _gameData)
+		public IEnumerator LoadAssets(UniversalData _data)
 		{
-			gameData = _gameData;
-			nameText.text = gameData.name;
+			sizeText.text = $"0.0{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}";
+			data = _data;
+			nameText.text = data.DisplayName;
+			versionText.text = data.Local.Version;
 			yield return null;
 			#region Game Size
 			long gameSize = 0;
-			DirectoryInfo dirInfo = new DirectoryInfo(!SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name) ? Path.Combine(Constants.Constants.GamesPath, gameData.name) : SettingsManager.Settings.customGamePaths[gameData.name]);
+			DirectoryInfo dirInfo = new DirectoryInfo(data.Local.LocalsPath);
 			foreach (FileInfo fi in dirInfo.GetFiles("*", SearchOption.AllDirectories))
 			{
 				gameSize += fi.Length;
+				sizeText.text = $"{Math.Convert.BytesToMB(gameSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}";
 				yield return null;
 			}
-			sizeText.text = $"{Math.Convert.BytesToMB(gameSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}";
-			#endregion
-			yield return null;
-			#region Version
-			versionText.text = gameData.version;
 			#endregion
 		}
 
 		public void StartGame()
 		{
-			gameHandler.StartGame(gameData);
+			gameHandler.StartGame(data);
 		}
 
 		void MorePageHandler(bool open)
@@ -138,27 +130,13 @@ namespace NALStudio.GameLauncher.Games
 			{
 				#region Playtime
 				string playtimeFormat = LeanLocalization.GetTranslationText("units-minutes", "Minutes");
-				float time = gameData.Playtime;
+				float time = data.Playtime;
 				if (time >= 60)
 				{
 					time /= 60f;
 					playtimeFormat = LeanLocalization.GetTranslationText("units-hours", "Hours");
 				}
 				playtimeText.text = $"{time:0.0} {playtimeFormat}";
-				#endregion
-				#region Shortcut
-				if (SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name))
-				{
-					ShortcutButton.interactable = false;
-					ShortcutText.color = ShortcutTextDisabled;
-					ShortcutTooltip.interactable = true;
-				}
-				else
-				{
-					ShortcutButton.interactable = true;
-					ShortcutText.color = ShortcutTextNormal;
-					ShortcutTooltip.interactable = false;
-				}
 				#endregion
 			}
 			morePageToggle.isOn = open;

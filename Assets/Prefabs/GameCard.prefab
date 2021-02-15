@@ -1265,18 +1265,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdb4d5f3f8c54fe4eadea33412fdf18d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardData:
-    title: 
-    developer: 
-    publisher: 
-    price: 0
-    version: 
-    release_date: 
-    early_access: 0
-    thumbnail: 
-    download: 
-    executable_path: 
-    thumbnailTexture: {fileID: 0}
   thumbnail: {fileID: 2428305272028391660}
   nameText: {fileID: 2428305272069505571}
   morePage: {fileID: 2428305270496666943}
@@ -1290,7 +1278,7 @@ MonoBehaviour:
   ShortcutText: {fileID: 2428305270861925423}
   ShortcutTextNormal: {r: 0.9254902, g: 0.9411765, b: 0.94509804, a: 1}
   ShortcutTextDisabled: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
-  ShortcutTooltip: {fileID: 3236723636172581037}
+  ShortcutTooltip: {fileID: 0}
   gameHandler: {fileID: 0}
   storePage: {fileID: 0}
 --- !u!114 &757226051226937683
@@ -1744,7 +1732,6 @@ GameObject:
   - component: {fileID: 2428305271478470843}
   - component: {fileID: 2428305271478470841}
   - component: {fileID: 2428305271478470842}
-  - component: {fileID: 3236723636172581037}
   m_Layer: 5
   m_Name: Create A Shortcut Button
   m_TagString: Untagged
@@ -1848,24 +1835,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &3236723636172581037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2428305271478470980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ef9d2dbfe08c9d4d9e4609eb03834ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactable: 0
-  header: 
-  content: 'Shortcuts aren''t currently supported
-
-    on games with custom paths.'
-  delay: 0.5
 --- !u!1 &2428305271567097653
 GameObject:
   m_ObjectHideFlags: 0

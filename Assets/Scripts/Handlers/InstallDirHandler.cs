@@ -24,6 +24,7 @@ using UnityEngine.UI;
 using NALStudio.GameLauncher.Cards;
 using System.Text.RegularExpressions;
 using NALStudio.UI;
+using NALStudio.IO;
 
 public class InstallDirHandler : MonoBehaviour
 {
@@ -41,11 +42,11 @@ public class InstallDirHandler : MonoBehaviour
 
 	string path;
 
-	CardHandler.CardData cardData;
+	UniversalData data;
 
-	public IEnumerator Prompt(CardHandler.CardData cData, Action<bool, bool, string> onComplete)
+	public IEnumerator Prompt(UniversalData _data, Action<bool, bool, string> onComplete)
 	{
-		cardData = cData;
+		data = _data;
 		gameObject.SetActive(true);
 		pathInput.text = Constants.GamesPath;
 		yield return new WaitUntil(() => close);
@@ -54,7 +55,7 @@ public class InstallDirHandler : MonoBehaviour
 		bool finished = false;
 		tweener.OnComplete += () => finished = true;
 		yield return new WaitUntil(() => finished);
-		onComplete.Invoke(true, success, path == Constants.GamesPath ? null : path);
+		onComplete.Invoke(true, success, NALPath.Match(Constants.GamesPath, path) ? null : path);
 		gameObject.SetActive(false);
 	}
 
@@ -95,9 +96,17 @@ public class InstallDirHandler : MonoBehaviour
 		path = path.Replace('\\', '/');
 		path = Regex.Replace(path, @"\/+", "/");
 		path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+		string wholePath = Path.Combine(path, data != null ? data.Name : "[ERROR]");
 		bool pValid = PathValid(path);
+		if (pValid)
+		{
+			pValid = !Directory.Exists(wholePath) || (Directory.Exists(wholePath)
+				&& Directory.GetFiles(wholePath).Length < 1
+				&& Directory.GetDirectories(wholePath).Length < 1);
+		}
+
 		invalidPath.SetActive(!pValid);
 		installButton.interactable = pValid;
-		pathText.text = Path.Combine(path, cardData != null ? cardData.title : "[ERROR]");
+		pathText.text = wholePath;
 	}
 }

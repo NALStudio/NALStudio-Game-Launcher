@@ -21,7 +21,6 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using NALStudio.JSON;
 using NALStudio.UI;
-using NALStudio.Encryption;
 using NALStudio.GameLauncher.Games;
 using System.Linq;
 
@@ -57,36 +56,6 @@ namespace NALStudio.GameLauncher.Cards
 
         #endregion
 
-        [System.Serializable]
-        public class CardData
-        {
-            public string title;
-            public string developer;
-            public string publisher;
-            public long price;
-            public string version;
-            public string release_date;
-            public bool early_access;
-            public string thumbnail;
-            public string download;
-            public string executable_path;
-            public long order;
-
-            public Texture2D thumbnailTexture;
-
-            public DownloadHandler.DownloadData ToDownloadData()
-            {
-                return new DownloadHandler.DownloadData()
-                {
-                    name = title,
-                    version = version,
-                    download = download,
-                    executable_path = executable_path,
-                    customPath = null
-                };
-            }
-        }
-
         void Start()
         {
             gridLayout = GetComponent<GridLayoutGroup>();
@@ -95,72 +64,53 @@ namespace NALStudio.GameLauncher.Cards
             sortingMode = (SortingMode)PlayerPrefs.GetInt("sorting/cards", 0);
             sortDropdown.value = (int)sortingMode;
 
+            // 3600 seconds in an hour.
+            InvokeRepeating(nameof(ReloadCards), 3600f, 3600f);
+
             StartCoroutine(LoadCards());
         }
 
-        public void SortCards(int index)
+		void OnApplicationQuit()
+		{
+            CancelInvoke(nameof(ReloadCards));
+		}
+
+		public void SortCards(int index)
         {
             if ((SortingMode)index != sortingMode)
             {
                 PlayerPrefs.SetInt("sorting/cards", index);
                 sortingMode = (SortingMode)index;
-                StartCoroutine(LoadCards());
+                AddCards();
             }
         }
 
-        public void AddToGames()
+        void AddCards()
         {
-            foreach (Card c in cardScripts)
-            {
-                foreach(Game g in gameHandler.gameScripts)
-                {
-                    if (c.cardData.title == g.gameData.name)
-                    {
-                        g.cardData = c.cardData;
-                        break;
-                    }
-                }
-            }
-        }
-
-        void AddCards(IReadOnlyCollection<string> jsons)
-        {
-            foreach (GameObject go in cards)
-                Destroy(go);
-            cards.Clear();
-            cardScripts.Clear();
-            cardTweeners.Clear();
-
-            List<CardData> cardDatas = new List<CardData>();
-            foreach (string json in jsons)
-            {
-                cardDatas.Add(JsonUtility.FromJson<CardData>(json));
-            }
-
+            UniversalData[] sortedDatas = DataHandler.UniversalDatas.Get().ToArray();
             switch (sortingMode)
             {
                 case SortingMode.alphabetical:
-                    cardDatas = cardDatas.OrderBy(c => c.title).ToList();
+                    sortedDatas = sortedDatas.OrderBy(d => d.DisplayName).ToArray();
                     break;
                 case SortingMode.relevance:
-                    cardDatas = cardDatas.OrderBy(c => c.order).ToList();
+                    sortedDatas = sortedDatas.OrderBy(d => d.Order).ToArray();
                     break;
             }
 
-            for (int i = 0; i < cardDatas.Count; i++)
+            for (int i = 0; i < sortedDatas.Length; i++)
             {
                 GameObject instantiated = Instantiate(cardPrefab, transform);
                 cards.Add(instantiated);
                 Card insCard = instantiated.GetComponent<Card>();
                 insCard.storePage = storePage;
-                insCard.LoadAssets(cardDatas[i]);
+                insCard.LoadAssets(sortedDatas[i]);
                 cardScripts.Add(insCard);
                 UITweener insTweener = instantiated.GetComponent<UITweener>();
                 insTweener.duration = cardAnimationDuration;
                 insTweener.delay = cardAnimationBaseDelay + (i * cardAnimationAddDelay);
                 cardTweeners.Add(insTweener);
             }
-            AddToGames();
             CalculateCellSize();
         }
 
@@ -168,11 +118,13 @@ namespace NALStudio.GameLauncher.Cards
         {
             SettingsManager.ReloadRemote();
             StartCoroutine(LoadCards());
-            Debug.Log("Application has been running for a day. Reloading cards...");
+            Debug.Log("Application has been running for an hour. Reloading cards...");
         }
 
         IEnumerator LoadCards()
         {
+            DataHandler.UniversalDatas.Loaded = false;
+            DataHandler.UniversalDatas.Clear();
             yield return new WaitUntil(() => SettingsManager.RemoteLoaded);
 
             string[] cardKeys = ConfigManager.appConfig.GetKeys();
@@ -186,9 +138,19 @@ namespace NALStudio.GameLauncher.Cards
                     Debug.LogError($"Fetched json for game: \"{cardKey}\" could not be loaded!");
             }
 
-            Invoke(nameof(ReloadCards), 86400f);
+            foreach (GameObject go in cards)
+                Destroy(go);
+            cards.Clear();
+            cardScripts.Clear();
+            cardTweeners.Clear();
 
-            AddCards(jsons);
+            foreach (string json in jsons)
+            {
+                DataHandler.UniversalDatas.Add(new UniversalData(json));
+            }
+            DataHandler.UniversalDatas.Loaded = true;
+
+            AddCards();
         }
 
         public void PlayAnimation()

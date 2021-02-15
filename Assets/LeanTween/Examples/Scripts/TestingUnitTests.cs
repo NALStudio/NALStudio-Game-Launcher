@@ -293,7 +293,9 @@ namespace DentedPixel.LTExamples
             });
 
             LTDescr[] descr = LeanTween.descriptions(cubeNormal);
+#pragma warning disable RCS1215 // Expression is always equal to true/false.
             LeanTest.expect(descr.Length >= 0 && descr[0].to.x == 12f, "WE CAN RETRIEVE A DESCRIPTION");
+#pragma warning restore RCS1215 // Expression is always equal to true/false.
 
             GameObject cubeIgnore = cubeNamed("ignoreTimeScale");
             LeanTween.moveX(cubeIgnore, 5f, 1.5f).setIgnoreTimeScale(true).setOnComplete(() => {

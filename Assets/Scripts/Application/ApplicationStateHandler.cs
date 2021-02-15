@@ -35,7 +35,7 @@ public class ApplicationStateHandler : MonoBehaviour
 		else if (!downloadsMenu.trueOpened)
 			Application.targetFrameRate = 1;
 		else
-			Application.targetFrameRate = Mathf.CeilToInt(1 / Time.deltaTime);
+			Application.targetFrameRate = Mathf.CeilToInt(1 / Time.fixedDeltaTime);
 		#endregion
 	}
 }

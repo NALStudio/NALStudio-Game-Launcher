@@ -11,6 +11,7 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
+using NALStudio.IO;
 using NALStudio.UI;
 using System;
 using System.Collections;
@@ -31,7 +32,7 @@ namespace NALStudio.GameLauncher.Games
 		public float verticalSpacing;
 
 		public bool gameRunning { get; private set; }
-		GameData gameRunningData;
+		UniversalData gameRunningData;
 		DateTime gameRunningStartTime;
 		public System.Diagnostics.Process gameRunningProcess { get; private set; }
 		[Space(10f)]
@@ -48,9 +49,10 @@ namespace NALStudio.GameLauncher.Games
 		public const string gamedataFilePath = "launcher-data/data.nal";
 		public const string gameLaunchFilePath = "launcher-data/launch.exe";
 		[HideInInspector]
-		public List<GameData> gameDatas = new List<GameData>();
+		public UniversalData[] gameDatas;
+		bool gameDatasLoaded = false;
 		[HideInInspector]
-		public List<Game> gameScripts = new List<Game>();	
+		public List<Game> gameScripts = new List<Game>();
 		[HideInInspector]
 		public List<string> uninstalling = new List<string>();
 
@@ -60,22 +62,7 @@ namespace NALStudio.GameLauncher.Games
 		RectTransform rectTransform;
 		GridLayoutGroup gridLayout;
 
-		Dictionary<string, float> playtimesToSave = new Dictionary<string, float>();
-
-		public class GameData
-		{
-			public string name;
-			public string version;
-			public string executable_path;
-			public long last_interest;
-			public float Playtime
-			{
-				get
-				{
-					return PlayerPrefs.GetFloat($"playtime/{name}", 0f);
-				}
-			}
-		}
+		Dictionary<string, double> playtimesToSave = new Dictionary<string, double>();
 
 		void Start()
 		{
@@ -85,7 +72,7 @@ namespace NALStudio.GameLauncher.Games
 			sortingMode = (SortingMode)PlayerPrefs.GetInt("sorting/games", 0);
 			sortDropdown.value = (int)sortingMode;
 
-			LoadGames();
+			StartCoroutine(LoadGames());
 		}
 
 		public void SortGames(int index)
@@ -94,7 +81,7 @@ namespace NALStudio.GameLauncher.Games
 			{
 				PlayerPrefs.SetInt("sorting/games", index);
 				sortingMode = (SortingMode)index;
-				LoadGames();
+				StartCoroutine(LoadGames());
 			}
 		}
 
@@ -147,90 +134,93 @@ namespace NALStudio.GameLauncher.Games
 				}
 			}
 			yield return null;
-			//Will clear invalid game folders as well...
-			LoadGames();
 			onComplete?.Invoke();
 		}
 
-		public IEnumerator Uninstall(GameData game, Action onComplete = null)
+		public IEnumerator Uninstall(UniversalData data, Action onComplete = null)
 		{
-			if (!uninstalling.Contains(game.name))
+			if (!uninstalling.Contains(data.UUID))
 			{
-				uninstalling.Add(game.name);
-				bool uninstalled = false;
-				string uninstallPath = Path.Combine(Constants.Constants.GamesPath, game.name);
-				if (SettingsManager.Settings.customGamePaths.ContainsKey(game.name))
+				uninstalling.Add(data.UUID);
+				string uninstallPath = data.Local.LocalsPath;
+				if (SettingsManager.Settings.customGamePaths.ContainsKey(data.UUID))
 				{
-					uninstallPath = SettingsManager.Settings.customGamePaths[game.name];
-					SettingsManager.Settings.customGamePaths.Remove(game.name);
+					uninstallPath = SettingsManager.Settings.customGamePaths[data.UUID];
+					SettingsManager.Settings.customGamePaths.Remove(data.UUID);
 					SettingsManager.Save();
 				}
+
+				string uninstallVersion = data.Local.Version;
+				AnalyticsEvent.Custom("game_uninstalled", new Dictionary<string, object>
+				{
+					{ "name", data.Name },
+					{ "version", uninstallVersion },
+					{ "playtime", data.Playtime }
+				});
+				AnalyticsEvent.Custom($"{data.Name}_uninstalled", new Dictionary<string, object>
+				{
+					{ "version", uninstallVersion },
+					{ "playtime", data.Playtime }
+				});
+
+				bool uninstalled = false;
 				StartCoroutine(Uninstaller(uninstallPath, () => uninstalled = true));
 				yield return new WaitUntil(() => uninstalled);
-				uninstalling.Remove(game.name);
+				data.Local = null;
+				//Will clear invalid game folders as well...
+				StartCoroutine(LoadGames());
+				uninstalling.Remove(data.UUID);
 			}
 			else
 			{
-				Debug.LogError($"{game.name} is already in the uninstalling queue!");
+				Debug.LogError($"\"{data.UUID}\" ({data.Name}) is already in the uninstalling queue!");
 			}
 			onComplete?.Invoke();
-			Debug.Log($"Uninstalled game: {game.name}");
-			AnalyticsEvent.Custom("game_uninstalled", new Dictionary<string, object>
-			{
-				{ "name", game.name },
-				{ "version", game.version },
-				{ "playtime", game.Playtime }
-			});
-			AnalyticsEvent.Custom($"{game.name}_uninstalled", new Dictionary<string, object>
-			{
-				{ "version", game.version },
-				{ "playtime", game.Playtime }
-			});
+			Debug.Log($"Uninstalled game: {data.Name}");
 		}
 
-		public IEnumerator UpdateUninstall(DownloadHandler.DownloadData download, Action<bool> onComplete = null)
+		public IEnumerator UpdateUninstall(UniversalData data, Action<bool> onComplete = null)
 		{
-			if (download.customPath != null && Directory.Exists(Path.Combine(download.customPath, download.name)))
-				Directory.Delete(Path.Combine(download.customPath, download.name), true);
-
-			string uninstallPath = Path.Combine(Constants.Constants.GamesPath, download.name);
-			if (SettingsManager.Settings.customGamePaths.ContainsKey(download.name))
+			string uninstallPath = data.Local?.LocalsPath;
+			if (SettingsManager.Settings.customGamePaths.ContainsKey(data.UUID))
 			{
-				uninstallPath = SettingsManager.Settings.customGamePaths[download.name];
-				SettingsManager.Settings.customGamePaths.Remove(download.name);
+				uninstallPath = SettingsManager.Settings.customGamePaths[data.UUID];
+				SettingsManager.Settings.customGamePaths.Remove(data.UUID);
 				SettingsManager.Save();
 			}
 
-			if (Directory.Exists(uninstallPath))
+			if (!string.IsNullOrEmpty(uninstallPath) && Directory.Exists(uninstallPath))
 			{
-				bool loop = true;
 				bool looped = false;
-				while (loop)
+				while (true)
 				{
-					if (!uninstalling.Contains(download.name))
+					if (!uninstalling.Contains(data.UUID))
 					{
-						uninstalling.Add(download.name);
+						uninstalling.Add(data.UUID);
 						bool uninstalled = false;
 						StartCoroutine(Uninstaller(uninstallPath, () => uninstalled = true));
 						yield return new WaitUntil(() => uninstalled);
-						uninstalling.Remove(download.name);
+						data.Local = null;
+						//Will clear invalid game folders as well...
+						StartCoroutine(LoadGames());
+						uninstalling.Remove(data.UUID);
 					}
 					else
 					{
-						Debug.LogError($"{download.name} is already in the uninstalling queue!");
+						Debug.LogError($"\"{data.UUID}\" ({data.Name}) is already in the uninstalling queue!");
 					}
 
 					string oldUninstallPath = uninstallPath;
-					uninstallPath = Path.Combine(Constants.Constants.GamesPath, download.name);
+					uninstallPath = Path.Combine(Constants.Constants.GamesPath, data.Name);
 					if (!looped)
 					{
-						loop = Directory.Exists(uninstallPath);
-						Debug.Log($"Uninstalled base game of \"{download.name}\". New custom path location: \"{oldUninstallPath}\"");
+						if (!Directory.Exists(uninstallPath) || looped)
+							break;
 						looped = true;
 					}
 					else
 					{
-						loop = false;
+						Debug.Log($"Uninstalled base game of \"{data.UUID}\" ({data.Name}). New custom path location: \"{oldUninstallPath}\"");
 					}
 				}
 				onComplete?.Invoke(true);
@@ -252,12 +242,14 @@ namespace NALStudio.GameLauncher.Games
 			switch (sortingMode)
 			{
 				case SortingMode.recent:
-					gameDatas = gameDatas.OrderBy(g => g.last_interest).ToList();
-					gameDatas.Reverse();
+					gameDatas = gameDatas.OrderByDescending(g => g.Local.LastInterest).ToArray();
+					break;
+				case SortingMode.alphabetical:
+					gameDatas = gameDatas.OrderBy(g => g.DisplayName).ToArray();
 					break;
 			}
 
-			for (int i = 0; i < gameDatas.Count; i++)
+			for (int i = 0; i < gameDatas.Length; i++)
 			{
 				GameObject instantiated = Instantiate(gamePrefab, transform);
 				games.Add(instantiated);
@@ -271,86 +263,50 @@ namespace NALStudio.GameLauncher.Games
 				insTweener.delay = cardAnimationBasedelay + (i / 10f);
 				gameTweeners.Add(insTweener);
 			}
-			cardHandler.AddToGames();
 		}
 
-		public void LoadGames()
+		public IEnumerator LoadGames()
 		{
+			yield return new WaitUntil(() => DataHandler.UniversalDatas.Loaded);
+
 			foreach (string path in Directory.EnumerateFiles(Constants.Constants.GamesPath))
 				File.Delete(path);
 
-			gameDatas = new List<GameData>();
-
-			List<string> keysToRemove = new List<string>();
-			foreach (KeyValuePair<string, string> custom in SettingsManager.Settings.customGamePaths)
-			{
-				string gamedataPath = Path.Combine(custom.Value, gamedataFilePath);
-				if (File.Exists(gamedataPath))
-				{
-					string encrypted = File.ReadAllText(gamedataPath);
-					string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
-					GameData tmpData = JsonUtility.FromJson<GameData>(unencrypted);
-					string tmpPath;
-					if (Directory.Exists(tmpPath = Path.Combine(Constants.Constants.GamesPath, tmpData.name)))
-						Directory.Delete(tmpPath);
-
-					gameDatas.Add(JsonUtility.FromJson<GameData>(unencrypted));
-				}
-				else
-				{
-					Debug.LogWarning($"Custom path \"{custom.Value}\" of game \"{custom.Key}\" not found.");
-					keysToRemove.Add(custom.Key);
-				}
-			}
-			foreach (string k in keysToRemove)
-			{
-				SettingsManager.Settings.customGamePaths.Remove(k);
-			}
-			SettingsManager.Save();
+			gameDatas = DataHandler.UniversalDatas.Get().Where(d => d.Local != null).ToArray();
+			gameDatasLoaded = true;
 
 			foreach (string path in Directory.EnumerateDirectories(Constants.Constants.GamesPath))
 			{
-				string gamedataPath = Path.Combine(path, gamedataFilePath);
-				if (File.Exists(gamedataPath))
-				{
-					string encrypted = File.ReadAllText(gamedataPath);
-					string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
-					gameDatas.Add(JsonUtility.FromJson<GameData>(unencrypted));
-				}
-				else if (path != Constants.Constants.DownloadPath)
+				if (!gameDatas.Any(g => NALPath.Match(g.Local.LocalsPath, path)))
 				{
 					Directory.Delete(path, true);
+				}
+			}
+			foreach (string path in SettingsManager.Settings.customGamePaths.Values.ToArray())
+			{
+				if (!gameDatas.Any(g => g.Local.LocalsPath == path))
+				{
+					foreach (string key in SettingsManager.Settings.customGamePaths.Keys.Where(k => SettingsManager.Settings.customGamePaths[k] == path).ToArray())
+						SettingsManager.Settings.customGamePaths.Remove(key);
 				}
 			}
 			AddGames();
 		}
 
-		public void StartGame(GameData gameData)
+		public void StartGame(UniversalData data)
 		{
 			if (gameRunningProcess != null)
 				return;
 
-			string path = Path.Combine(Constants.Constants.GamesPath, gameData.name, gameData.executable_path);
-			if (SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name))
-				path = Path.Combine(SettingsManager.Settings.customGamePaths[gameData.name], gameData.executable_path);
-
 			#region Set Start Time
-			string gdPath = Path.Combine(Constants.Constants.GamesPath, gameData.name, gamedataFilePath);
-			if (SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name))
-				gdPath = Path.Combine(SettingsManager.Settings.customGamePaths[gameData.name], gamedataFilePath);
-			string encrypted = File.ReadAllText(gdPath);
-			string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
-			GameData tmp = JsonUtility.FromJson<GameData>(unencrypted);
-			tmp.last_interest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
-			unencrypted = JsonUtility.ToJson(tmp, true);
-			encrypted = Encryption.EncryptionHelper.EncryptString(unencrypted);
-			File.WriteAllText(gdPath, encrypted);
+			data.Local.LastInterest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
+			data.Local.Save();
 			#endregion
 
 			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
 			{
-				FileName = path,
-				WorkingDirectory = !SettingsManager.Settings.customGamePaths.ContainsKey(gameData.name) ? Path.Combine(Constants.Constants.GamesPath, gameData.name) : SettingsManager.Settings.customGamePaths[gameData.name]
+				FileName = Path.Combine(data.Local.LocalsPath, data.Local.ExecutablePath),
+				WorkingDirectory = data.Local.LocalsPath
 			};
 			gameRunningProcess = new System.Diagnostics.Process
 			{
@@ -358,22 +314,20 @@ namespace NALStudio.GameLauncher.Games
 				EnableRaisingEvents = true
 			};
 			gameRunningProcess.Exited += GameCloseHandler;
-			gameRunningData = gameData;
+			gameRunningData = data;
 			gameRunningStartTime = DateTime.UtcNow;
 			gameRunningProcess.Start();
 			gameRunning = true;
 
 			if (sortingMode == SortingMode.recent)
-				LoadGames();
+				StartCoroutine(LoadGames());
 		}
 
 		void Update()
 		{
-			foreach (KeyValuePair<string, float> kv in playtimesToSave)
+			foreach (KeyValuePair<string, double> kv in playtimesToSave)
 			{
-				float toAdd = PlayerPrefs.GetFloat($"playtime/{kv.Key}", 0f);
-				float added = toAdd + kv.Value;
-				PlayerPrefs.SetFloat($"playtime/{kv.Key}", added);
+				DataHandler.UniversalDatas.Get(kv.Key).Playtime += Convert.ToSingle(kv.Value);
 			}
 			playtimesToSave.Clear();
 
@@ -386,7 +340,7 @@ namespace NALStudio.GameLauncher.Games
 			{
 				TimeSpan playTime = DateTime.UtcNow - gameRunningStartTime;
 				if (playTime.TotalMinutes > 0)
-					playtimesToSave.Add(gameRunningData.name, (float)playTime.TotalMinutes);
+					playtimesToSave.Add(gameRunningData.UUID, playTime.TotalMinutes);
 			}
 			catch (Exception ex) { Debug.LogError(ex.Message); }
 			gameRunningData = null;
@@ -429,37 +383,18 @@ namespace NALStudio.GameLauncher.Games
 		{
 			if (gameRunningProcess == null)
 			{
-				if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+				string launchUUID = Environment.GetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", EnvironmentVariableTarget.User);
+				if (launchUUID != null && gameDatasLoaded)
 				{
-					string launchApp = Environment.GetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", EnvironmentVariableTarget.User);
-					if (launchApp != null)
-					{
-						GameData correctData = null;
-						foreach (GameData gd in gameDatas)
-						{
-							if (gd.name == launchApp)
-							{
-								correctData = gd;
-							}
-						}
-						if (correctData != null)
-							StartGame(correctData);
-						else
-							Debug.LogError($"Game name not found in gameDatas! GameDatas count: {gameDatas.Count}, GameName: {launchApp}");
+					UniversalData correctData = Array.Find(gameDatas, d => d.UUID == launchUUID);
+					if (correctData != null)
+						StartGame(correctData);
+					else
+						Debug.LogError($"Game name not found in gameDatas! GameDatas count: {gameDatas.Length}, Game UUID: {launchUUID}");
 
-						Environment.SetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", null, EnvironmentVariableTarget.User);
-					}
-				}
-				else
-				{
-					throw new PlatformNotSupportedException("Shortcuts currently support only Windows NT or newer!");
+					Environment.SetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", null, EnvironmentVariableTarget.User);
 				}
 			}
-		}
-
-		void OnApplicationQuit()
-		{
-			Environment.SetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", null, EnvironmentVariableTarget.User);
 		}
 	}
 }

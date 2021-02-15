@@ -19,13 +19,13 @@ using NALStudio.GameLauncher.Cards;
 using NALStudio.GameLauncher.Constants;
 using NALStudio.GameLauncher.Games;
 using TMPro;
-using NALStudio.Encryption;
 using NALStudio.GameLauncher;
 using System.Collections;
+using Lean.Localization;
 
 public class StorePage : MonoBehaviour
 {
-	CardHandler.CardData openedData;
+	UniversalData openedData;
 	public UITweener tweener;
 	public RawImage image;
 	public AspectRatioFitter ratioFitter;
@@ -45,77 +45,65 @@ public class StorePage : MonoBehaviour
 	public GameHandler gameHandler;
 	public InstallDirHandler dirHandler;
 
-	GameHandler.GameData openedGamedata;
-
-	public void Open(CardHandler.CardData cardData)
+	public void Open(UniversalData _data)
 	{
 		gameObject.SetActive(true);
-		openedData = cardData;
-		if (cardData.early_access)
-			earlyAccessBanner.SetActive(true);
-		else
-			earlyAccessBanner.SetActive(false);
-		ratioFitter.aspectRatio = (float)cardData.thumbnailTexture.width / cardData.thumbnailTexture.height;
-		image.texture = cardData.thumbnailTexture;
-		title.text = cardData.title;
-		developer.text = cardData.developer;
-		publisher.text = cardData.publisher;
-		releaseDate.text = cardData.release_date;
-		version.text = cardData.version;
-		string priceText = $"€{cardData.price}";
-		if (cardData.price == 0)
-			priceText = Lean.Localization.LeanLocalization.GetTranslationText("pricing-free", "Free");
-		price.text = priceText;
+		openedData = _data;
+		earlyAccessBanner.SetActive(openedData.EarlyAccess);
+		ratioFitter.aspectRatio = (float)openedData.ThumbnailTexture.width / openedData.ThumbnailTexture.height;
+		image.texture = openedData.ThumbnailTexture;
+		title.text = openedData.DisplayName;
+		developer.text = openedData.Developer;
+		publisher.text = openedData.Publisher;
+		releaseDate.text = openedData.ReleaseDate;
+		version.text = openedData.Remote.Version;
+		price.text = openedData.Price > 0 ? $"€{openedData.Price}" : LeanLocalization.GetTranslationText("pricing-free", "Free");
 
 		buttonMode = ButtonMode.Install;
-		string gameDataPath = Path.Combine(Constants.GamesPath, cardData.title, GameHandler.gamedataFilePath);
-		if (SettingsManager.Settings.customGamePaths.ContainsKey(cardData.title))
-			gameDataPath = Path.Combine(SettingsManager.Settings.customGamePaths[cardData.title], GameHandler.gamedataFilePath);
-		
-		if (File.Exists(gameDataPath))
-		{
-			string encrypted = File.ReadAllText(gameDataPath);
-			string decrypted = EncryptionHelper.DecryptString(encrypted);
-			openedGamedata = JsonUtility.FromJson<GameHandler.GameData>(decrypted);
+		string gameDataPath = Path.Combine(Constants.GamesPath, openedData.Name, GameHandler.gamedataFilePath);
+		if (SettingsManager.Settings.customGamePaths.ContainsKey(openedData.UUID))
+			gameDataPath = Path.Combine(SettingsManager.Settings.customGamePaths[openedData.UUID], GameHandler.gamedataFilePath);
 
-			if (cardData.version != openedGamedata.version)
+		if (openedData.Local != null)
+		{
+			if (openedData.Remote.Version != openedData.Local.Version)
 				buttonMode = ButtonMode.Update;
 			else
 				buttonMode = ButtonMode.Uninstall;
 		}
-		if (downloadHandler.Queue.Contains(cardData))
+		if (downloadHandler.Queue.Contains(openedData))
 			buttonMode = ButtonMode.Queued;
-		else if (downloadHandler.currentlyDownloading != null && downloadHandler.currentlyDownloading.Equals(cardData.ToDownloadData()))
+		else if (downloadHandler.currentlyDownloading?.Equals(openedData) == true)
 			buttonMode = ButtonMode.Downloading;
 
 		switch (buttonMode)
 		{
 			case ButtonMode.Install:
-				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-install", "INSTALL");
+				buttonText.text = LeanLocalization.GetTranslationText("store_page-install", "INSTALL");
 				break;
 			case ButtonMode.Update:
-				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-update", "UPDATE");
+				buttonText.text = LeanLocalization.GetTranslationText("store_page-update", "UPDATE");
 				break;
 			case ButtonMode.Uninstall:
-				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-uninstall", "UNINSTALL");
+				buttonText.text = LeanLocalization.GetTranslationText("store_page-uninstall", "UNINSTALL");
 				break;
 			case ButtonMode.Queued:
-				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-queued", "Queued...");
+				buttonText.text = LeanLocalization.GetTranslationText("store_page-queued", "Queued...");
 				break;
 			case ButtonMode.Downloading:
-				buttonText.text = Lean.Localization.LeanLocalization.GetTranslationText("store_page-downloading", "Downloading...");
+				buttonText.text = LeanLocalization.GetTranslationText("store_page-downloading", "Downloading...");
 				break;
 		}
 
 		tweener.DoTween();
 	}
 
-	IEnumerator InstallCustomDir(CardHandler.CardData data)
+	IEnumerator InstallCustomDir(UniversalData openedData)
 	{
 		bool finished = false;
 		bool success = false;
 		string path = null;
-		StartCoroutine(dirHandler.Prompt(data, (bool f, bool s, string p) =>
+		StartCoroutine(dirHandler.Prompt(openedData, (bool f, bool s, string p) =>
 		{
 			finished = f;
 			success = s;
@@ -123,11 +111,8 @@ public class StorePage : MonoBehaviour
 		}));
 		yield return new WaitUntil(() => finished);
 		if (success)
-		{
-			DownloadHandler.DownloadData dd = data.ToDownloadData();
-			dd.customPath = path;
-			downloadHandler.Queue.Add(dd);
-		}
+			downloadHandler.Queue.Add(openedData, Path.Combine(path, openedData.Name));
+
 		Close(success);
 	}
 
@@ -147,7 +132,7 @@ public class StorePage : MonoBehaviour
 					downloadHandler.Cancel(openedData);
 					break;
 				case ButtonMode.Uninstall:
-					StartCoroutine(gameHandler.Uninstall(openedGamedata));
+					StartCoroutine(gameHandler.Uninstall(openedData));
 					openDownloads = false;
 					break;
 			}

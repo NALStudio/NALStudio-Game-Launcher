@@ -73,52 +73,7 @@ namespace NALStudio.GameLauncher
         [HideInInspector]
         public QueueHandler Queue = new QueueHandler();
         [HideInInspector]
-        public DownloadData currentlyDownloading;
-
-        [Serializable]
-        public class DownloadData
-        {
-            public string name;
-            public string version;
-            public string download;
-            public string executable_path;
-            public string customPath;
-            public float Playtime
-            {
-                get
-                {
-                    return PlayerPrefs.GetFloat($"playtime/{name}", 0f);
-                }
-            }
-
-            public DownloadData Copy()
-            {
-                return new DownloadData()
-                {
-                    name = name,
-                    version = version,
-                    download = download,
-                    customPath = customPath
-                };
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is DownloadData data && name == data.name;
-            }
-
-            public override int GetHashCode()
-            {
-                int hashCode = 1307175314;
-                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
-                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(version);
-                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(download);
-                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(executable_path);
-                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(customPath);
-                hashCode = hashCode * -1521134295 + Playtime.GetHashCode();
-                return hashCode;
-            }
-        }
+        public UniversalData currentlyDownloading;
 
         void Awake()
         {
@@ -132,45 +87,46 @@ namespace NALStudio.GameLauncher
 
         public class QueueHandler
         {
-            List<DownloadData> queued = new List<DownloadData>();
+            List<string> queued = new List<string>();
+            Dictionary<string, string> customPaths = new Dictionary<string, string>();
 
-            public void Add(DownloadData downloadData)
+            public void Add(UniversalData data)
             {
-                if (!queued.Contains(downloadData))
-                    queued.Add(downloadData);
+                if (!queued.Contains(data.UUID))
+                    queued.Add(data.UUID);
             }
 
-            public void Add(Cards.CardHandler.CardData cardData)
+            public void Add(UniversalData data, string customPath)
             {
-                Add(cardData.ToDownloadData());
+                if (!string.IsNullOrEmpty(customPath))
+				{
+                    if (customPaths.ContainsKey(data.UUID))
+                        customPaths.Add(data.UUID, customPath);
+                    else
+                        customPaths[data.UUID] = customPath;
+				}
+
+				Add(data);
             }
 
-            public void Add(Cards.CardHandler.CardData cardData, string customPath)
+            public void Remove(UniversalData item)
             {
-                DownloadData downloadData = cardData.ToDownloadData();
-                downloadData.customPath = customPath;
-                Add(downloadData);
+                if (queued.Contains(item.UUID))
+                    queued.Remove(item.UUID);
             }
 
-            public void Remove(Cards.CardHandler.CardData item)
+            public bool Contains(UniversalData item)
             {
-                queued.Remove(item.ToDownloadData());
+                return queued.Contains(item.UUID);
             }
 
-            public void Remove(DownloadData item)
-            {
-                queued.Remove(item);
-            }
-
-            public bool Contains(Cards.CardHandler.CardData item)
-            {
-                return queued.Contains(item.ToDownloadData());
-            }
-
-            public bool Contains(DownloadData item)
-            {
-                return queued.Contains(item);
-            }
+            public string CustomPath(UniversalData item)
+			{
+                if (customPaths.TryGetValue(item.UUID, out string value))
+                    return value;
+                else
+                    return null;
+			}
 
             public int Count()
             {
@@ -182,13 +138,13 @@ namespace NALStudio.GameLauncher
                 queued.Clear();
             }
 
-            public DownloadData GetNextDownload()
+            public UniversalData GetNextDownload()
             {
                 if (queued.Count > 0)
                 {
-                    DownloadData tmpData = queued[0];
+                    string tmpUUID = queued[0];
                     queued.RemoveAt(0);
-                    return tmpData;
+                    return DataHandler.UniversalDatas.Get(tmpUUID);
                 }
                 else
                 {
@@ -350,12 +306,7 @@ namespace NALStudio.GameLauncher
             }
         }
 
-        public void Cancel(Cards.CardHandler.CardData toCancel)
-        {
-            Cancel(toCancel.ToDownloadData());
-        }
-
-        public void Cancel(DownloadData toCancel)
+        public void Cancel(UniversalData toCancel)
         {
             if (currentlyDownloading.Equals(toCancel))
             {
@@ -405,7 +356,7 @@ namespace NALStudio.GameLauncher
             yield return DownloadError($"{error.Message}\n{error.StackTrace}");
         }
 
-        IEnumerator Downloader(DownloadData downloadData)
+        IEnumerator Downloader(UniversalData data)
         {
             string downloadDir = Constants.Constants.DownloadPath;
             if (Directory.Exists(downloadDir))
@@ -413,7 +364,7 @@ namespace NALStudio.GameLauncher
             DirectoryInfo downloadTmp = Directory.CreateDirectory(downloadDir);
             downloadTmp.Attributes |= FileAttributes.Hidden;
             string downloadPath = Path.Combine(downloadDir, "data.nbf");
-            request = new UnityWebRequest(downloadData.download)
+            request = new UnityWebRequest(data.DownloadUrl)
             {
                 downloadHandler = new DownloadHandlerFile(downloadPath)
             };
@@ -438,10 +389,10 @@ namespace NALStudio.GameLauncher
                             progressBarBackground.color = progressBarExtracting;
                             progressBarFill.color = new Color(0, 0, 0, 0);
                             bool extractionCompleted = false;
-                            StartCoroutine(Extractor(downloadPath, downloadData, () => extractionCompleted = true));
+                            StartCoroutine(Extractor(downloadPath, data, () => extractionCompleted = true));
                             yield return new WaitUntil(() => extractionCompleted);
-                            gameHandler.LoadGames();
-                            yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
+							StartCoroutine(gameHandler.LoadGames());
+							yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
                             extractingAssets.SetActive(false);
                             extractingText.color = extractingNormalColor;
                             extractingText.text = extractingNormalText;
@@ -483,7 +434,7 @@ namespace NALStudio.GameLauncher
             }
         }
 
-        IEnumerator Extractor(string zipPath, DownloadData downloadData, Action onComplete = null)
+        IEnumerator Extractor(string zipPath, UniversalData data, Action onComplete = null)
         {
             if (!SettingsManager.Settings.allowInstallsDuringGameplay)
                 yield return new WaitUntil(() => !gameHandler.gameRunning || ApplicationHandler.hasFocus || SettingsManager.Settings.allowInstallsDuringGameplay);
@@ -502,23 +453,46 @@ namespace NALStudio.GameLauncher
 
             bool uninstalled = false;
             bool updated = false;
-            StartCoroutine(gameHandler.UpdateUninstall(downloadData, (u) =>
+            StartCoroutine(gameHandler.UpdateUninstall(data, (u) =>
             {
                 uninstalled = true;
                 updated = u;
             }));
 
-            string gamePath = Path.Combine(Constants.Constants.GamesPath, downloadData.name);
-            if (downloadData.customPath != null)
+            string searchDir;
+            if (Queue.CustomPath(data) == null)
             {
-                gamePath = Path.Combine(downloadData.customPath, downloadData.name);
-                // Extra prosessointi kakkaa
-                if (!SettingsManager.Settings.customGamePaths.Keys.Contains(downloadData.name))
-                    SettingsManager.Settings.customGamePaths.Add(downloadData.name, gamePath);
-                else
-                    Debug.LogWarning($"Custom path \"{gamePath}\" for game \"{downloadData.name}\" exists already!");
+                searchDir = Path.Combine(Constants.Constants.GamesPath, data.Name);
+				if (File.Exists(Path.Combine(searchDir, Constants.Constants.gamedataFilePath)))
+				{
+                    string json = File.ReadAllText(Path.Combine(searchDir, Constants.Constants.gamedataFilePath));
+                    var tmp = UniversalData.LocalData.FromJson(json);
+                    if (tmp != null && tmp.UUID != data.UUID)
+                        searchDir = Path.Combine(Constants.Constants.GamesPath, data.UUID);
+				}
+			}
+            else
+            {
+                searchDir = Queue.CustomPath(data);
+			}
 
-                SettingsManager.Save();
+            string gamePath = Path.Combine(Constants.Constants.GamesPath, searchDir);
+            string customPath = Queue.CustomPath(data);
+            if (customPath != null)
+            {
+                gamePath = customPath;
+				// Extra prosessointi kakkaa
+				if (!SettingsManager.Settings.customGamePaths.Keys.Contains(data.UUID))
+				{
+					SettingsManager.Settings.customGamePaths.Add(data.UUID, gamePath);
+				}
+				else
+				{
+					Debug.LogWarning($"Custom path \"{gamePath}\" for game \"{data.UUID}\" ({data.Name}) exists already! Overriding old setting...");
+                    SettingsManager.Settings.customGamePaths[data.UUID] = gamePath;
+                }
+
+				SettingsManager.Save();
             }
 
             yield return new WaitUntil(() => uninstalled);
@@ -545,37 +519,26 @@ namespace NALStudio.GameLauncher
                 Directory.Delete(Constants.Constants.DownloadPath, true);
             yield return null;
 
-            string gamedataPath = Path.Combine(gamePath, GameHandler.gamedataFilePath);
-            GameHandler.GameData gamedata;
-            if (File.Exists(gamedataPath))
-            {
-                string encrypted = File.ReadAllText(gamedataPath);
-                string unencrypted = Encryption.EncryptionHelper.DecryptString(encrypted);
-                gamedata = JsonUtility.FromJson<GameHandler.GameData>(unencrypted);
-                gamedata.version = downloadData.version;
-                gamedata.executable_path = downloadData.executable_path;
-                gamedata.last_interest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
-
-                yield return null;
-            }
-            else
-            {
-                gamedata = new GameHandler.GameData
-                {
-                    name = downloadData.name,
-                    version = downloadData.version,
-                    executable_path = downloadData.executable_path,
-                    last_interest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds()
-                };
-            }
-            string gamedataJson = JsonUtility.ToJson(gamedata, true);
-            string gamedataEncrypted = Encryption.EncryptionHelper.EncryptString(gamedataJson);
-
+			if (data.Local != null)
+			{
+				data.Local.Version = data.Remote.Version;
+				data.Local.ExecutablePath = data.Remote.ExecutablePath;
+				data.Local.LastInterest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
+			}
+			else
+			{
+				data.Local = new UniversalData.LocalData(data.UUID,
+					data.Remote.Version,
+					data.Remote.ExecutablePath,
+					gamePath,
+					new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds());
+			}
             try
             {
-                if (!Directory.Exists(GameHandler.launcherDataFilePath))
-                    Directory.CreateDirectory(Path.Combine(gamePath, GameHandler.launcherDataFilePath));
-                File.WriteAllText(Path.Combine(gamePath, GameHandler.gamedataFilePath), gamedataEncrypted);
+                string tmpPath = Path.Combine(gamePath, Constants.Constants.launcherDataFilePath);
+                if (!Directory.Exists(tmpPath))
+                    Directory.CreateDirectory(tmpPath);
+                data.Local.Save();
             }
             catch (Exception e)
             {
@@ -590,39 +553,41 @@ namespace NALStudio.GameLauncher
             yield return null;
 
             if (extractError)
-                yield return new WaitForSeconds(5);
+                yield return new WaitForSeconds(5f);
             onComplete?.Invoke();
             if (!extractError)
             {
                 if (!updated)
                 {
-                    Debug.Log($"Installed game: {downloadData.name}");
+                    Debug.Log($"Installed game: \"{data.UUID}\" ({data.Name})");
                     AnalyticsEvent.Custom("game_installed", new Dictionary<string, object>
-                {
-                    { "name", downloadData.name},
-                    { "version", downloadData.version },
-                    { "playtime", downloadData.Playtime }
-                });
-                    AnalyticsEvent.Custom($"{downloadData.name}_installed", new Dictionary<string, object>
-                {
-                    { "version", downloadData.version },
-                    { "playtime", downloadData.Playtime }
-                });
-                }
+                    {
+                        { "name", data.Name},
+                        { "uuid", data.UUID },
+                        { "version", data.Remote.Version },
+                        { "playtime", data.Playtime }
+                    });
+                    AnalyticsEvent.Custom($"{data.Name}_{data.UUID}_installed", new Dictionary<string, object>
+                    {
+                        { "version", data.Remote.Version },
+                        { "playtime", data.Playtime }
+                    });
+                    }
                 else
                 {
-                    Debug.Log($"Updated game: {downloadData.name}");
-                    AnalyticsEvent.Custom("game_update", new Dictionary<string, object>
-                {
-                    { "name", downloadData.name },
-                    { "version", downloadData.version },
-                    { "playtime", downloadData.Playtime }
-                });
-                    AnalyticsEvent.Custom($"{downloadData.name}_update", new Dictionary<string, object>
-                {
-                    { "version", downloadData.version },
-                    { "playtime", downloadData.Playtime }
-                });
+                    Debug.Log($"Updated game: \"{data.UUID}\" ({data.Name})");
+                    AnalyticsEvent.Custom("game_updated", new Dictionary<string, object>
+                    {
+                        { "name", data.Name },
+                        { "uuid", data.UUID },
+                        { "version", data.Remote.Version },
+                        { "playtime", data.Playtime }
+                    });
+                    AnalyticsEvent.Custom($"{data.Name}_{data.UUID}_updated", new Dictionary<string, object>
+                    {
+                        { "version", data.Remote.Version },
+                        { "playtime", data.Playtime }
+                    });
                 }
             }
         }
