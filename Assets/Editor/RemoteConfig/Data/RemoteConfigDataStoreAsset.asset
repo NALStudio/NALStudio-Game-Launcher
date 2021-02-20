@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"2560a481-f191-4b91-9a76-c87c13c554fb\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"49b6f449-ca4e-468a-a75b-5c35b9c6e1d2\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
     \"type\": \"json\",\r\n      \"value\": {\r\n        \"name\": \"Koponen Dating
     Simulator\",\r\n        \"display_name\": \"Koponen Dating Simulator\",\r\n       
@@ -23,7 +23,7 @@ MonoBehaviour:
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
     \"order\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"KoponenDatingSimulator.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
-    {\r\n      \"entityId\": \"43e35976-bcf4-4416-9cd0-065359d547c7\"\r\n    },\r\n   
+    {\r\n      \"entityId\": \"68549f29-8545-4ae6-ab1c-d000ead40c20\"\r\n    },\r\n   
     \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
     \"value\": {\r\n        \"name\": \"Rise and Fall\",\r\n        \"display_name\":
     \"Rise and Fall\",\r\n        \"uuid\": \"70f29c3f-b344-4767-9a6d-22a47c394129\",\r\n       
@@ -33,7 +33,7 @@ MonoBehaviour:
     \"download_url\": \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
     \"order\": 1,\r\n        \"version\": \"0.2.0\",\r\n        \"executable_path\":
     \"Peli_VAL.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"85de0c1e-5a6a-48f9-b4a3-fab4fabee92a\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"3fd8298c-995d-4dc5-a087-ed6f0a7dc46a\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n      \"value\":
     {\r\n        \"name\": \"Mastermind\",\r\n        \"display_name\": \"Mastermind\",\r\n       
     \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n        \"developer\":
@@ -43,7 +43,7 @@ MonoBehaviour:
     \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
     \"order\": 2,\r\n        \"version\": \"1.0.1\",\r\n        \"executable_path\":
     \"Mastermind.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"358dda0e-4cbf-4b85-89cb-4ff2d0f3aab0\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"7f18d713-90db-44cf-84f9-ed2515a5dd7d\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\": \"json\",\r\n     
     \"value\": {\r\n        \"name\": \"KDS Level Builder\",\r\n        \"display_name\":
     \"KDS Level Builder\",\r\n        \"uuid\": \"4ca9096d-8055-4430-88f0-1e6a6046f92a\",\r\n       
@@ -53,7 +53,7 @@ MonoBehaviour:
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/LevelBuilder.zip\",\r\n       
     \"order\": 3,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"LevelBuilder.exe\"\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"2560a481-f191-4b91-9a76-c87c13c554fb\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"49b6f449-ca4e-468a-a75b-5c35b9c6e1d2\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
     \"type\": \"json\",\r\n      \"value\": {\r\n        \"name\": \"Koponen Dating
     Simulator\",\r\n        \"display_name\": \"Koponen Dating Simulator\",\r\n       
@@ -64,7 +64,7 @@ MonoBehaviour:
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
     \"order\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"KoponenDatingSimulator.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
-    {\r\n      \"entityId\": \"43e35976-bcf4-4416-9cd0-065359d547c7\"\r\n    },\r\n   
+    {\r\n      \"entityId\": \"68549f29-8545-4ae6-ab1c-d000ead40c20\"\r\n    },\r\n   
     \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
     \"value\": {\r\n        \"name\": \"Rise and Fall\",\r\n        \"display_name\":
     \"Rise and Fall\",\r\n        \"uuid\": \"70f29c3f-b344-4767-9a6d-22a47c394129\",\r\n       
@@ -74,7 +74,7 @@ MonoBehaviour:
     \"download_url\": \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
     \"order\": 1,\r\n        \"version\": \"0.2.0\",\r\n        \"executable_path\":
     \"Peli_VAL.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"85de0c1e-5a6a-48f9-b4a3-fab4fabee92a\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"3fd8298c-995d-4dc5-a087-ed6f0a7dc46a\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n      \"value\":
     {\r\n        \"name\": \"Mastermind\",\r\n        \"display_name\": \"Mastermind\",\r\n       
     \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n        \"developer\":
@@ -84,7 +84,7 @@ MonoBehaviour:
     \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
     \"order\": 2,\r\n        \"version\": \"1.0.1\",\r\n        \"executable_path\":
     \"Mastermind.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"358dda0e-4cbf-4b85-89cb-4ff2d0f3aab0\"\r\n    },\r\n    \"rs\":
+    \"entityId\": \"7f18d713-90db-44cf-84f9-ed2515a5dd7d\"\r\n    },\r\n    \"rs\":
     {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\": \"json\",\r\n     
     \"value\": {\r\n        \"name\": \"KDS Level Builder\",\r\n        \"display_name\":
     \"KDS Level Builder\",\r\n        \"uuid\": \"4ca9096d-8055-4430-88f0-1e6a6046f92a\",\r\n       

@@ -19,7 +19,13 @@ using UnityEngine.Analytics;
 
 public class ApplicationHandler : MonoBehaviour
 {
-	public static bool hasFocus { get; private set; }
+	public static bool HasFocus { get; private set; }
+
+	void Awake()
+	{
+		if (Debug.isDebugBuild)
+			Analytics.enabled = false;
+	}
 
 	void Start()
 	{
@@ -38,6 +44,6 @@ public class ApplicationHandler : MonoBehaviour
 
 	void OnApplicationFocus(bool focus)
 	{
-		hasFocus = focus;
+		HasFocus = focus;
 	}
 }

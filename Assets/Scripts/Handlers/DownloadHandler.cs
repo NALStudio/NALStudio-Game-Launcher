@@ -437,7 +437,7 @@ namespace NALStudio.GameLauncher
         IEnumerator Extractor(string zipPath, UniversalData data, Action onComplete = null)
         {
             if (!SettingsManager.Settings.allowInstallsDuringGameplay)
-                yield return new WaitUntil(() => !gameHandler.gameRunning || ApplicationHandler.hasFocus || SettingsManager.Settings.allowInstallsDuringGameplay);
+                yield return new WaitUntil(() => !gameHandler.gameRunning || ApplicationHandler.HasFocus || SettingsManager.Settings.allowInstallsDuringGameplay);
 
             bool extractError = false;
 
