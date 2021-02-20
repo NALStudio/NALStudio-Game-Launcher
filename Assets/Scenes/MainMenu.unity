@@ -2928,8 +2928,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 706.93164, y: -90}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_AnchoredPosition: {x: 620, y: -90}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &264079389
 MonoBehaviour:
@@ -6684,8 +6684,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 706.93164, y: -100}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_AnchoredPosition: {x: 620, y: -100}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &567964752
 MonoBehaviour:
@@ -6776,7 +6776,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   header: Limit FPS When Unfocused
-  content: 'Limit application''s frame rate when unfocused.
+  content: 'Limit application''s frame rate
+
+    when unfocused.
 
     [Default: On]'
   delay: 0.5
@@ -14275,7 +14277,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -120}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1255746033
 MonoBehaviour:
@@ -15354,8 +15356,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 706.93164, y: 0}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_AnchoredPosition: {x: 620, y: 0}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1350398085
 MonoBehaviour:
@@ -18727,8 +18729,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 706.93164, y: -60}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_AnchoredPosition: {x: 620, y: -60}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1659253517
 MonoBehaviour:
@@ -19261,8 +19263,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 706.93164, y: -40}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_AnchoredPosition: {x: 620, y: -40}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1693817065
 MonoBehaviour:
@@ -21328,8 +21330,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 706.93164, y: -30}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_AnchoredPosition: {x: 620, y: -30}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1867351859
 MonoBehaviour:
@@ -21898,8 +21900,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 706.93164, y: -10}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_AnchoredPosition: {x: 620, y: -10}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1886871185
 MonoBehaviour:
@@ -22038,8 +22040,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 706.93164, y: -70}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_AnchoredPosition: {x: 620, y: -70}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1890409183
 MonoBehaviour:
@@ -23903,8 +23905,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 706.93164, y: -130}
-  m_SizeDelta: {x: 1413.8652, y: 20}
+  m_AnchoredPosition: {x: 620, y: -130}
+  m_SizeDelta: {x: 1240, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2046987571
 MonoBehaviour:
@@ -23995,9 +23997,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 1
   header: Low Performance Mode
-  content: 'Limit application''s frame rate
+  content: 'Limit application''s frame rate more aggressively
 
-    more aggressively when unfocused.
+    when unfocused.
 
     [Default:
     Off]'
