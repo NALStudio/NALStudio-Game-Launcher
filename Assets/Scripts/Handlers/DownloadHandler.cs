@@ -27,6 +27,7 @@ using NALStudio.Math;
 using NALStudio.Coroutines;
 using System;
 using UnityEngine.Analytics;
+using NALStudio.IO;
 
 namespace NALStudio.GameLauncher
 {
@@ -82,13 +83,21 @@ namespace NALStudio.GameLauncher
             extractingNormalColor = extractingText.color;
             extractingNormalText = extractingText.text;
             queuedCountText.text =
-                $"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {Queue.Count()}";
+                $"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {Queue.Count}";
         }
 
         public class QueueHandler
         {
             List<string> queued = new List<string>();
             Dictionary<string, string> customPaths = new Dictionary<string, string>();
+
+            public int Count
+			{
+				get
+				{
+                    return queued.Count;
+				}
+			}
 
             public void Add(UniversalData data)
             {
@@ -99,12 +108,7 @@ namespace NALStudio.GameLauncher
             public void Add(UniversalData data, string customPath)
             {
                 if (!string.IsNullOrEmpty(customPath))
-				{
-                    if (customPaths.ContainsKey(data.UUID))
-                        customPaths.Add(data.UUID, customPath);
-                    else
-                        customPaths[data.UUID] = customPath;
-				}
+					customPaths[data.UUID] = customPath;
 
 				Add(data);
             }
@@ -128,11 +132,6 @@ namespace NALStudio.GameLauncher
                     return null;
 			}
 
-            public int Count()
-            {
-                return queued.Count;
-            }
-
             public void Clear()
             {
                 queued.Clear();
@@ -144,8 +143,11 @@ namespace NALStudio.GameLauncher
                 {
                     string tmpUUID = queued[0];
                     queued.RemoveAt(0);
-                    return DataHandler.UniversalDatas.Get(tmpUUID);
-                }
+                    UniversalData tmpData = DataHandler.UniversalDatas.Get(tmpUUID);
+                    if (tmpData == null)
+						Debug.LogWarning($"UUID \"{tmpUUID}\" not found in UniversalDatas! Removing from download queue...");
+                    return tmpData;
+				}
                 else
                 {
                     return null;
@@ -196,20 +198,6 @@ namespace NALStudio.GameLauncher
 
                 if (downloadsMenu.opened)
                 {
-                    #region Download Error
-                    if (downloadError)
-                    {
-                        downloadSpeedText.text = "[ERROR]";
-                        timeRemainingText.text = LeanLocalization.GetTranslationText("downloads-remaining", "Time Remaining:") + " [ERROR]";
-                        progressBarBackground.color = errorProgressColor;
-                        progressBarFill.color = new Color(0, 0, 0, 0);
-                    }
-                    else if (progressBarBackground.color != progressNormalColor)
-                    {
-                        progressBarBackground.color = progressNormalColor;
-                        progressBarFill.color = progressFillNormalColor;
-                    }
-                    #endregion
 
                     #region Progress Bar
                     progressBar.value = request.downloadProgress;
@@ -282,11 +270,25 @@ namespace NALStudio.GameLauncher
 
                     #region Queued Count
                     queuedCountText.text =
-                        $"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {Queue.Count()}";
+                        $"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {Queue.Count}";
+                    #endregion
+
+                    #region Download Error
+                    if (downloadError)
+                    {
+                        downloadSpeedText.text = "[ERROR]";
+                        timeRemainingText.text = LeanLocalization.GetTranslationText("downloads-remaining", "Time Remaining:") + " [ERROR]";
+                        progressBarBackground.color = errorProgressColor;
+                        progressBarFill.color = new Color(0, 0, 0, 0);
+                    }
+                    else if (progressBarBackground.color != progressNormalColor)
+                    {
+                        progressBarBackground.color = progressNormalColor;
+                        progressBarFill.color = progressFillNormalColor;
+                    }
                     #endregion
 
                     oldDownloadedBytes = request.downloadedBytes;
-
                 }
                 else
                 {
@@ -343,7 +345,7 @@ namespace NALStudio.GameLauncher
         {
             Debug.LogError(error);
             downloadError = true;
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(10f);
             downloadError = false;
             request = null;
             updateGraphs = false;
@@ -353,7 +355,7 @@ namespace NALStudio.GameLauncher
 
         IEnumerator DownloadError(Exception error)
         {
-            yield return DownloadError($"{error.Message}\n{error.StackTrace}");
+            yield return StartCoroutine(DownloadError($"{error.Message}\n{error.StackTrace}"));
         }
 
         IEnumerator Downloader(UniversalData data)
@@ -445,11 +447,7 @@ namespace NALStudio.GameLauncher
             if (Directory.Exists(extractPath))
                 Directory.Delete(extractPath, true);
 
-            yield return null;
-
-            ZipFile.ExtractToDirectory(zipPath, extractPath);
-
-            yield return null;
+            yield return StartCoroutine(NALZipFile.ExtractToDirectoryThreaded(zipPath, extractPath));
 
             bool uninstalled = false;
             bool updated = false;

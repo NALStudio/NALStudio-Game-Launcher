@@ -132,15 +132,20 @@ public class StorePage : MonoBehaviour
 					downloadHandler.Cancel(openedData);
 					break;
 				case ButtonMode.Uninstall:
-					StartCoroutine(gameHandler.Uninstall(openedData));
+					gameHandler.Uninstall(openedData);
 					openDownloads = false;
 					break;
 			}
 			Close(openDownloads);
 		}
-		else if (buttonMode == ButtonMode.Install)
+		else
 		{
-			StartCoroutine(InstallCustomDir(openedData));
+			switch (buttonMode)
+			{
+				case ButtonMode.Install:
+					StartCoroutine(InstallCustomDir(openedData));
+					break;
+			}
 		}
 	}
 

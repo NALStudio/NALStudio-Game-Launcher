@@ -13,6 +13,7 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 
 using Lean.Localization;
 using NALStudio.GameLauncher.Cards;
+using NALStudio.IO;
 using NALStudio.UI;
 using System;
 using System.Collections;
@@ -73,7 +74,7 @@ namespace NALStudio.GameLauncher.Games
 
 		public void Uninstall()
 		{
-			StartCoroutine(gameHandler.Uninstall(data));
+			gameHandler.Uninstall(data);
 		}
 
 		public void CreateShortcut()
@@ -100,22 +101,25 @@ namespace NALStudio.GameLauncher.Games
 			File.WriteAllLines(shortcutPath, shortcutLines);
 		}
 
-		public IEnumerator LoadAssets(UniversalData _data)
+		public void LoadAssets(UniversalData _data)
 		{
-			sizeText.text = $"0.0{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}";
 			data = _data;
+			StartCoroutine(SetContent());
+		}
+
+		public IEnumerator SetContent()
+		{
 			nameText.text = data.DisplayName;
 			versionText.text = data.Local.Version;
-			yield return null;
+			// Update so that it sets the thumbnail
+			// immediately if found.
+			Update();
+			sizeText.text = LeanLocalization.GetTranslationText("global-calculating", "Calculating...");
 			#region Game Size
-			long gameSize = 0;
-			DirectoryInfo dirInfo = new DirectoryInfo(data.Local.LocalsPath);
-			foreach (FileInfo fi in dirInfo.GetFiles("*", SearchOption.AllDirectories))
-			{
-				gameSize += fi.Length;
-				sizeText.text = $"{Math.Convert.BytesToMB(gameSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}";
-				yield return null;
-			}
+			long gameSize = -1;
+			StartCoroutine(NALDirectory.GetSize(data.Local.LocalsPath, (s) => gameSize = s));
+			yield return new WaitWhile(() => gameSize < 0);
+			sizeText.text = $"{Math.Convert.BytesToMB(gameSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}";
 			#endregion
 		}
 

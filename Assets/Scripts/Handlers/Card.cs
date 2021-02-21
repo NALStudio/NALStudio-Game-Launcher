@@ -44,7 +44,10 @@ namespace NALStudio.GameLauncher.Cards
 
 		IEnumerator SetContent()
         {
-            yield return new WaitWhile(() => data.ThumbnailTexture == null);
+            // If check added to remove the flicker
+            // that is sometimes seen because of WaitWhile
+            if (data.ThumbnailTexture == null)
+                yield return new WaitWhile(() => data.ThumbnailTexture == null);
 			#region Thumbnail
             thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = data.ThumbnailTexture.width / (float)data.ThumbnailTexture.height;
             thumbnail.texture = data.ThumbnailTexture;

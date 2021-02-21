@@ -25,17 +25,25 @@ public class ApplicationStateHandler : MonoBehaviour
 	{
 		#region Focused
 		if (hasFocus || !SettingsManager.Settings.limitFPS)
+		{
 			Application.targetFrameRate = -1;
+		}
 		#endregion
 		#region Unfocused
-		else if (gameHandler.gameRunning || SettingsManager.Settings.lowPerfMode)
-			Application.targetFrameRate = 1;
-		else if (tabGroup.SelectedButton == tabGroup.tabButtons[0])
-			Application.targetFrameRate = 30;
-		else if (!downloadsMenu.trueOpened)
-			Application.targetFrameRate = 1;
 		else
-			Application.targetFrameRate = Mathf.CeilToInt(1 / Time.fixedDeltaTime);
+		{
+			if (gameHandler.gameRunning || SettingsManager.Settings.lowPerfMode)
+				Application.targetFrameRate = 1;
+			else if (tabGroup.SelectedButton == tabGroup.tabButtons[0])
+				Application.targetFrameRate = 30;
+			else if (!downloadsMenu.trueOpened)
+				Application.targetFrameRate = 1;
+			else
+				Application.targetFrameRate = Mathf.CeilToInt(1 / Time.fixedDeltaTime);
+			// Manually empty garbage to free up RAM
+			Resources.UnloadUnusedAssets();
+			System.GC.Collect();
+		}
 		#endregion
 	}
 }

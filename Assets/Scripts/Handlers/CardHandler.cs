@@ -87,6 +87,12 @@ namespace NALStudio.GameLauncher.Cards
 
         void AddCards()
         {
+            foreach (GameObject go in cards)
+                Destroy(go);
+            cards.Clear();
+            cardScripts.Clear();
+            cardTweeners.Clear();
+
             UniversalData[] sortedDatas = DataHandler.UniversalDatas.Get().ToArray();
             switch (sortingMode)
             {
@@ -137,12 +143,6 @@ namespace NALStudio.GameLauncher.Cards
                 else
                     Debug.LogError($"Fetched json for game: \"{cardKey}\" could not be loaded!");
             }
-
-            foreach (GameObject go in cards)
-                Destroy(go);
-            cards.Clear();
-            cardScripts.Clear();
-            cardTweeners.Clear();
 
             foreach (string json in jsons)
             {

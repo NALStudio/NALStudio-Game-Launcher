@@ -18,6 +18,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.UI;
@@ -94,50 +96,47 @@ namespace NALStudio.GameLauncher.Games
 		}
 #endif
 
-		IEnumerator Uninstaller(string path, Action onComplete = null)
+		struct UninstallJob : IJob
 		{
-			int tries = 0;
-			string dPath = Path.Combine(path, gamedataFilePath);
-			while (File.Exists(dPath))
+			public NativeArray<char> pathChars;
+			public NativeArray<bool> result;
+
+			public void Execute()
 			{
-				try
-				{
-					tries++;
-					File.Delete(dPath);
-					if (tries > 10)
-					{
-						Debug.LogError($"Could not delete file {dPath}! Tries: {tries}");
-						break;
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.LogWarning($"Could not delete file {dPath}!\n{e.Message}");
-				}
+				result[0] = false;
+				string path = new string(pathChars.ToArray());
+				string dPath = Path.Combine(path, gamedataFilePath);
+				File.Delete(dPath);
+				Directory.Delete(path, true);
+				result[0] = true;
 			}
-			yield return null;
-			tries = 0;
-			while (Directory.Exists(path))
-			{
-				try
-				{
-					tries++;
-					Directory.Delete(path, true);
-					if (tries > 10)
-					{
-						Debug.LogError($"Could not delete directory {path}! Tries: {tries}");
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.LogWarning($"Could not delete directory {path}!\n{e.Message}");
-				}
-			}
-			yield return null;
-			onComplete?.Invoke();
 		}
 
-		public IEnumerator Uninstall(UniversalData data, Action onComplete = null)
+		IEnumerator Uninstaller(string path)
+		{
+			NativeArray<bool> result = new NativeArray<bool>(1, Allocator.Persistent);
+			NativeArray<char> pathChars = new NativeArray<char>(path.ToCharArray(), Allocator.Persistent);
+			UninstallJob job = new UninstallJob
+			{
+				pathChars = pathChars,
+				result = result
+			};
+			JobHandle handle = job.Schedule();
+			yield return new WaitUntil(() => handle.IsCompleted);
+			handle.Complete();
+			bool success = result[0];
+			if (!success)
+				Debug.LogError($"Directory deletion at path \"{path}\" was unsuccesful!");
+			result.Dispose();
+			pathChars.Dispose();
+		}
+
+		public void Uninstall(UniversalData data)
+		{
+			StartCoroutine(UninstallCoroutine(data));
+		}
+
+		IEnumerator UninstallCoroutine(UniversalData data, Action onComplete = null)
 		{
 			if (!uninstalling.Contains(data.UUID))
 			{
@@ -163,9 +162,7 @@ namespace NALStudio.GameLauncher.Games
 					{ "playtime", data.Playtime }
 				});
 
-				bool uninstalled = false;
-				StartCoroutine(Uninstaller(uninstallPath, () => uninstalled = true));
-				yield return new WaitUntil(() => uninstalled);
+				yield return StartCoroutine(Uninstaller(uninstallPath));
 				data.Local = null;
 				//Will clear invalid game folders as well...
 				StartCoroutine(LoadGames());
@@ -197,9 +194,7 @@ namespace NALStudio.GameLauncher.Games
 					if (!uninstalling.Contains(data.UUID))
 					{
 						uninstalling.Add(data.UUID);
-						bool uninstalled = false;
-						StartCoroutine(Uninstaller(uninstallPath, () => uninstalled = true));
-						yield return new WaitUntil(() => uninstalled);
+						yield return StartCoroutine(Uninstaller(uninstallPath));
 						data.Local = null;
 						//Will clear invalid game folders as well...
 						StartCoroutine(LoadGames());
@@ -256,7 +251,7 @@ namespace NALStudio.GameLauncher.Games
 				Game insGame = instantiated.GetComponent<Game>();
 				insGame.gameHandler = this;
 				insGame.storePage = storePage;
-				StartCoroutine(insGame.LoadAssets(gameDatas[i]));
+				insGame.LoadAssets(gameDatas[i]);
 				gameScripts.Add(insGame);
 				UITweener insTweener = instantiated.GetComponent<UITweener>();
 				insTweener.duration = cardAnimationDuration;
