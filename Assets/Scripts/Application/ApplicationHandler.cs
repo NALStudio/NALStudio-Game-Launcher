@@ -14,12 +14,18 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Analytics;
+using Microsoft.Win32;
+using NALStudio.GameLauncher.Constants;
+using System.Security.Permissions;
+using System.Security.Principal;
 
 public class ApplicationHandler : MonoBehaviour
 {
 	public static bool HasFocus { get; private set; }
+	public static bool ShortcutsEnabled { get; private set; }
 
 	void Awake()
 	{
@@ -40,6 +46,34 @@ public class ApplicationHandler : MonoBehaviour
 			{ "OS", SystemInfo.operatingSystem },
 			{ "Internet", Application.internetReachability != NetworkReachability.NotReachable }
 		});
+
+		if (!File.Exists(Constants.LaunchPath))
+		{
+			File.Copy(Path.Combine(Application.streamingAssetsPath, "NALStudioGameLauncherShortcutLaunch.exe"), Constants.LaunchPath);
+
+			System.Diagnostics.ProcessStartInfo registryStart = new System.Diagnostics.ProcessStartInfo
+			{
+				FileName = Path.Combine(Application.streamingAssetsPath, "NALStudioGameLauncherRegistry.exe"),
+				Arguments = $"\"{Constants.LaunchPath}\"",
+				CreateNoWindow = true
+			};
+			try
+			{
+				System.Diagnostics.Process.Start(registryStart);
+				ShortcutsEnabled = true;
+			}
+			catch (Exception e)
+			{
+				Debug.LogError(e.Message);
+
+				ShortcutsEnabled = false;
+				File.Delete(Constants.LaunchPath);
+			}
+		}
+		else
+		{
+			ShortcutsEnabled = true;
+		}
 	}
 
 	void OnApplicationFocus(bool focus)

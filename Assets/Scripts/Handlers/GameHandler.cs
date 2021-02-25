@@ -49,7 +49,6 @@ namespace NALStudio.GameLauncher.Games
 
 		public const string launcherDataFilePath = "launcher-data";
 		public const string gamedataFilePath = "launcher-data/data.nal";
-		public const string gameLaunchFilePath = "launcher-data/launch.exe";
 		[HideInInspector]
 		public UniversalData[] gameDatas;
 		bool gameDatasLoaded = false;

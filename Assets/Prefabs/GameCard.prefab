@@ -1277,7 +1277,7 @@ MonoBehaviour:
   ShortcutButton: {fileID: 2428305271478470842}
   ShortcutText: {fileID: 2428305270861925423}
   ShortcutTextNormal: {r: 0.9254902, g: 0.9411765, b: 0.94509804, a: 1}
-  ShortcutTextDisabled: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  ShortcutTextDisabled: {r: 0.7529412, g: 0.7529412, b: 0.7529412, a: 1}
   gameHandler: {fileID: 0}
   storePage: {fileID: 0}
 --- !u!114 &757226051226937683

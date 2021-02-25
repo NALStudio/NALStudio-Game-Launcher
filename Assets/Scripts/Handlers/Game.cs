@@ -87,14 +87,12 @@ namespace NALStudio.GameLauncher.Games
 					shortcutPath = Path.Combine(deskDir, $"{data.Name} ({i}).url");
 			}
 
-			string fileUrl = Path.Combine(data.Local.LocalsPath, GameHandler.gameLaunchFilePath);
 			string iconPath = Path.Combine(data.Local.LocalsPath, data.Local.ExecutablePath);
-			File.Copy(Path.Combine(Application.streamingAssetsPath, "ShortcutLaunch.exe"), fileUrl, true);
 
 			string[] shortcutLines = new string[]
 			{
 				"[InternetShortcut]",
-				"URL=file:///" + $"{fileUrl}",
+				$"URL=nalstudiogamelauncher://rungameid/{data.UUID}",
 				"IconIndex=0",
 				$"IconFile={iconPath}"
 			};
@@ -141,6 +139,11 @@ namespace NALStudio.GameLauncher.Games
 					playtimeFormat = LeanLocalization.GetTranslationText("units-hours", "Hours");
 				}
 				playtimeText.text = $"{time:0.0} {playtimeFormat}";
+				#endregion
+				#region Shortcut Button
+				bool shortcuts = ApplicationHandler.ShortcutsEnabled;
+				ShortcutButton.interactable = shortcuts;
+				ShortcutText.color = shortcuts ? ShortcutTextNormal : ShortcutTextDisabled;
 				#endregion
 			}
 			morePageToggle.isOn = open;

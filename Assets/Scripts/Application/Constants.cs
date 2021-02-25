@@ -27,6 +27,7 @@ namespace NALStudio.GameLauncher.Constants
 				return gamesPath;
 			}
 		}
+		public static readonly string LaunchPath = Path.Combine(BaseFolder, "launch.exe");
 
 		/*
 		static readonly string screenshotsPath = Path.GetFullPath("Screenshots").Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
