@@ -14,6 +14,9 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class NewsGroup : MonoBehaviour
 {
@@ -44,11 +47,24 @@ public class NewsGroup : MonoBehaviour
 	public NewsBanner lastBanner;
 	[HideInInspector]
 	public List<NewsButton> buttons;
+	[HideInInspector]
+	public GameObject runtimeStartFixer;
 
 	int index = 0;
 
-	void Start()
+	public void Generate()
 	{
+		while (bannerParent.transform.childCount > 0 || buttonParent.transform.childCount > 0)
+		{
+			foreach (Transform child in bannerParent.transform)
+				DestroyImmediate(child.gameObject);
+			foreach (Transform child in buttonParent.transform)
+				DestroyImmediate(child.gameObject);
+		}
+
+		banners.Clear();
+		buttons.Clear();
+
 		NewsBanner bannerScript = banner.GetComponent<NewsBanner>();
 		NewsButton buttonScript = button.GetComponent<NewsButton>();
 
@@ -93,20 +109,16 @@ public class NewsGroup : MonoBehaviour
 			GameObject but = Instantiate(button, buttonParent);
 			but.SetActive(true);
 			NewsButton butComp = but.GetComponent<NewsButton>();
-			butComp.background.canvasRenderer.SetColor(buttonColor);
 			buttons.Add(butComp);
 			#endregion
 		}
-		Destroy(banner);
-		banner = null;
-		Destroy(button);
-		button = null;
-		startFixer.transform.SetAsLastSibling();
+		runtimeStartFixer = Instantiate(startFixer, bannerParent);
+		runtimeStartFixer.transform.SetAsLastSibling();
 	}
 
 	void OnEnable()
 	{
-		startFixer.transform.SetAsLastSibling();
+		runtimeStartFixer.transform.SetAsLastSibling();
 		foreach (NewsButton b in buttons)
 			b.background.canvasRenderer.SetColor(buttonColor);
 	}
@@ -158,3 +170,18 @@ public class NewsGroup : MonoBehaviour
 		index = buttons.IndexOf(newsButton);
 	}
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(NewsGroup))]
+class NewsGroupEditor : Editor
+{
+	public override void OnInspectorGUI()
+	{
+		base.OnInspectorGUI();
+		GUILayout.Space(25f);
+		NewsGroup t = (NewsGroup)target;
+		if (GUILayout.Button("Generate!"))
+			t.Generate();
+	}
+}
+#endif

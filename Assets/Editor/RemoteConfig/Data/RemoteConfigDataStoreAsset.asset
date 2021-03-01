@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"49b6f449-ca4e-468a-a75b-5c35b9c6e1d2\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f78fe3e5-a4af-4a9f-acfb-331bf0b6a7a7\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
     \"type\": \"json\",\r\n      \"value\": {\r\n        \"name\": \"Koponen Dating
     Simulator\",\r\n        \"display_name\": \"Koponen Dating Simulator\",\r\n       
@@ -22,9 +22,9 @@ MonoBehaviour:
     true,\r\n        \"thumbnail_url\": \"https://i.imgur.com/kVjnUHx.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
     \"order\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
-    \"KoponenDatingSimulator.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
-    {\r\n      \"entityId\": \"68549f29-8545-4ae6-ab1c-d000ead40c20\"\r\n    },\r\n   
-    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
+    \"KoponenDatingSimulator.exe\",\r\n        \"discord_image_key\": \"kds_game\"\r\n     
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"fb0f638e-b60c-4e14-872b-42680a063711\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
     \"value\": {\r\n        \"name\": \"Rise and Fall\",\r\n        \"display_name\":
     \"Rise and Fall\",\r\n        \"uuid\": \"70f29c3f-b344-4767-9a6d-22a47c394129\",\r\n       
     \"developer\": \"Pentti Kaalimaa\",\r\n        \"publisher\": \"Kaalimaa Productions\",\r\n       
@@ -32,28 +32,40 @@ MonoBehaviour:
     true,\r\n        \"thumbnail_url\": \"https://i.imgur.com/eQw5ewd.png\",\r\n       
     \"download_url\": \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
     \"order\": 1,\r\n        \"version\": \"0.2.0\",\r\n        \"executable_path\":
-    \"Peli_VAL.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"3fd8298c-995d-4dc5-a087-ed6f0a7dc46a\"\r\n    },\r\n    \"rs\":
-    {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n      \"value\":
-    {\r\n        \"name\": \"Mastermind\",\r\n        \"display_name\": \"Mastermind\",\r\n       
-    \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n        \"developer\":
-    \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
+    \"Peli_VAL.exe\",\r\n        \"discord_image_key\": null\r\n      }\r\n    }\r\n 
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"06fa8cfb-f807-4858-95ee-dea7295b3268\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n     
+    \"value\": {\r\n        \"name\": \"Mastermind\",\r\n        \"display_name\":
+    \"Mastermind\",\r\n        \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n       
+    \"developer\": \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
     \"price\": 0,\r\n        \"release_date\": \"16.1.2021\",\r\n        \"early_access\":
     false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
     \"order\": 2,\r\n        \"version\": \"1.0.1\",\r\n        \"executable_path\":
-    \"Mastermind.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"7f18d713-90db-44cf-84f9-ed2515a5dd7d\"\r\n    },\r\n    \"rs\":
-    {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\": \"json\",\r\n     
-    \"value\": {\r\n        \"name\": \"KDS Level Builder\",\r\n        \"display_name\":
-    \"KDS Level Builder\",\r\n        \"uuid\": \"4ca9096d-8055-4430-88f0-1e6a6046f92a\",\r\n       
+    \"Mastermind.exe\",\r\n        \"discord_image_key\": \"mastermind\"\r\n     
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"7f8aabaf-54df-4be9-ade1-287a93f63899\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\":
+    \"json\",\r\n      \"value\": {\r\n        \"name\": \"KDS Level Builder\",\r\n       
+    \"display_name\": \"KDS Level Builder\",\r\n        \"uuid\": \"4ca9096d-8055-4430-88f0-1e6a6046f92a\",\r\n       
     \"developer\": \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
     \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n        \"early_access\":
     false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/25abZCf.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/LevelBuilder.zip\",\r\n       
-    \"order\": 3,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
-    \"LevelBuilder.exe\"\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"49b6f449-ca4e-468a-a75b-5c35b9c6e1d2\"\r\n   
+    \"order\": 4,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
+    \"LevelBuilder.exe\",\r\n        \"discord_image_key\": \"kds_levelbuilder\"\r\n     
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"32e23752-0311-437b-9f06-29fcd2f3031a\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n     
+    \"type\": \"json\",\r\n      \"value\": {\r\n        \"name\": \"\xC4idinkieli
+    Lausekeanalyysi Peli\",\r\n        \"display_name\": \"\xC4idinkieli Lausekeanalyysi
+    Peli\",\r\n        \"uuid\": \"14544199-8754-4bb1-93ba-aaeb09b51bce\",\r\n       
+    \"developer\": \"NALStudio\",\r\n        \"publisher\": \"NALStudio\",\r\n       
+    \"price\": 0,\r\n        \"release_date\": \"25.4.2020\",\r\n        \"early_access\":
+    false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/OxdvYnU.png\",\r\n       
+    \"download_url\": \"https://github.com/NALStudio/Aidinkieli-Lausekeanalyysi-Peli/releases/download/1.2.3/Build.zip\",\r\n       
+    \"order\": 3,\r\n        \"version\": \"1.2.3\",\r\n        \"executable_path\":
+    \"Aidinkieli Lausekeanalyysi Peli.exe\",\r\n        \"discord_image_key\": \"aidinkieli\"\r\n     
+    }\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f78fe3e5-a4af-4a9f-acfb-331bf0b6a7a7\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
     \"type\": \"json\",\r\n      \"value\": {\r\n        \"name\": \"Koponen Dating
     Simulator\",\r\n        \"display_name\": \"Koponen Dating Simulator\",\r\n       
@@ -63,9 +75,9 @@ MonoBehaviour:
     true,\r\n        \"thumbnail_url\": \"https://i.imgur.com/kVjnUHx.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
     \"order\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
-    \"KoponenDatingSimulator.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
-    {\r\n      \"entityId\": \"68549f29-8545-4ae6-ab1c-d000ead40c20\"\r\n    },\r\n   
-    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
+    \"KoponenDatingSimulator.exe\",\r\n        \"discord_image_key\": \"kds_game\"\r\n     
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"fb0f638e-b60c-4e14-872b-42680a063711\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
     \"value\": {\r\n        \"name\": \"Rise and Fall\",\r\n        \"display_name\":
     \"Rise and Fall\",\r\n        \"uuid\": \"70f29c3f-b344-4767-9a6d-22a47c394129\",\r\n       
     \"developer\": \"Pentti Kaalimaa\",\r\n        \"publisher\": \"Kaalimaa Productions\",\r\n       
@@ -73,27 +85,39 @@ MonoBehaviour:
     true,\r\n        \"thumbnail_url\": \"https://i.imgur.com/eQw5ewd.png\",\r\n       
     \"download_url\": \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
     \"order\": 1,\r\n        \"version\": \"0.2.0\",\r\n        \"executable_path\":
-    \"Peli_VAL.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"3fd8298c-995d-4dc5-a087-ed6f0a7dc46a\"\r\n    },\r\n    \"rs\":
-    {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n      \"value\":
-    {\r\n        \"name\": \"Mastermind\",\r\n        \"display_name\": \"Mastermind\",\r\n       
-    \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n        \"developer\":
-    \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
+    \"Peli_VAL.exe\",\r\n        \"discord_image_key\": null\r\n      }\r\n    }\r\n 
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"06fa8cfb-f807-4858-95ee-dea7295b3268\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n     
+    \"value\": {\r\n        \"name\": \"Mastermind\",\r\n        \"display_name\":
+    \"Mastermind\",\r\n        \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n       
+    \"developer\": \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
     \"price\": 0,\r\n        \"release_date\": \"16.1.2021\",\r\n        \"early_access\":
     false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
     \"order\": 2,\r\n        \"version\": \"1.0.1\",\r\n        \"executable_path\":
-    \"Mastermind.exe\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
-    \"entityId\": \"7f18d713-90db-44cf-84f9-ed2515a5dd7d\"\r\n    },\r\n    \"rs\":
-    {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\": \"json\",\r\n     
-    \"value\": {\r\n        \"name\": \"KDS Level Builder\",\r\n        \"display_name\":
-    \"KDS Level Builder\",\r\n        \"uuid\": \"4ca9096d-8055-4430-88f0-1e6a6046f92a\",\r\n       
+    \"Mastermind.exe\",\r\n        \"discord_image_key\": \"mastermind\"\r\n     
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"7f8aabaf-54df-4be9-ade1-287a93f63899\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\":
+    \"json\",\r\n      \"value\": {\r\n        \"name\": \"KDS Level Builder\",\r\n       
+    \"display_name\": \"KDS Level Builder\",\r\n        \"uuid\": \"4ca9096d-8055-4430-88f0-1e6a6046f92a\",\r\n       
     \"developer\": \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
     \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n        \"early_access\":
     false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/25abZCf.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/LevelBuilder.zip\",\r\n       
-    \"order\": 3,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
-    \"LevelBuilder.exe\"\r\n      }\r\n    }\r\n  }\r\n]"
+    \"order\": 4,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
+    \"LevelBuilder.exe\",\r\n        \"discord_image_key\": \"kds_levelbuilder\"\r\n     
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"32e23752-0311-437b-9f06-29fcd2f3031a\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n     
+    \"type\": \"json\",\r\n      \"value\": {\r\n        \"name\": \"\xC4idinkieli
+    Lausekeanalyysi Peli\",\r\n        \"display_name\": \"\xC4idinkieli Lausekeanalyysi
+    Peli\",\r\n        \"uuid\": \"14544199-8754-4bb1-93ba-aaeb09b51bce\",\r\n       
+    \"developer\": \"NALStudio\",\r\n        \"publisher\": \"NALStudio\",\r\n       
+    \"price\": 0,\r\n        \"release_date\": \"25.4.2020\",\r\n        \"early_access\":
+    false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/OxdvYnU.png\",\r\n       
+    \"download_url\": \"https://github.com/NALStudio/Aidinkieli-Lausekeanalyysi-Peli/releases/download/1.2.3/Build.zip\",\r\n       
+    \"order\": 3,\r\n        \"version\": \"1.2.3\",\r\n        \"executable_path\":
+    \"Aidinkieli Lausekeanalyysi Peli.exe\",\r\n        \"discord_image_key\": \"aidinkieli\"\r\n     
+    }\r\n    }\r\n  }\r\n]"
   _environments: "[\r\n  {\r\n    \"projectId\": \"36939bee-afea-4b49-a55d-cfba83548ea4\",\r\n   
     \"name\": \"Testing\",\r\n    \"id\": \"03dfe905-cd6b-47f5-8a2d-ca5087b6e065\",\r\n   
     \"createdAt\": \"2021-02-07T14:25:00Z\",\r\n    \"updatedAt\": \"2021-02-09T14:33:35Z\",\r\n   

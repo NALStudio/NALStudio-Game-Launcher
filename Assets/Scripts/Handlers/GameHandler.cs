@@ -292,16 +292,25 @@ namespace NALStudio.GameLauncher.Games
 			if (gameRunningProcess != null)
 				return;
 
-			#region Set Start Time
-			data.Local.LastInterest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
-			data.Local.Save();
-			#endregion
-
 			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
 			{
 				FileName = Path.Combine(data.Local.LocalsPath, data.Local.ExecutablePath),
 				WorkingDirectory = data.Local.LocalsPath
 			};
+
+			if (!File.Exists(startInfo.FileName))
+			{
+				Debug.LogError($"File not found on path: \"{startInfo.FileName}\"");
+				return;
+			}
+
+			#region Set Start Time
+			data.Local.LastInterest = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+			data.Local.Save();
+			#endregion
+
+			DiscordHandler.SetRichPresence(data, data.Local.LastInterest);
+
 			gameRunningProcess = new System.Diagnostics.Process
 			{
 				StartInfo = startInfo,
@@ -312,6 +321,7 @@ namespace NALStudio.GameLauncher.Games
 			gameRunningStartTime = DateTime.UtcNow;
 			gameRunningProcess.Start();
 			gameRunning = true;
+
 
 			if (sortingMode == SortingMode.recent)
 				StartCoroutine(LoadGames());
@@ -340,6 +350,8 @@ namespace NALStudio.GameLauncher.Games
 			gameRunningData = null;
 			gameRunningProcess = null;
 			gameRunning = false;
+
+			DiscordHandler.ResetRichPresence();
 		}
 
 		public void StopActiveGame()

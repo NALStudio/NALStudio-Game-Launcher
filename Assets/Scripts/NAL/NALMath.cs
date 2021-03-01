@@ -11,6 +11,7 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
+using Lean.Localization;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +41,19 @@ namespace NALStudio.Math
 		public static float BitsToMb(float value)
 		{
 			return value / (1024f * 1024f);
+		}
+		#endregion
+
+		#region Time
+		public static string MinutesToReadable(float minutes)
+		{
+			string playtimeFormat = LeanLocalization.GetTranslationText("units-minutes", "Minutes");
+			if (minutes >= 60)
+			{
+				minutes /= 60f;
+				playtimeFormat = LeanLocalization.GetTranslationText("units-hours", "Hours");
+			}
+			return $"{minutes:0.0} {playtimeFormat}";
 		}
 		#endregion
 	}

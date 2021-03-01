@@ -64,6 +64,12 @@ namespace NALStudio.GameLauncher.Games
 				updateAvailable.SetActive(data.Remote.Version != data.Local.Version);
 		}
 
+		public void BrowseLocals()
+		{
+			if (data?.Local?.LocalsPath != null)
+				Application.OpenURL(data.Local.LocalsPath);
+		}
+
 		public void OpenStorePage()
 		{
 			if (data != null)
@@ -131,14 +137,7 @@ namespace NALStudio.GameLauncher.Games
 			if (open)
 			{
 				#region Playtime
-				string playtimeFormat = LeanLocalization.GetTranslationText("units-minutes", "Minutes");
-				float time = data.Playtime;
-				if (time >= 60)
-				{
-					time /= 60f;
-					playtimeFormat = LeanLocalization.GetTranslationText("units-hours", "Hours");
-				}
-				playtimeText.text = $"{time:0.0} {playtimeFormat}";
+				playtimeText.text = NALStudio.Math.Convert.MinutesToReadable(data.Playtime);
 				#endregion
 				#region Shortcut Button
 				bool shortcuts = ApplicationHandler.ShortcutsEnabled;

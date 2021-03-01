@@ -213,6 +213,16 @@ public class UniversalData
 		}
 	}
 
+	public class DiscordData
+	{
+		public string ImageKey { get; private set; }
+
+		public DiscordData(string imageKey)
+		{
+			ImageKey = imageKey;
+		}
+	}
+
 	#region Basic Info
 	public string Name { get; private set; }
 	public string DisplayName { get; private set; }
@@ -249,6 +259,8 @@ public class UniversalData
 	public LocalData Local { get; set; }
 
 	public RemoteData Remote { get; private set; }
+
+	public DiscordData Discord { get; private set; }
 	#endregion
 
 	#region Instancing
@@ -269,6 +281,7 @@ public class UniversalData
 
 		public string version;
 		public string executable_path;
+		public string discord_image_key;
 	}
 
 	public UniversalData(string json)
@@ -276,6 +289,11 @@ public class UniversalData
 		JsonUniversalData d = JsonUtility.FromJson<JsonUniversalData>(json);
 		#region Remote
 		Remote = new RemoteData(d.version, d.executable_path);
+		#endregion
+		#region Discord
+		Discord = null;
+		if (!string.IsNullOrEmpty(d.discord_image_key))
+			Discord = new DiscordData(d.discord_image_key);
 		#endregion
 		#region Data
 		Name = d.name;

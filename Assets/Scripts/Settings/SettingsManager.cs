@@ -95,6 +95,7 @@ public class SettingsManager : MonoBehaviour
         public bool allowInstallsDuringGameplay = true;
         public bool limitFPS = true;
         public bool lowPerfMode = false;
+        public bool enableDiscordIntegration = true;
 
         public ParsableSettingsHolder ToParsable()
         {
@@ -105,6 +106,7 @@ public class SettingsManager : MonoBehaviour
             parsable.disableLogging = disableLogging;
             parsable.limitFPS = limitFPS;
             parsable.lowPerfMode = lowPerfMode;
+            parsable.enableDiscordIntegration = enableDiscordIntegration;
             return parsable;
         }
     }
@@ -118,6 +120,7 @@ public class SettingsManager : MonoBehaviour
         public bool disableLogging = false;
         public bool limitFPS = true;
         public bool lowPerfMode = false;
+        public bool enableDiscordIntegration = true;
 
         public SettingsHolder ToUsable()
         {
@@ -129,6 +132,7 @@ public class SettingsManager : MonoBehaviour
             }
             usable.disableLogging = disableLogging;
             usable.allowInstallsDuringGameplay = allowInstallsDuringGameplay;
+            usable.enableDiscordIntegration = enableDiscordIntegration;
             return usable;
         }
     }

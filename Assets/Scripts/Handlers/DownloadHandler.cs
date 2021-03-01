@@ -521,7 +521,7 @@ namespace NALStudio.GameLauncher
 			{
 				data.Local.Version = data.Remote.Version;
 				data.Local.ExecutablePath = data.Remote.ExecutablePath;
-				data.Local.LastInterest = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds();
+				data.Local.LastInterest = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 			}
 			else
 			{

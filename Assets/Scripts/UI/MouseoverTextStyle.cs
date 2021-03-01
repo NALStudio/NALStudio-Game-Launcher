@@ -52,4 +52,9 @@ public class MouseoverTextStyle : MonoBehaviour, IPointerEnterHandler, IPointerE
 	{
 		text.fontStyle = normalStyle;
 	}
+
+	void OnDisable()
+	{
+		text.fontStyle = normalStyle;
+	}
 }
