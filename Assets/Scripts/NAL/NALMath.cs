@@ -47,13 +47,14 @@ namespace NALStudio.Math
 		#region Time
 		public static string MinutesToReadable(float minutes)
 		{
+			float time = minutes;
 			string playtimeFormat = LeanLocalization.GetTranslationText("units-minutes", "Minutes");
-			if (minutes >= 60)
+			if (time >= 60)
 			{
-				minutes /= 60f;
+				time /= 60f;
 				playtimeFormat = LeanLocalization.GetTranslationText("units-hours", "Hours");
 			}
-			return $"{minutes:0.0} {playtimeFormat}";
+			return $"{time:0.0} {playtimeFormat}";
 		}
 		#endregion
 	}

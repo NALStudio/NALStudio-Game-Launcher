@@ -521,7 +521,7 @@ namespace NALStudio.GameLauncher
 			{
 				data.Local.Version = data.Remote.Version;
 				data.Local.ExecutablePath = data.Remote.ExecutablePath;
-				data.Local.LastInterest = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+				data.Local.LastInterest = DateTimeOffset.Now.ToUnixTimeSeconds();
 			}
 			else
 			{
@@ -529,7 +529,7 @@ namespace NALStudio.GameLauncher
 					data.Remote.Version,
 					data.Remote.ExecutablePath,
 					gamePath,
-					new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero).ToUnixTimeSeconds());
+					DateTimeOffset.Now.ToUnixTimeSeconds());
 			}
             try
             {

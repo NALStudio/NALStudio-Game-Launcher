@@ -33,7 +33,7 @@ namespace NALStudio.GameLauncher
 
                     ActivityManager = DiscordClient?.GetActivityManager();
 
-                    ResetRichPresence(); // Sets the default Rich Presence
+                    ResetActivity(); // Sets the default Rich Presence
                     break;
                 case false:
                     DiscordClient?.Dispose();
@@ -48,34 +48,45 @@ namespace NALStudio.GameLauncher
             DiscordClient?.RunCallbacks();
         }
 
-        public static void SetRichPresence(UniversalData data, long epochStartTime)
+        public static void SetActivity(UniversalData data, long epochStartTime)
 		{
             ActivityManager?.RegisterCommand($"nalstudiogamelauncher://rungameid/{data.UUID}");
             ActivityManager?.UpdateActivity(new Discord.Activity
-            {
-                Details = $"{data.DisplayName}",
+			{
                 State = "Playing",
+                Details = data.DisplayName,
                 Timestamps = new Discord.ActivityTimestamps { Start = epochStartTime },
-                Assets = new Discord.ActivityAssets { LargeImage = data.Discord != null ? data.Discord.ImageKey : "monitor", SmallImage = "info", SmallText = $"Playtime: {NALStudio.Math.Convert.MinutesToReadable(data.Playtime)}" }
+                Assets = new Discord.ActivityAssets {
+                    LargeImage = data.Discord != null ? data.Discord.ImageKey : "monitor",
+                    LargeText = data.DisplayName,
+                    SmallImage = "info",
+                    SmallText = $"Playtime: {NALStudio.Math.Convert.MinutesToReadable(data.Playtime)}"
+                },
+                Instance = false
             }, (result) =>
             {
                 if (result != Discord.Result.Ok)
-					Debug.LogError($"Rich presence set failed with result: \"{result:F}\".");
-			});
-		}
+                    Debug.LogError($"An error occured while updating activity. Error type: {result:F}");
+            });
+        }
 
-        public static void ResetRichPresence()
+        public static void ResetActivity()
 		{
-            ActivityManager?.RegisterCommand();
-            ActivityManager?.UpdateActivity( new Discord.Activity
-			{
+            ActivityManager?.RegisterCommand("nalstudiogamelauncher://");
+            ActivityManager?.UpdateActivity(new Discord.Activity
+            {
                 State = "Idling",
-                Timestamps = new Discord.ActivityTimestamps { Start = DateTimeOffset.UtcNow.ToUnixTimeSeconds() },
-                Assets = new Discord.ActivityAssets { LargeImage = "padding" }
-			}, (result) =>
+                Timestamps = new Discord.ActivityTimestamps { Start = DateTimeOffset.Now.ToUnixTimeSeconds() },
+                Assets = new Discord.ActivityAssets
+                {
+                    LargeImage = "padding",
+                    LargeText = "NALStudio Game Launcher",
+                },
+                Instance = false
+            }, (result) =>
             {
                 if (result != Discord.Result.Ok)
-                    Debug.LogError($"Rich presence set failed with result: \"{result:F}\".");
+                    Debug.LogError($"An error occured while updating activity. Error type: {result:F}");
             });
 		}
 

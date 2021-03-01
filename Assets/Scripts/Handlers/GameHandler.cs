@@ -305,11 +305,11 @@ namespace NALStudio.GameLauncher.Games
 			}
 
 			#region Set Start Time
-			data.Local.LastInterest = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+			data.Local.LastInterest = DateTimeOffset.Now.ToUnixTimeSeconds();
 			data.Local.Save();
 			#endregion
 
-			DiscordHandler.SetRichPresence(data, data.Local.LastInterest);
+			DiscordHandler.SetActivity(data, data.Local.LastInterest);
 
 			gameRunningProcess = new System.Diagnostics.Process
 			{
@@ -351,7 +351,7 @@ namespace NALStudio.GameLauncher.Games
 			gameRunningProcess = null;
 			gameRunning = false;
 
-			DiscordHandler.ResetRichPresence();
+			DiscordHandler.ResetActivity();
 		}
 
 		public void StopActiveGame()
