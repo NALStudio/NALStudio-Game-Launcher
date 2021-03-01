@@ -25,7 +25,8 @@ public class SettingsTogglesFunctions : MonoBehaviour
 		allowInstallsDuringGameplay,
 		disableLogging,
 		limitFPS,
-		lowPerf
+		lowPerf,
+		discordIntegration
 	}
 
 	public Toggle[] toggles;
@@ -48,6 +49,7 @@ public class SettingsTogglesFunctions : MonoBehaviour
 				TogglesSetTypes.disableLogging => SettingsManager.Settings.disableLogging,
 				TogglesSetTypes.limitFPS => SettingsManager.Settings.limitFPS,
 				TogglesSetTypes.lowPerf => SettingsManager.Settings.lowPerfMode,
+				TogglesSetTypes.discordIntegration => SettingsManager.Settings.enableDiscordIntegration,
 				_ => false,
 			};
 		}
@@ -84,5 +86,10 @@ public class SettingsTogglesFunctions : MonoBehaviour
 	public void LowPerfMode(bool on)
 	{
 		SettingsManager.Settings.lowPerfMode = on;
+	}
+
+	public void DiscordIntegration(bool on)
+	{
+		SettingsManager.Settings.enableDiscordIntegration = on;
 	}
 }

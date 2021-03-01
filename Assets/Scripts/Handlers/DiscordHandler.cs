@@ -15,7 +15,7 @@ namespace NALStudio.GameLauncher
             SetClient(SettingsManager.Settings.enableDiscordIntegration);
         }
 
-        public void SetClient(bool enabled)
+        public static void SetClient(bool enabled)
 		{
             Debug.Log($"Setting Discord Client... Client Enabled: {enabled}");
             switch (enabled)
@@ -27,6 +27,7 @@ namespace NALStudio.GameLauncher
                     }
                     catch (Discord.ResultException e)
                     {
+                        DiscordClient = null;
                         Debug.LogWarning($"Discord Result Exception. Most likely just that Discord wasn't found. Exception message: \"{e.Message}\"");
                     } // Throws error if Discord is not found.
 

@@ -11,6 +11,7 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
+using NALStudio.GameLauncher;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -95,7 +96,19 @@ public class SettingsManager : MonoBehaviour
         public bool allowInstallsDuringGameplay = true;
         public bool limitFPS = true;
         public bool lowPerfMode = false;
-        public bool enableDiscordIntegration = true;
+        bool _enableDiscordIntegration = true;
+        public bool enableDiscordIntegration
+		{
+			get
+			{
+                return _enableDiscordIntegration;
+			}
+			set
+			{
+                _enableDiscordIntegration = value;
+                DiscordHandler.SetClient(_enableDiscordIntegration);
+			}
+		}
 
         public ParsableSettingsHolder ToParsable()
         {
