@@ -46,6 +46,5 @@ namespace NALStudio.GameLauncher.Constants
 
 		public const string launcherDataFilePath = "launcher-data";
 		public const string gamedataFilePath = "launcher-data/data.nal";
-		public const string gameLaunchFilePath = "launcher-data/launch.exe";
 	}
 }

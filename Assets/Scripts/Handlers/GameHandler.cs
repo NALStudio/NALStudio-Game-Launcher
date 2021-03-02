@@ -95,39 +95,17 @@ namespace NALStudio.GameLauncher.Games
 		}
 #endif
 
-		struct UninstallJob : IJob
-		{
-			public NativeArray<char> pathChars;
-			public NativeArray<bool> result;
-
-			public void Execute()
-			{
-				result[0] = false;
-				string path = new string(pathChars.ToArray());
-				string dPath = Path.Combine(path, gamedataFilePath);
-				File.Delete(dPath);
-				Directory.Delete(path, true);
-				result[0] = true;
-			}
-		}
-
 		IEnumerator Uninstaller(string path)
 		{
-			NativeArray<bool> result = new NativeArray<bool>(1, Allocator.Persistent);
-			NativeArray<char> pathChars = new NativeArray<char>(path.ToCharArray(), Allocator.Persistent);
-			UninstallJob job = new UninstallJob
+			try
 			{
-				pathChars = pathChars,
-				result = result
-			};
-			JobHandle handle = job.Schedule();
-			yield return new WaitUntil(() => handle.IsCompleted);
-			handle.Complete();
-			bool success = result[0];
-			if (!success)
-				Debug.LogError($"Directory deletion at path \"{path}\" was unsuccesful!");
-			result.Dispose();
-			pathChars.Dispose();
+				File.Delete(Path.Combine(path, gamedataFilePath));
+			}
+			catch (Exception e)
+			{
+				Debug.LogError($"Failed to remove gamedata file in advance. Exception message: {e.Message}");
+			}
+			yield return StartCoroutine(NALDirectory.Delete(path, true));
 		}
 
 		public void Uninstall(UniversalData data)
@@ -170,6 +148,7 @@ namespace NALStudio.GameLauncher.Games
 			else
 			{
 				Debug.LogError($"\"{data.UUID}\" ({data.Name}) is already in the uninstalling queue!");
+				yield return new WaitWhile(() => uninstalling.Contains(data.UUID));
 			}
 			onComplete?.Invoke();
 			Debug.Log($"Uninstalled game: {data.Name}");
@@ -187,35 +166,19 @@ namespace NALStudio.GameLauncher.Games
 
 			if (!string.IsNullOrEmpty(uninstallPath) && Directory.Exists(uninstallPath))
 			{
-				bool looped = false;
-				while (true)
+				if (!uninstalling.Contains(data.UUID))
 				{
-					if (!uninstalling.Contains(data.UUID))
-					{
-						uninstalling.Add(data.UUID);
-						yield return StartCoroutine(Uninstaller(uninstallPath));
-						data.Local = null;
-						//Will clear invalid game folders as well...
-						StartCoroutine(LoadGames());
-						uninstalling.Remove(data.UUID);
-					}
-					else
-					{
-						Debug.LogError($"\"{data.UUID}\" ({data.Name}) is already in the uninstalling queue!");
-					}
-
-					string oldUninstallPath = uninstallPath;
-					uninstallPath = Path.Combine(Constants.Constants.GamesPath, data.Name);
-					if (!looped)
-					{
-						if (!Directory.Exists(uninstallPath) || looped)
-							break;
-						looped = true;
-					}
-					else
-					{
-						Debug.Log($"Uninstalled base game of \"{data.UUID}\" ({data.Name}). New custom path location: \"{oldUninstallPath}\"");
-					}
+					uninstalling.Add(data.UUID);
+					yield return StartCoroutine(Uninstaller(uninstallPath));
+					data.Local = null;
+					//Will clear invalid game folders as well...
+					yield return StartCoroutine(LoadGames());
+					uninstalling.Remove(data.UUID);
+				}
+				else
+				{
+					Debug.LogError($"\"{data.UUID}\" ({data.Name}) is already in the uninstalling queue!");
+					yield return new WaitWhile(() => uninstalling.Contains(data.UUID));
 				}
 				onComplete?.Invoke(true);
 			}
@@ -267,15 +230,30 @@ namespace NALStudio.GameLauncher.Games
 				File.Delete(path);
 
 			gameDatas = DataHandler.UniversalDatas.Get().Where(d => d.Local != null).ToArray();
-			gameDatasLoaded = true;
 
 			foreach (string path in Directory.EnumerateDirectories(Constants.Constants.GamesPath))
 			{
-				if (!gameDatas.Any(g => NALPath.Match(g.Local.LocalsPath, path)))
+				if (NALPath.Match(path, Constants.Constants.DownloadPath))
+					continue; // Skip deletion if download path.
+
+				if (!gameDatas.Any(g => NALPath.Match(g.Local.LocalsPath, path))) // If no one owns directory. Delete.
 				{
-					Directory.Delete(path, true);
+					yield return StartCoroutine(NALDirectory.Delete(path, true));
+				}
+				else if (Directory.GetFiles(path).Length < 1)
+				{
+					string[] subDirs = Directory.GetDirectories(path);
+					if (subDirs.Length == 1 && subDirs[0].Contains(Constants.Constants.launcherDataFilePath))
+					{
+						yield return StartCoroutine(NALDirectory.Delete(path, true));
+						foreach (UniversalData d in DataHandler.UniversalDatas.Get().Where(d => d.Local != null && NALPath.Match(d.Local.LocalsPath, path)))
+							d.Local = null;
+						gameDatas = DataHandler.UniversalDatas.Get().Where(d => d.Local != null).ToArray();
+					}
 				}
 			}
+			gameDatasLoaded = true;
+
 			foreach (string path in SettingsManager.Settings.customGamePaths.Values.ToArray())
 			{
 				if (!gameDatas.Any(g => g.Local.LocalsPath == path))
@@ -284,6 +262,7 @@ namespace NALStudio.GameLauncher.Games
 						SettingsManager.Settings.customGamePaths.Remove(key);
 				}
 			}
+
 			AddGames();
 		}
 

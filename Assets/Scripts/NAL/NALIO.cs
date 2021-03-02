@@ -49,7 +49,17 @@ namespace NALStudio.IO
 				long size = 0L;
 				string path = new string(pathArray.ToArray());
 				foreach (FileInfo fi in new DirectoryInfo(path).EnumerateFiles("*", SearchOption.AllDirectories))
-					size += fi.Length;
+				{
+					try
+					{
+						size += fi.Length;
+					}
+					catch (Exception e)
+					{
+						Debug.LogWarning(e.Message);
+					}
+				}
+
 				result[0] = size;
 			}
 		}
@@ -58,6 +68,7 @@ namespace NALStudio.IO
 		{
 			if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
 			{
+				Debug.LogError($"Directory \"{path}\" does not exist!");
 				onComplete.Invoke(0L);
 				yield break;
 			}
@@ -74,6 +85,38 @@ namespace NALStudio.IO
 			onComplete?.Invoke(result[0]);
 			yield return null;
 			result.Dispose();
+			pathArray.Dispose();
+		}
+
+		struct DirDelete : IJob
+		{
+			public bool recursive;
+			public NativeArray<char> pathArray;
+
+			public void Execute()
+			{
+				string path = new string(pathArray.ToArray());
+				Directory.Delete(path, recursive);
+			}
+		}
+
+		public static IEnumerator Delete(string path, bool recursive)
+		{
+			if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+			{
+				Debug.LogError($"Directory \"{path}\" does not exist!");
+				yield break;
+			}
+			NativeArray<char> pathArray = new NativeArray<char>(path.ToCharArray(), Allocator.Persistent);
+			DirDelete job = new DirDelete
+			{
+				pathArray = pathArray,
+				recursive = recursive
+			};
+			JobHandle handle = job.Schedule();
+			yield return new WaitUntil(() => handle.IsCompleted);
+			handle.Complete();
+			yield return null;
 			pathArray.Dispose();
 		}
 	}

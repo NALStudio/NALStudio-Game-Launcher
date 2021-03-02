@@ -4499,7 +4499,7 @@ MonoBehaviour:
   progressBar: {fileID: 1713388938}
   progressBarBackground: {fileID: 277620626}
   progressBarFill: {fileID: 2124618896}
-  errorProgressColor: {r: 0.9098039, g: 0.25490198, b: 0.09411765, a: 1}
+  errorColor: {r: 0.9098039, g: 0.25490198, b: 0.09411765, a: 1}
   gameHandler: {fileID: 1246525250}
 --- !u!225 &271946581
 CanvasGroup:
@@ -4732,8 +4732,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  translationName: settings-open_data_privacy
-  FallbackText: Data Privacy Page
+  translationName: Games
+  FallbackText: NALStudio Game Launcher
 --- !u!114 &296405595
 MonoBehaviour:
   m_ObjectHideFlags: 0

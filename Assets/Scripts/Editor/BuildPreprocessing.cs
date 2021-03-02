@@ -38,7 +38,7 @@ public class BuildPreprocessing : IPreprocessBuildWithReport
 			}
 			catch
 			{
-				Debug.Log("Games directory deletion failed!");
+				Debug.LogWarning("Games directory deletion failed!");
 			}
 		}
 		else

@@ -60,9 +60,10 @@ namespace NALStudio.GameLauncher
         [Space(10f)]
         public Image progressBarBackground;
         public Image progressBarFill;
-        public Color errorProgressColor;
+        public Color errorColor;
         Color progressNormalColor;
         Color progressFillNormalColor;
+        Color lineNormalColor;
         Color extractingNormalColor;
         string extractingNormalText;
         bool downloadError;
@@ -80,6 +81,7 @@ namespace NALStudio.GameLauncher
         {
             progressNormalColor = progressBarBackground.color;
             progressFillNormalColor = progressBarFill.color;
+            lineNormalColor = lineRenderer.color;
             extractingNormalColor = extractingText.color;
             extractingNormalText = extractingText.text;
             queuedCountText.text =
@@ -190,6 +192,10 @@ namespace NALStudio.GameLauncher
                 uninstallingCountText.gameObject.SetActive(false);
             }
             #endregion
+            #region Queued Count
+            queuedCountText.text =
+                $"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {Queue.Count}";
+            #endregion
 
             if (updateGraphs && Application.targetFrameRate != 1 && request != null && !extracting)
             {
@@ -268,23 +274,20 @@ namespace NALStudio.GameLauncher
                     timeRemainingText.text = LeanLocalization.GetTranslationText("downloads-remaining", "Time Remaining:") + $" {formatted}";
                     #endregion
 
-                    #region Queued Count
-                    queuedCountText.text =
-                        $"{LeanLocalization.GetTranslationText("downloads-queued", "Queued")}: {Queue.Count}";
-                    #endregion
-
                     #region Download Error
                     if (downloadError)
                     {
                         downloadSpeedText.text = "[ERROR]";
                         timeRemainingText.text = LeanLocalization.GetTranslationText("downloads-remaining", "Time Remaining:") + " [ERROR]";
-                        progressBarBackground.color = errorProgressColor;
+                        progressBarBackground.color = errorColor;
+                        lineRenderer.color = errorColor;
                         progressBarFill.color = new Color(0, 0, 0, 0);
                     }
                     else if (progressBarBackground.color != progressNormalColor)
                     {
                         progressBarBackground.color = progressNormalColor;
                         progressBarFill.color = progressFillNormalColor;
+                        lineRenderer.color = lineNormalColor;
                     }
                     #endregion
 
@@ -362,7 +365,7 @@ namespace NALStudio.GameLauncher
         {
             string downloadDir = Constants.Constants.DownloadPath;
             if (Directory.Exists(downloadDir))
-                Directory.Delete(downloadDir, true);
+                Directory.Delete(downloadDir); // Threaded delete access gets denies.
             DirectoryInfo downloadTmp = Directory.CreateDirectory(downloadDir);
             downloadTmp.Attributes |= FileAttributes.Hidden;
             string downloadPath = Path.Combine(downloadDir, "data.nbf");
@@ -390,9 +393,7 @@ namespace NALStudio.GameLauncher
                             extractingAssets.SetActive(true);
                             progressBarBackground.color = progressBarExtracting;
                             progressBarFill.color = new Color(0, 0, 0, 0);
-                            bool extractionCompleted = false;
-                            StartCoroutine(Extractor(downloadPath, data, () => extractionCompleted = true));
-                            yield return new WaitUntil(() => extractionCompleted);
+                            yield return StartCoroutine(Extractor(downloadPath, data));
 							StartCoroutine(gameHandler.LoadGames());
 							yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
                             extractingAssets.SetActive(false);
@@ -436,7 +437,7 @@ namespace NALStudio.GameLauncher
             }
         }
 
-        IEnumerator Extractor(string zipPath, UniversalData data, Action onComplete = null)
+        IEnumerator Extractor(string zipPath, UniversalData data)
         {
             if (!SettingsManager.Settings.allowInstallsDuringGameplay)
                 yield return new WaitUntil(() => !gameHandler.gameRunning || ApplicationHandler.HasFocus || SettingsManager.Settings.allowInstallsDuringGameplay);
@@ -445,17 +446,12 @@ namespace NALStudio.GameLauncher
 
             string extractPath = Path.Combine(Constants.Constants.DownloadPath, "extraction");
             if (Directory.Exists(extractPath))
-                Directory.Delete(extractPath, true);
+                yield return StartCoroutine(NALDirectory.Delete(extractPath, true));
 
             yield return StartCoroutine(NALZipFile.ExtractToDirectoryThreaded(zipPath, extractPath));
 
-            bool uninstalled = false;
             bool updated = false;
-            StartCoroutine(gameHandler.UpdateUninstall(data, (u) =>
-            {
-                uninstalled = true;
-                updated = u;
-            }));
+            yield return StartCoroutine(gameHandler.UpdateUninstall(data, (u) => updated = u));
 
             string searchDir;
             if (Queue.CustomPath(data) == null)
@@ -493,12 +489,11 @@ namespace NALStudio.GameLauncher
 				SettingsManager.Save();
             }
 
-            yield return new WaitUntil(() => uninstalled);
-
             try
             {
-                if (Directory.GetDirectories(extractPath).Length == 1 && Directory.GetFiles(extractPath).Length < 1)
-                    Directory.Move(Directory.GetDirectories(extractPath)[0], gamePath);
+                string[] subDirs = Directory.GetDirectories(extractPath);
+                if (subDirs.Length == 1 && Directory.GetFiles(extractPath).Length < 1)
+                    Directory.Move(subDirs[0], gamePath);
                 else
                     Directory.Move(extractPath, gamePath);
             }
@@ -506,53 +501,44 @@ namespace NALStudio.GameLauncher
             {
                 StartCoroutine(DownloadError(e));
                 extractError = true;
-                extractingText.color = errorProgressColor;
+                extractingText.color = errorColor;
                 extractingText.text = "[ERROR]";
-                progressBarBackground.color = errorProgressColor;
+                progressBarBackground.color = errorColor;
                 progressBarFill.color = new Color(0, 0, 0, 0);
             }
 
-            yield return null;
             if (Directory.Exists(Constants.Constants.DownloadPath))
-                Directory.Delete(Constants.Constants.DownloadPath, true);
-            yield return null;
+                yield return StartCoroutine(NALDirectory.Delete(Constants.Constants.DownloadPath, true));
 
 			if (data.Local != null)
 			{
 				data.Local.Version = data.Remote.Version;
 				data.Local.ExecutablePath = data.Remote.ExecutablePath;
 				data.Local.LastInterest = DateTimeOffset.Now.ToUnixTimeSeconds();
+                data.Local.Save();
 			}
 			else
 			{
 				data.Local = new UniversalData.LocalData(data.UUID,
 					data.Remote.Version,
 					data.Remote.ExecutablePath,
-					gamePath,
-					DateTimeOffset.Now.ToUnixTimeSeconds());
+					gamePath);
+                // Will automatically save and create a directory if needed.
 			}
-            try
+            string tmpPath = Path.Combine(gamePath, Constants.Constants.launcherDataFilePath);
+            if (!Directory.Exists(tmpPath))
             {
-                string tmpPath = Path.Combine(gamePath, Constants.Constants.launcherDataFilePath);
-                if (!Directory.Exists(tmpPath))
-                    Directory.CreateDirectory(tmpPath);
-                data.Local.Save();
-            }
-            catch (Exception e)
-            {
-                StartCoroutine(DownloadError(e));
+                StartCoroutine(DownloadError($"No launcher data directory found. Excepted to find directory at path: \"{tmpPath}\""));
                 extractError = true;
-                extractingText.color = errorProgressColor;
+                extractingText.color = errorColor;
                 extractingText.text = "[ERROR]";
-                progressBarBackground.color = errorProgressColor;
+                progressBarBackground.color = errorColor;
                 progressBarFill.color = new Color(0, 0, 0, 0);
             }
 
-            yield return null;
-
             if (extractError)
                 yield return new WaitForSeconds(5f);
-            onComplete?.Invoke();
+
             if (!extractError)
             {
                 if (!updated)

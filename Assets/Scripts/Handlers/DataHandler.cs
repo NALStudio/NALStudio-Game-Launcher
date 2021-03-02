@@ -88,17 +88,35 @@ public class UniversalData
 			public string uuid;
 			public string version;
 			public string executable_path;
-			public string launcher_dir;
 			public long last_interest;
 		}
 
 		public void Save()
 		{
-			string json = ToJson(this);
-			File.WriteAllText(Path.Combine(LocalsPath, Constants.gamedataFilePath), json);
+			string dir = Path.Combine(LocalsPath, Constants.launcherDataFilePath);
+			if (!Directory.Exists(dir))
+			{
+				try
+				{
+					Directory.CreateDirectory(dir);
+				}
+				catch (Exception e)
+				{
+					Debug.LogError($"Could not create gamedata directory for \"{UUID}\" at path \"{dir}\". Errors will follow. Exception Message: {e.Message}");
+				}
+			}
+			try
+			{
+				string json = ToJson(this);
+				File.WriteAllText(Path.Combine(LocalsPath, Constants.gamedataFilePath), json);
+			}
+			catch (Exception e)
+			{
+				Debug.LogError($"Could not save gamedata file for \"{UUID}\". Errors will follow. Exception Message: {e.Message}");
+			}
 		}
 
-		public LocalData(string uuid, string version, string exePath, string localsPath, long lastInterest)
+		public LocalData(string uuid, string version, string exePath, string localsPath)
 		{
 			UUID = uuid;
 			Parent = DataHandler.UniversalDatas.Get(UUID);
@@ -106,7 +124,9 @@ public class UniversalData
 			Version = version;
 			ExecutablePath = exePath;
 			LocalsPath = localsPath;
-			LastInterest = lastInterest;
+			LastInterest = DateTimeOffset.Now.ToUnixTimeSeconds();
+
+			Save();
 		}
 
 		private LocalData() { }
@@ -194,8 +214,7 @@ public class UniversalData
 				uuid = localData.UUID,
 				version = localData.Version,
 				executable_path = localData.ExecutablePath,
-				last_interest = localData.LastInterest,
-				launcher_dir = Constants.BaseFolder
+				last_interest = localData.LastInterest
 			};
 			return JsonUtility.ToJson(j);
 		}
