@@ -54,13 +54,10 @@ public class NewsGroup : MonoBehaviour
 
 	public void Generate()
 	{
-		while (bannerParent.transform.childCount > 0 || buttonParent.transform.childCount > 0)
-		{
-			foreach (Transform child in bannerParent.transform)
-				DestroyImmediate(child.gameObject);
-			foreach (Transform child in buttonParent.transform)
-				DestroyImmediate(child.gameObject);
-		}
+		while (bannerParent.transform.childCount > 0)
+			DestroyImmediate(bannerParent.transform.GetChild(0).gameObject);
+		while (buttonParent.transform.childCount > 0)
+			DestroyImmediate(buttonParent.transform.GetChild(0).gameObject);
 
 		banners.Clear();
 		buttons.Clear();
