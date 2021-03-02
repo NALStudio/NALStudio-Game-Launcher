@@ -11,12 +11,14 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 using SimpleJSON;
+using NALStudio.GameLauncher.Networking;
 
 public class ApplicationChecker : MonoBehaviour
 {
@@ -29,13 +31,8 @@ public class ApplicationChecker : MonoBehaviour
 
 	void Awake()
 	{
-		if (Application.internetReachability != NetworkReachability.NotReachable)
-			StartCoroutine(CheckForUpdate());
-	}
-
-	void Update()
-	{
-		NoInternet?.Invoke(Application.internetReachability == NetworkReachability.NotReachable);
+		StartCoroutine(CheckForUpdate());
+		NetworkManager.InternetAvailabilityChange += (available) => NoInternet?.Invoke(!available);
 	}
 
 	IEnumerator CheckForUpdate()

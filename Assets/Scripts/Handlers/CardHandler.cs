@@ -93,7 +93,7 @@ namespace NALStudio.GameLauncher.Cards
             cardScripts.Clear();
             cardTweeners.Clear();
 
-            UniversalData[] sortedDatas = DataHandler.UniversalDatas.Get().ToArray();
+            UniversalData[] sortedDatas = DataHandler.UniversalDatas.Get().Where((d) => !d.Hidden).ToArray();
             switch (sortingMode)
             {
                 case SortingMode.alphabetical:

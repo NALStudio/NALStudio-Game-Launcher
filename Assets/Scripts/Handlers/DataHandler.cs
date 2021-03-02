@@ -229,6 +229,7 @@ public class UniversalData
 	public string UUID { get; private set; }
 	#endregion
 	#region Store Info
+	public bool Hidden { get; private set; }
 	public string Developer { get; private set; }
 	public string Publisher { get; private set; }
 	public string ReleaseDate { get; private set; }
@@ -270,6 +271,7 @@ public class UniversalData
 		public string name;
 		public string display_name;
 		public string uuid;
+		public bool hidden;
 		public string developer;
 		public string publisher;
 		public long price;
@@ -299,6 +301,7 @@ public class UniversalData
 		Name = d.name;
 		DisplayName = d.display_name;
 		UUID = d.uuid;
+		Hidden = d.hidden;
 		Developer = d.developer;
 		Publisher = d.publisher;
 		Price = d.price;

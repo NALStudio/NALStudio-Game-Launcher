@@ -12,11 +12,13 @@ namespace NALStudio.GameLauncher
 
         void Start()
         {
-            SetClient(SettingsManager.Settings.enableDiscordIntegration);
+            SetClient();
+            Networking.NetworkManager.InternetAvailabilityChange += OnConnectionChange;
         }
 
-        public static void SetClient(bool enabled)
+        public static void SetClient()
 		{
+            bool enabled = SettingsManager.Settings.enableDiscordIntegration;
             Debug.Log($"Setting Discord Client... Client Enabled: {enabled}");
             switch (enabled)
 			{
@@ -36,16 +38,50 @@ namespace NALStudio.GameLauncher
                     ResetActivity(); // Sets the default Rich Presence
                     break;
                 case false:
-                    DiscordClient?.Dispose();
-					DiscordClient = null;
-                    ActivityManager = null;
+                    RemoveClient();
                     break;
 			}
 		}
 
+        public static void RemoveClient()
+		{
+            try
+            {
+                DiscordClient?.Dispose();
+            }
+            catch (Discord.ResultException e)
+            {
+                Debug.LogError(e.Message);
+            }
+
+            DiscordClient = null;
+            ActivityManager = null;
+		}
+
+        void OnConnectionChange(bool internetAccess)
+        {
+            switch (internetAccess)
+            {
+                case true:
+                    SetClient();
+                    break;
+                case false:
+                    RemoveClient();
+                    break;
+            }
+        }
+
         void Update()
         {
-            DiscordClient?.RunCallbacks();
+            try
+            {
+                DiscordClient?.RunCallbacks();
+            }
+            catch (Discord.ResultException e)
+			{
+                DiscordClient = null;
+                Debug.Log("Result Exception. Discord client was probably disconnected. Removing Discord Client... Exception Message: " + e.Message);
+			}
         }
 
         public static void SetActivity(UniversalData data, long epochStartTime)
