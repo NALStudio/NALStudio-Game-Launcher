@@ -33,7 +33,7 @@ namespace NALStudio.Logging
 
 		void Init()
 		{
-			if (SettingsManager.Settings.disableLogging)
+			if (SettingsManager.Settings.DisableLogging)
 				return;
 
 			logDir = Path.Combine(Application.persistentDataPath, "logs");
@@ -69,7 +69,7 @@ I==========[ SYSTEM INFO ]==========I";
 
 		void Log(string logString, string stackTrace, LogType logType)
 		{
-			if (SettingsManager.Settings.disableLogging)
+			if (SettingsManager.Settings.DisableLogging)
 				return;
 
 			if (logFilePath == null)

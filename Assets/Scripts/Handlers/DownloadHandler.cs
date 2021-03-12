@@ -439,8 +439,8 @@ namespace NALStudio.GameLauncher
 
         IEnumerator Extractor(string zipPath, UniversalData data)
         {
-            if (!SettingsManager.Settings.allowInstallsDuringGameplay)
-                yield return new WaitUntil(() => !gameHandler.gameRunning || ApplicationHandler.HasFocus || SettingsManager.Settings.allowInstallsDuringGameplay);
+            if (!SettingsManager.Settings.AllowInstallsDuringGameplay)
+                yield return new WaitUntil(() => !gameHandler.gameRunning || ApplicationHandler.HasFocus || SettingsManager.Settings.AllowInstallsDuringGameplay);
 
             bool extractError = false;
 
@@ -476,14 +476,14 @@ namespace NALStudio.GameLauncher
             {
                 gamePath = customPath;
 				// Extra prosessointi kakkaa
-				if (!SettingsManager.Settings.customGamePaths.Keys.Contains(data.UUID))
+				if (!SettingsManager.Settings.CustomGamePaths.Keys.Contains(data.UUID))
 				{
-					SettingsManager.Settings.customGamePaths.Add(data.UUID, gamePath);
+					SettingsManager.Settings.CustomGamePaths.Add(data.UUID, gamePath);
 				}
 				else
 				{
 					Debug.LogWarning($"Custom path \"{gamePath}\" for game \"{data.UUID}\" ({data.Name}) exists already! Overriding old setting...");
-                    SettingsManager.Settings.customGamePaths[data.UUID] = gamePath;
+                    SettingsManager.Settings.CustomGamePaths[data.UUID] = gamePath;
                 }
 
 				SettingsManager.Save();

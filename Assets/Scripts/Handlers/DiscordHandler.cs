@@ -18,7 +18,8 @@ namespace NALStudio.GameLauncher
 
         public static void SetClient()
 		{
-            bool enabled = SettingsManager.Settings.enableDiscordIntegration;
+            bool enabled = SettingsManager.Settings.EnableDiscordIntegration;
+
             Debug.Log($"Setting Discord Client... Client Enabled: {enabled}");
             switch (enabled)
 			{

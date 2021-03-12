@@ -119,10 +119,10 @@ namespace NALStudio.GameLauncher.Games
 			{
 				uninstalling.Add(data.UUID);
 				string uninstallPath = data.Local.LocalsPath;
-				if (SettingsManager.Settings.customGamePaths.ContainsKey(data.UUID))
+				if (SettingsManager.Settings.CustomGamePaths.ContainsKey(data.UUID))
 				{
-					uninstallPath = SettingsManager.Settings.customGamePaths[data.UUID];
-					SettingsManager.Settings.customGamePaths.Remove(data.UUID);
+					uninstallPath = SettingsManager.Settings.CustomGamePaths[data.UUID];
+					SettingsManager.Settings.CustomGamePaths.Remove(data.UUID);
 					SettingsManager.Save();
 				}
 
@@ -157,10 +157,10 @@ namespace NALStudio.GameLauncher.Games
 		public IEnumerator UpdateUninstall(UniversalData data, Action<bool> onComplete = null)
 		{
 			string uninstallPath = data.Local?.LocalsPath;
-			if (SettingsManager.Settings.customGamePaths.ContainsKey(data.UUID))
+			if (SettingsManager.Settings.CustomGamePaths.ContainsKey(data.UUID))
 			{
-				uninstallPath = SettingsManager.Settings.customGamePaths[data.UUID];
-				SettingsManager.Settings.customGamePaths.Remove(data.UUID);
+				uninstallPath = SettingsManager.Settings.CustomGamePaths[data.UUID];
+				SettingsManager.Settings.CustomGamePaths.Remove(data.UUID);
 				SettingsManager.Save();
 			}
 
@@ -254,12 +254,12 @@ namespace NALStudio.GameLauncher.Games
 			}
 			gameDatasLoaded = true;
 
-			foreach (string path in SettingsManager.Settings.customGamePaths.Values.ToArray())
+			foreach (string path in SettingsManager.Settings.CustomGamePaths.Values.ToArray())
 			{
 				if (!gameDatas.Any(g => g.Local.LocalsPath == path))
 				{
-					foreach (string key in SettingsManager.Settings.customGamePaths.Keys.Where(k => SettingsManager.Settings.customGamePaths[k] == path).ToArray())
-						SettingsManager.Settings.customGamePaths.Remove(key);
+					foreach (string key in SettingsManager.Settings.CustomGamePaths.Keys.Where(k => SettingsManager.Settings.CustomGamePaths[k] == path).ToArray())
+						SettingsManager.Settings.CustomGamePaths.Remove(key);
 				}
 			}
 

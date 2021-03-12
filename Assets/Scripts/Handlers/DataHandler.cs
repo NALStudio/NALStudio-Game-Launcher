@@ -137,7 +137,7 @@ public class UniversalData
 
 			string searchDir;
 			string gdPath;
-			if (!SettingsManager.Settings.customGamePaths.ContainsKey(data.UUID))
+			if (!SettingsManager.Settings.CustomGamePaths.ContainsKey(data.UUID))
 			{
 				searchDir = Path.Combine(Constants.GamesPath, data.Name);
 				gdPath = Path.Combine(searchDir, Constants.gamedataFilePath);
@@ -165,7 +165,7 @@ public class UniversalData
 			}
 			else
 			{
-				searchDir = SettingsManager.Settings.customGamePaths[data.UUID];
+				searchDir = SettingsManager.Settings.CustomGamePaths[data.UUID];
 				gdPath = Path.Combine(searchDir, Constants.gamedataFilePath);
 				if (File.Exists(gdPath))
 				{
@@ -175,7 +175,7 @@ public class UniversalData
 				}
 				else
 				{
-					SettingsManager.Settings.customGamePaths.Remove(data.UUID);
+					SettingsManager.Settings.CustomGamePaths.Remove(data.UUID);
 					SettingsManager.Save();
 				}
 			}

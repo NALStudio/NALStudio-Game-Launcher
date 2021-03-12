@@ -24,7 +24,7 @@ public class ApplicationStateHandler : MonoBehaviour
 	void OnApplicationFocus(bool hasFocus)
 	{
 		#region Focused
-		if (hasFocus || !SettingsManager.Settings.limitFPS)
+		if (hasFocus || !SettingsManager.Settings.LimitFPS)
 		{
 			Application.targetFrameRate = -1;
 		}
@@ -32,7 +32,7 @@ public class ApplicationStateHandler : MonoBehaviour
 		#region Unfocused
 		else
 		{
-			if (gameHandler.gameRunning || SettingsManager.Settings.lowPerfMode)
+			if (gameHandler.gameRunning || SettingsManager.Settings.LowPerfMode)
 				Application.targetFrameRate = 1;
 			else if (tabGroup.SelectedButton == tabGroup.tabButtons[0])
 				Application.targetFrameRate = 30;

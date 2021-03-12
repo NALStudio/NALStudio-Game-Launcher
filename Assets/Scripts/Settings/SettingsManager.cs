@@ -12,6 +12,7 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
 using NALStudio.GameLauncher;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -103,76 +104,28 @@ public class SettingsManager : MonoBehaviour
     }
 #endif
 
+    [Serializable]
     public class SettingsHolder
     {
-        public Dictionary<string, string> customGamePaths = new Dictionary<string, string>();
-        public bool disableLogging = false;
-        public bool allowInstallsDuringGameplay = true;
-        public bool limitFPS = true;
-        public bool lowPerfMode = false;
-        bool _enableDiscordIntegration = true;
-        public bool enableDiscordIntegration
-		{
-			get
-			{
-                return _enableDiscordIntegration;
-			}
-			set
-			{
-                _enableDiscordIntegration = value;
-                DiscordHandler.SetClient();
-			}
-		}
-
-        public ParsableSettingsHolder ToParsable()
-        {
-            ParsableSettingsHolder parsable = new ParsableSettingsHolder();
-            parsable.customGamePathKeys = customGamePaths.Keys.ToArray();
-            parsable.customGamePathValues = customGamePaths.Values.ToArray();
-            parsable.allowInstallsDuringGameplay = allowInstallsDuringGameplay;
-            parsable.disableLogging = disableLogging;
-            parsable.limitFPS = limitFPS;
-            parsable.lowPerfMode = lowPerfMode;
-            parsable.enableDiscordIntegration = enableDiscordIntegration;
-            return parsable;
-        }
-    }
-
-    [Serializable]
-    public class ParsableSettingsHolder
-    {
-        public string[] customGamePathKeys = new string[0];
-        public string[] customGamePathValues = new string[0];
-        public bool allowInstallsDuringGameplay = true;
-        public bool disableLogging = false;
-        public bool limitFPS = true;
-        public bool lowPerfMode = false;
-        public bool enableDiscordIntegration = true;
-
-        public SettingsHolder ToUsable()
-        {
-            SettingsHolder usable = new SettingsHolder();
-            usable.customGamePaths = new Dictionary<string, string>();
-            for (int i = 0; i < Mathf.Min(customGamePathKeys.Length, customGamePathValues.Length); i++)
-            {
-                usable.customGamePaths.Add(customGamePathKeys[i], customGamePathValues[i]);
-            }
-            usable.disableLogging = disableLogging;
-            usable.allowInstallsDuringGameplay = allowInstallsDuringGameplay;
-            usable.enableDiscordIntegration = enableDiscordIntegration;
-            return usable;
-        }
+        public Dictionary<string, string> CustomGamePaths { get; set; } = new Dictionary<string, string>();
+        public bool DisableLogging { get; set; } = false;
+        public bool AllowInstallsDuringGameplay { get; set; } = true;
+        public bool LimitFPS { get; set; } = true;
+        public bool LowPerfMode { get; set; } = false;
+        public bool EnableDiscordIntegration { get; set; } = true;
+        public bool AllowShortcuts { get; set; } = true;
     }
 
     public static void Save()
     {
-        File.WriteAllText(path, JsonUtility.ToJson(Settings.ToParsable(), true));
+        File.WriteAllText(path, JsonConvert.SerializeObject(Settings, Formatting.Indented));
     }
 
     public static void Load()
     {
         if (!File.Exists(path))
         {
+            Debug.Log("No settings file found. Creating a new one...");
             Settings = new SettingsHolder();
             Save();
         }
@@ -180,7 +133,7 @@ public class SettingsManager : MonoBehaviour
         {
             try
             {
-                Settings = JsonUtility.FromJson<ParsableSettingsHolder>(File.ReadAllText(path)).ToUsable();
+                Settings = JsonConvert.DeserializeObject<SettingsHolder>(File.ReadAllText(path));
             }
             catch
             {

@@ -61,8 +61,8 @@ public class StorePage : MonoBehaviour
 
 		buttonMode = ButtonMode.Install;
 		string gameDataPath = Path.Combine(Constants.GamesPath, openedData.Name, GameHandler.gamedataFilePath);
-		if (SettingsManager.Settings.customGamePaths.ContainsKey(openedData.UUID))
-			gameDataPath = Path.Combine(SettingsManager.Settings.customGamePaths[openedData.UUID], GameHandler.gamedataFilePath);
+		if (SettingsManager.Settings.CustomGamePaths.ContainsKey(openedData.UUID))
+			gameDataPath = Path.Combine(SettingsManager.Settings.CustomGamePaths[openedData.UUID], GameHandler.gamedataFilePath);
 
 		if (openedData.Local != null)
 		{

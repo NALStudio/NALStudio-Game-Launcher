@@ -11,6 +11,7 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
+using NALStudio.GameLauncher;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +27,8 @@ public class SettingsTogglesFunctions : MonoBehaviour
 		disableLogging,
 		limitFPS,
 		lowPerf,
-		discordIntegration
+		discordIntegration,
+		shortcuts
 	}
 
 	public Toggle[] toggles;
@@ -45,11 +47,12 @@ public class SettingsTogglesFunctions : MonoBehaviour
 		{
 			toggles[i].isOn = (setTypes[i]) switch
 			{
-				TogglesSetTypes.allowInstallsDuringGameplay => SettingsManager.Settings.allowInstallsDuringGameplay,
-				TogglesSetTypes.disableLogging => SettingsManager.Settings.disableLogging,
-				TogglesSetTypes.limitFPS => SettingsManager.Settings.limitFPS,
-				TogglesSetTypes.lowPerf => SettingsManager.Settings.lowPerfMode,
-				TogglesSetTypes.discordIntegration => SettingsManager.Settings.enableDiscordIntegration,
+				TogglesSetTypes.allowInstallsDuringGameplay => SettingsManager.Settings.AllowInstallsDuringGameplay,
+				TogglesSetTypes.disableLogging => SettingsManager.Settings.DisableLogging,
+				TogglesSetTypes.limitFPS => SettingsManager.Settings.LimitFPS,
+				TogglesSetTypes.lowPerf => SettingsManager.Settings.LowPerfMode,
+				TogglesSetTypes.discordIntegration => SettingsManager.Settings.EnableDiscordIntegration,
+				TogglesSetTypes.shortcuts => SettingsManager.Settings.AllowShortcuts,
 				_ => false,
 			};
 		}
@@ -58,21 +61,21 @@ public class SettingsTogglesFunctions : MonoBehaviour
 
 	public void AllowInstallsGameplay(bool allow)
 	{
-		SettingsManager.Settings.allowInstallsDuringGameplay = allow;
+		SettingsManager.Settings.AllowInstallsDuringGameplay = allow;
 	}
 
 	public void DisableLogging(bool disable)
 	{
 		if (disable)
 			Debug.Log("Debug Logging disabled by user.");
-		SettingsManager.Settings.disableLogging = disable;
+		SettingsManager.Settings.DisableLogging = disable;
 		if (!disable)
 			Debug.Log("Debug Logging enabled by user.");
 	}
 
 	public void LimitFPS(bool limit)
 	{
-		SettingsManager.Settings.limitFPS = limit;
+		SettingsManager.Settings.LimitFPS = limit;
 
 		lowPerfText.CrossFadeColor(!limit ? limitDisabledColor : lowPerfTextNormalColor, fadeDuration, true, true);
 		lowPerfCheckmark.CrossFadeColor(!limit ? limitDisabledColor : lowPerfTextNormalColor, fadeDuration, true, true);
@@ -85,11 +88,17 @@ public class SettingsTogglesFunctions : MonoBehaviour
 
 	public void LowPerfMode(bool on)
 	{
-		SettingsManager.Settings.lowPerfMode = on;
+		SettingsManager.Settings.LowPerfMode = on;
 	}
 
 	public void DiscordIntegration(bool on)
 	{
-		SettingsManager.Settings.enableDiscordIntegration = on;
+		SettingsManager.Settings.EnableDiscordIntegration = on;
+		DiscordHandler.SetClient();
+	}
+
+	public void Shortcuts(bool on)
+	{
+		SettingsManager.Settings.AllowShortcuts = on;
 	}
 }

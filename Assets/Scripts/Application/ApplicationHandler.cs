@@ -17,10 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Analytics;
-using Microsoft.Win32;
 using NALStudio.GameLauncher.Constants;
-using System.Security.Permissions;
-using System.Security.Principal;
 
 public class ApplicationHandler : MonoBehaviour
 {
@@ -43,14 +40,12 @@ public class ApplicationHandler : MonoBehaviour
 			{ "VRAM", SystemInfo.graphicsMemorySize },
 			{ "CPU", SystemInfo.processorType },
 			{ "CPU Core Count", SystemInfo.processorCount },
-			{ "OS", SystemInfo.operatingSystem },
-			{ "Internet", Application.internetReachability != NetworkReachability.NotReachable }
+			{ "OS", SystemInfo.operatingSystem }
 		});
 
-		if (!File.Exists(Constants.LaunchPath))
+		if ((!File.Exists(Constants.LaunchPath) || PlayerPrefs.GetString("shortcut_launcher_version", null) != System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Application.streamingAssetsPath, "NALStudioGameLauncherShortcutLaunch.exe")).FileVersion) && SettingsManager.Settings.AllowShortcuts)
 		{
-			File.Copy(Path.Combine(Application.streamingAssetsPath, "NALStudioGameLauncherShortcutLaunch.exe"), Constants.LaunchPath);
-
+			bool createFile = true;
 			System.Diagnostics.ProcessStartInfo registryStart = new System.Diagnostics.ProcessStartInfo
 			{
 				FileName = Path.Combine(Application.streamingAssetsPath, "NALStudioGameLauncherRegistry.exe"),
@@ -64,15 +59,42 @@ public class ApplicationHandler : MonoBehaviour
 			}
 			catch (Exception e)
 			{
-				Debug.LogError(e.Message);
+				Debug.LogError($"Failed to start registry handler. Message: {e.Message}");
 
+				createFile = false;
 				ShortcutsEnabled = false;
-				File.Delete(Constants.LaunchPath);
+				try
+				{
+					if (File.Exists(Constants.LaunchPath))
+						File.Delete(Constants.LaunchPath);
+				}
+				catch (Exception f)
+				{
+					Debug.LogError($"Could not delete registry file. Message: {f.Message}");
+				}
+			}
+			if (createFile)
+			{
+				File.Copy(Path.Combine(Application.streamingAssetsPath, "NALStudioGameLauncherShortcutLaunch.exe"), Constants.LaunchPath, true);
+				PlayerPrefs.SetString("shortcut_launcher_version", System.Diagnostics.FileVersionInfo.GetVersionInfo(Constants.LaunchPath).FileVersion);
 			}
 		}
 		else
 		{
 			ShortcutsEnabled = true;
+			if (!SettingsManager.Settings.AllowShortcuts && File.Exists(Constants.LaunchPath))
+			{
+				Debug.Log("Deleting launch file, because user has disabled launch file updates.");
+				try
+				{
+					if (File.Exists(Constants.LaunchPath))
+						File.Delete(Constants.LaunchPath);
+				}
+				catch (Exception e)
+				{
+					Debug.LogError($"Launch file could not be deleted. Message: {e.Message}");
+				}
+			}
 		}
 	}
 
