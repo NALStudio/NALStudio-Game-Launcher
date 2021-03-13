@@ -99,11 +99,7 @@ public class InstallDirHandler : MonoBehaviour
 		string wholePath = Path.Combine(path, data != null ? data.Name : "[ERROR]");
 		bool pValid = PathValid(path);
 		if (pValid)
-		{
-			pValid = !Directory.Exists(wholePath) || (Directory.Exists(wholePath)
-				&& Directory.GetFiles(wholePath).Length < 1
-				&& Directory.GetDirectories(wholePath).Length < 1);
-		}
+			pValid = !Directory.Exists(wholePath); // If directory exists; not valid.
 
 		invalidPath.SetActive(!pValid);
 		installButton.interactable = pValid;

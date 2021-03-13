@@ -82,10 +82,10 @@ namespace NALStudio.IO
 			JobHandle handle = job.Schedule();
 			yield return new WaitUntil(() => handle.IsCompleted);
 			handle.Complete();
+			pathArray.Dispose();
 			onComplete?.Invoke(result[0]);
 			yield return null;
 			result.Dispose();
-			pathArray.Dispose();
 		}
 
 		struct DirDelete : IJob
@@ -116,8 +116,50 @@ namespace NALStudio.IO
 			JobHandle handle = job.Schedule();
 			yield return new WaitUntil(() => handle.IsCompleted);
 			handle.Complete();
-			yield return null;
 			pathArray.Dispose();
+		}
+	
+		struct DirMove : IJob
+		{
+			public NativeArray<char> fromArray;
+			public NativeArray<char> toArray;
+
+			public void Execute()
+			{
+				string from = new string(fromArray.ToArray());
+				string to = new string(toArray.ToArray());
+				Directory.Move(from, to);
+			}
+		}
+
+		public static IEnumerator Move(string sourceDirName, string destDirName)
+		{
+			try
+			{
+				if (!Directory.Exists(sourceDirName) || Directory.Exists(destDirName) || NALPath.Match(sourceDirName, destDirName))
+				{
+					Debug.LogError("Invalid directory configuration.");
+					yield break;
+				}
+			}
+			catch
+			{
+				Debug.LogError("Invalid path.");
+				yield break;
+			}
+
+			NativeArray<char> from = new NativeArray<char>(sourceDirName.ToCharArray(), Allocator.Persistent);
+			NativeArray<char> to = new NativeArray<char>(destDirName.ToCharArray(), Allocator.Persistent);
+			DirMove job = new DirMove
+			{
+				fromArray = from,
+				toArray = to
+			};
+			JobHandle handle = job.Schedule();
+			yield return new WaitUntil(() => handle.IsCompleted);
+			handle.Complete();
+			from.Dispose();
+			to.Dispose();
 		}
 	}
 

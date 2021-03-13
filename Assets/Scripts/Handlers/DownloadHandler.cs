@@ -14,7 +14,6 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,8 +22,6 @@ using UnityEngine.UI.Extensions;
 using TMPro;
 using NALStudio.GameLauncher.Games;
 using Lean.Localization;
-using NALStudio.Math;
-using NALStudio.Coroutines;
 using System;
 using UnityEngine.Analytics;
 using NALStudio.IO;
@@ -489,17 +486,21 @@ namespace NALStudio.GameLauncher
 				SettingsManager.Save();
             }
 
-            try
+            if (Directory.Exists(gamePath))
+			{
+				yield return StartCoroutine(NALDirectory.Delete(gamePath, true));
+                Debug.LogWarning("Directory found at gamePath... Deleting directory...");
+			}
+
+			string[] subDirs = Directory.GetDirectories(extractPath);
+            if (subDirs.Length == 1 && Directory.GetFiles(extractPath).Length < 1)
+                yield return StartCoroutine(NALDirectory.Move(subDirs[0], gamePath));
+            else
+                yield return StartCoroutine(NALDirectory.Move(extractPath, gamePath));
+
+            if (!Directory.Exists(gamePath))
             {
-                string[] subDirs = Directory.GetDirectories(extractPath);
-                if (subDirs.Length == 1 && Directory.GetFiles(extractPath).Length < 1)
-                    Directory.Move(subDirs[0], gamePath);
-                else
-                    Directory.Move(extractPath, gamePath);
-            }
-            catch (Exception e)
-            {
-                StartCoroutine(DownloadError(e));
+                StartCoroutine(DownloadError("No directory at gamepath found. Possible failure when moving directory."));
                 extractError = true;
                 extractingText.color = errorColor;
                 extractingText.text = "[ERROR]";
@@ -541,6 +542,7 @@ namespace NALStudio.GameLauncher
 
             if (!extractError)
             {
+                double playtime = data.Playtime;
                 if (!updated)
                 {
                     Debug.Log($"Installed game: \"{data.UUID}\" ({data.Name})");
@@ -549,12 +551,12 @@ namespace NALStudio.GameLauncher
                         { "name", data.Name},
                         { "uuid", data.UUID },
                         { "version", data.Remote.Version },
-                        { "playtime", data.Playtime }
+                        { "playtime", playtime }
                     });
-                    AnalyticsEvent.Custom($"{data.Name}_{data.UUID}_installed", new Dictionary<string, object>
+                    AnalyticsEvent.Custom($"{data.UUID}_installed", new Dictionary<string, object>
                     {
                         { "version", data.Remote.Version },
-                        { "playtime", data.Playtime }
+                        { "playtime", playtime }
                     });
                     }
                 else
@@ -565,12 +567,12 @@ namespace NALStudio.GameLauncher
                         { "name", data.Name },
                         { "uuid", data.UUID },
                         { "version", data.Remote.Version },
-                        { "playtime", data.Playtime }
+                        { "playtime", playtime }
                     });
-                    AnalyticsEvent.Custom($"{data.Name}_{data.UUID}_updated", new Dictionary<string, object>
+                    AnalyticsEvent.Custom($"{data.UUID}_updated", new Dictionary<string, object>
                     {
                         { "version", data.Remote.Version },
-                        { "playtime", data.Playtime }
+                        { "playtime", playtime }
                     });
                 }
             }

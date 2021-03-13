@@ -81,7 +81,8 @@ public class ApplicationHandler : MonoBehaviour
 		}
 		else
 		{
-			ShortcutsEnabled = true;
+			ShortcutsEnabled = SettingsManager.Settings.AllowShortcuts;
+
 			if (!SettingsManager.Settings.AllowShortcuts && File.Exists(Constants.LaunchPath))
 			{
 				Debug.Log("Deleting launch file, because user has disabled launch file updates.");

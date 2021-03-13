@@ -145,10 +145,9 @@ namespace NALStudio.GameLauncher.Cards
             }
 
             foreach (string json in jsons)
-            {
-                DataHandler.UniversalDatas.Add(new UniversalData(json));
-            }
-            DataHandler.UniversalDatas.Loaded = true;
+				DataHandler.UniversalDatas.Add(new UniversalData(json));
+
+			DataHandler.UniversalDatas.Loaded = true;
 
             AddCards();
         }

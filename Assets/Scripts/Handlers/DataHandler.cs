@@ -12,6 +12,7 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
 using NALStudio.GameLauncher.Constants;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -191,7 +192,7 @@ public class UniversalData
 		{
 			try
 			{
-				JsonLocalData j = JsonUtility.FromJson<JsonLocalData>(json);
+				JsonLocalData j = JsonConvert.DeserializeObject<JsonLocalData>(json);
 				return new LocalData()
 				{
 					ExecutablePath = j.executable_path,
@@ -216,7 +217,7 @@ public class UniversalData
 				executable_path = localData.ExecutablePath,
 				last_interest = localData.LastInterest
 			};
-			return JsonUtility.ToJson(j);
+			return JsonConvert.SerializeObject(j);
 		}
 	}
 
@@ -242,6 +243,20 @@ public class UniversalData
 		}
 	}
 
+	public class BranchData
+	{
+		class JsonClassData
+		{
+			public string name;
+			public string executable_path;
+			public string version;
+		}
+
+		public string Name { get; private set; }
+		public string ExecutablePath { get; private set; }
+		public string Version { get; private set; }
+	}
+
 	#region Basic Info
 	public string Name { get; private set; }
 	public string DisplayName { get; private set; }
@@ -261,17 +276,27 @@ public class UniversalData
 	public string ThumbnailUrl { get; private set; }
 	public Texture2D ThumbnailTexture { get; private set; }
 	#endregion
-
+	#region Branch Info
+	public BranchData[] Branches { get; private set; }
+	#endregion
 	#region Game Info
-	public float Playtime
+	/// <summary>
+	/// Playtime in minutes
+	/// </summary>
+	public double Playtime
 	{
 		get
 		{
-			return PlayerPrefs.GetFloat($"playtime/{UUID}");
+			string timeString = PlayerPrefs.GetString($"playtime/{UUID}", "0");
+			if (double.TryParse(timeString, out double playtime))
+				return playtime;
+
+			Debug.LogError($"Could not parse playtime to double. Playtime value: {timeString}");
+			return 0d;
 		}
 		set
 		{
-			PlayerPrefs.SetFloat($"playtime/{UUID}", value);
+			PlayerPrefs.SetString($"playtime/{UUID}", value.ToString("G17"));
 		}
 	}
 	#endregion
@@ -300,6 +325,8 @@ public class UniversalData
 		public string download_url;
 		public long order;
 
+		public BranchData[] branches;
+
 		public string version;
 		public string executable_path;
 		public string discord_image_key;
@@ -307,7 +334,7 @@ public class UniversalData
 
 	public UniversalData(string json)
 	{
-		JsonUniversalData d = JsonUtility.FromJson<JsonUniversalData>(json);
+		JsonUniversalData d = JsonConvert.DeserializeObject<JsonUniversalData>(json);
 		#region Remote
 		Remote = new RemoteData(d.version, d.executable_path);
 		#endregion
@@ -343,6 +370,9 @@ public class UniversalData
 		#endregion
 		#region Local
 		Local = LocalData.FromData(this);
+		#endregion
+		#region Branches
+		Branches = d.branches ?? (new BranchData[0]);
 		#endregion
 	}
 	#endregion

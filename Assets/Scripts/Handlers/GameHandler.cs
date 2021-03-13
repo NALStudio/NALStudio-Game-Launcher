@@ -18,8 +18,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Unity.Collections;
-using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.UI;
@@ -127,16 +125,17 @@ namespace NALStudio.GameLauncher.Games
 				}
 
 				string uninstallVersion = data.Local.Version;
+				double tmpPlaytime = data.Playtime;
 				AnalyticsEvent.Custom("game_uninstalled", new Dictionary<string, object>
 				{
 					{ "name", data.Name },
 					{ "version", uninstallVersion },
-					{ "playtime", data.Playtime }
+					{ "playtime", tmpPlaytime }
 				});
-				AnalyticsEvent.Custom($"{data.Name}_uninstalled", new Dictionary<string, object>
+				AnalyticsEvent.Custom($"{data.UUID}_uninstalled", new Dictionary<string, object>
 				{
 					{ "version", uninstallVersion },
-					{ "playtime", data.Playtime }
+					{ "playtime", tmpPlaytime }
 				});
 
 				yield return StartCoroutine(Uninstaller(uninstallPath));
@@ -308,11 +307,12 @@ namespace NALStudio.GameLauncher.Games
 
 		void Update()
 		{
-			foreach (KeyValuePair<string, double> kv in playtimesToSave)
+			if (playtimesToSave.Count > 0)
 			{
-				DataHandler.UniversalDatas.Get(kv.Key).Playtime += Convert.ToSingle(kv.Value);
+				KeyValuePair<string, double> toAdd = playtimesToSave.First();
+				playtimesToSave.Remove(toAdd.Key);
+				DataHandler.UniversalDatas.Get(toAdd.Key).Playtime += toAdd.Value;
 			}
-			playtimesToSave.Clear();
 
 			CheckForStartRequest();
 		}
@@ -322,15 +322,18 @@ namespace NALStudio.GameLauncher.Games
 			try
 			{
 				TimeSpan playTime = DateTime.UtcNow - gameRunningStartTime;
-				if (playTime.TotalMinutes > 0)
-					playtimesToSave.Add(gameRunningData.UUID, playTime.TotalMinutes);
+				playtimesToSave.Add(gameRunningData.UUID, playTime.TotalMinutes);
 			}
 			catch (Exception ex) { Debug.LogError(ex.Message); }
 			gameRunningData = null;
 			gameRunningProcess = null;
 			gameRunning = false;
 
-			DiscordHandler.ResetActivity();
+			try
+			{
+				DiscordHandler.ResetActivity();
+			}
+			catch (Exception ex) { Debug.LogError(ex.Message); }
 		}
 
 		public void StopActiveGame()

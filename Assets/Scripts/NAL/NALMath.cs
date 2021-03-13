@@ -45,9 +45,9 @@ namespace NALStudio.Math
 		#endregion
 
 		#region Time
-		public static string MinutesToReadable(float minutes)
+		public static string MinutesToReadable(double minutes)
 		{
-			float time = minutes;
+			double time = minutes;
 			string playtimeFormat = LeanLocalization.GetTranslationText("units-minutes", "Minutes");
 			if (time >= 60)
 			{
@@ -55,6 +55,11 @@ namespace NALStudio.Math
 				playtimeFormat = LeanLocalization.GetTranslationText("units-hours", "Hours");
 			}
 			return $"{time:0.0} {playtimeFormat}";
+		}
+
+		public static string MinutesToReadable(float minutes)
+		{
+			return MinutesToReadable((double)minutes);
 		}
 		#endregion
 	}
