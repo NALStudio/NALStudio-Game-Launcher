@@ -531,7 +531,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 330, y: 260}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7845690710822109051
 CanvasRenderer:
@@ -639,18 +639,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45453a60b34ed524c8be7b4ca92c6129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardData:
-    title: 
-    developer: 
-    publisher: 
-    price: 0
-    version: 
-    release_date: 
-    early_access: 0
-    thumbnail: 
-    download: 
-    executable_path: 
-    thumbnailTexture: {fileID: 0}
   thumbnail: {fileID: 2397607654950276116}
   title: {fileID: 9104463210509869330}
   devPub: {fileID: 8374592262258013811}
@@ -748,7 +736,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: a8cb4e1039ad3384d82f7d4b27469c96, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0

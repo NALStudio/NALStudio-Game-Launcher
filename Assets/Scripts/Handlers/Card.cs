@@ -44,29 +44,26 @@ namespace NALStudio.GameLauncher.Cards
 
 		IEnumerator SetContent()
         {
-            // If check added to remove the flicker
-            // that is sometimes seen because of WaitWhile
-            if (data.ThumbnailTexture == null)
-                yield return new WaitWhile(() => data.ThumbnailTexture == null);
-			#region Thumbnail
-            thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = data.ThumbnailTexture.width / (float)data.ThumbnailTexture.height;
-            thumbnail.texture = data.ThumbnailTexture;
-            #endregion
-            yield return null;
             #region Title
 			title.text = data.DisplayName;
             #endregion
-            yield return null;
             #region Developer
 			devPub.text = data.Developer == data.Publisher ? data.Developer : $"{data.Developer} | {data.Publisher}";
             #endregion
-            yield return null;
             #region Price
-			string priceText = $"€{data.Price}";
+			string priceText = $"{data.Price}€";
             if (data.Price == 0)
                 priceText = Lean.Localization.LeanLocalization.GetTranslationText("pricing-free", "Free");
             price.text = priceText;
 			#endregion
+			#region Thumbnail
+            // If check added to remove the flicker
+            // that is sometimes seen because of WaitWhile
+            if (data.ThumbnailTexture == null)
+                yield return new WaitWhile(() => data.ThumbnailTexture == null);
+            thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = data.ThumbnailTexture.width / (float)data.ThumbnailTexture.height;
+            thumbnail.texture = data.ThumbnailTexture;
+            #endregion
 		}
     }
 }
