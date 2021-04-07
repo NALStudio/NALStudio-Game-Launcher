@@ -11,6 +11,7 @@
 Copyright © 2020 NALStudio. All Rights Reserved.
 */
 
+using NALStudio.Extensions;
 using NALStudio.GameLauncher.Constants;
 using Newtonsoft.Json;
 using System;
@@ -45,9 +46,10 @@ public class DataHandler : MonoBehaviour
 
 		public static void Add(UniversalData toAdd)
 		{
-			while (datas.Any(d => d.UUID == toAdd.UUID))
-				datas.RemoveAt(datas.FindIndex(d => d.UUID == toAdd.UUID));
-			datas.Add(toAdd);
+			if (!datas.Any((d) => d.UUID == toAdd.UUID))
+				datas.Add(toAdd);
+			else
+				Debug.LogError($"Game with UUID \"{toAdd.UUID}\" exists already!");
 		}
 	}
 
@@ -245,16 +247,28 @@ public class UniversalData
 
 	public class BranchData
 	{
-		class JsonClassData
+		public class JsonBranchData
 		{
-			public string name;
-			public string executable_path;
 			public string version;
+			public string executable_path;
+			public string download_url;
+
+			public BranchData ToBranchData(string name)
+			{
+				return new BranchData
+				{
+					Name = name,
+					ExecutablePath = executable_path,
+					Version = version,
+					DownloadUrl = download_url
+				};
+			}
 		}
 
 		public string Name { get; private set; }
-		public string ExecutablePath { get; private set; }
 		public string Version { get; private set; }
+		public string ExecutablePath { get; private set; }
+		public string DownloadUrl { get; private set; }
 	}
 
 	#region Basic Info
@@ -325,7 +339,7 @@ public class UniversalData
 		public string download_url;
 		public long order;
 
-		public BranchData[] branches;
+		public Dictionary<string, BranchData.JsonBranchData> branches;
 
 		public string version;
 		public string executable_path;
@@ -372,7 +386,17 @@ public class UniversalData
 		Local = LocalData.FromData(this);
 		#endregion
 		#region Branches
-		Branches = d.branches ?? (new BranchData[0]);
+		if (d.branches != null)
+		{
+			List<BranchData> branches = new List<BranchData>();
+			foreach (KeyValuePair<string, BranchData.JsonBranchData> b in d.branches)
+				branches.Add(b.Value.ToBranchData(b.Key));
+			Branches = branches.ToArray();
+		}
+		else
+		{
+			Branches = new BranchData[0];
+		}
 		#endregion
 	}
 	#endregion

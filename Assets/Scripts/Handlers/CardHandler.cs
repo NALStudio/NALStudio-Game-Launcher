@@ -134,18 +134,14 @@ namespace NALStudio.GameLauncher.Cards
             yield return new WaitUntil(() => SettingsManager.RemoteLoaded);
 
             string[] cardKeys = ConfigManager.appConfig.GetKeys();
-            List<string> jsons = new List<string>();
             foreach (string cardKey in cardKeys)
             {
                 string fetchedJson = ConfigManager.appConfig.GetJson(cardKey, null);
                 if (fetchedJson != null)
-                    jsons.Add(fetchedJson);
+                    DataHandler.UniversalDatas.Add(new UniversalData(fetchedJson));
                 else
                     Debug.LogError($"Fetched json for game: \"{cardKey}\" could not be loaded!");
             }
-
-            foreach (string json in jsons)
-				DataHandler.UniversalDatas.Add(new UniversalData(json));
 
 			DataHandler.UniversalDatas.Loaded = true;
 

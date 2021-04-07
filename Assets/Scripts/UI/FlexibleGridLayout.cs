@@ -16,10 +16,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(RectTransform))]
 public class FlexibleGridLayout : LayoutGroup
 {
     #region Parameters
-
     public enum FitType
     {
         Uniform,
@@ -74,15 +74,12 @@ public class FlexibleGridLayout : LayoutGroup
         cellSize.x = fitX ? cellWidth : cellSize.x;
         cellSize.y = fitY ? cellHeight : cellSize.y;
 
-        int columnCount = 0;
-        int rowCount = 0;
-
-        for(int i = 0; i < rectChildren.Count; i++)
+		for (int i = 0; i < rectChildren.Count; i++)
         {
-            rowCount = i / columns;
-            columnCount = i % columns;
+			int rowCount = i / columns;
+			int columnCount = i % columns;
 
-            var item = rectChildren[i];
+			var item = rectChildren[i];
 
             var xPos = (cellSize.x * columnCount) + (spacing.x * columnCount) + padding.left;
             var yPos = (cellSize.y * rowCount) + (spacing.y * rowCount) + padding.top;
@@ -92,18 +89,14 @@ public class FlexibleGridLayout : LayoutGroup
         }
     }
 
-    public override void CalculateLayoutInputVertical()
-    {
+    public override void CalculateLayoutInputVertical() { }
 
-    }
+    public override void SetLayoutHorizontal() { }
 
-    public override void SetLayoutHorizontal()
-    {
+    public override void SetLayoutVertical() { }
 
-    }
-
-    public override void SetLayoutVertical()
-    {
-
-    }
+	new public void OnValidate()
+	{
+        base.OnValidate();
+	}
 }

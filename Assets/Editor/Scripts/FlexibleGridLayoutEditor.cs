@@ -13,76 +13,71 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 
 using UnityEngine;
 using UnityEditor;
+using NALStudio.NALEditor;
 
 [CustomEditor(typeof(FlexibleGridLayout)), CanEditMultipleObjects]
-public class FlexibleGridLayoutEditor : Editor
+public class FlexibleGridLayoutEditor : NALEditor
 {
-    public SerializedProperty childAlignmentSerialized;
-    public SerializedProperty rowsSerialized;
-    public SerializedProperty columnsSerialized;
-    public SerializedProperty cellSizeSerialized;
-    public SerializedProperty spacingSerialized;
-    public SerializedProperty fitXSerialized;
-    public SerializedProperty fitYSerialized;
+    bool paddingFoldout;
 
-    static bool paddingFoldout;
-
-    void OnEnable()
-    {
-        rowsSerialized = serializedObject.FindProperty("rows");
-        columnsSerialized = serializedObject.FindProperty("columns");
-        cellSizeSerialized = serializedObject.FindProperty("cellSize");
-        spacingSerialized = serializedObject.FindProperty("spacing");
-        fitXSerialized = serializedObject.FindProperty("fitX");
-        fitYSerialized = serializedObject.FindProperty("fitY");
-    }
-
-    public override void OnInspectorGUI()
+	public override void OnInspectorGUI()
     {
         FlexibleGridLayout layout = (FlexibleGridLayout)target;
-        Color defaultColor = GUI.color;
-        Color defaultContentColor = GUI.contentColor;
+        serializedObject = new SerializedObject(layout);
+
         paddingFoldout = EditorGUILayout.Foldout(paddingFoldout, "Padding");
+        EditorGUI.BeginChangeCheck();
+        int left = layout.padding.left;
+        int right = layout.padding.right;
+        int top = layout.padding.top;
+        int bottom = layout.padding.bottom;
 		if (paddingFoldout)
 		{
-            layout.padding.left = EditorGUILayout.IntField("     Left", layout.padding.left);
-            layout.padding.right = EditorGUILayout.IntField("     Right", layout.padding.right);
-            layout.padding.top = EditorGUILayout.IntField("     Top", layout.padding.top);
-            layout.padding.bottom = EditorGUILayout.IntField("     Bottom", layout.padding.bottom);
+            EditorGUI.indentLevel++;
+            left = EditorGUILayout.IntField("Left", layout.padding.left);
+            right = EditorGUILayout.IntField("Right", layout.padding.right);
+            top = EditorGUILayout.IntField("Top", layout.padding.top);
+            bottom = EditorGUILayout.IntField("Bottom", layout.padding.bottom);
+            EditorGUI.indentLevel--;
             GUILayout.Space(10f);
 		}
-        layout.childAlignment = (TextAnchor)EditorGUILayout.EnumPopup(new GUIContent("Child Alignment", "Determines how your content will be aligned."), layout.childAlignment);
+
+        TextAnchor alignment = (TextAnchor)EditorGUILayout.EnumPopup(new GUIContent("Child Alignment", "Determines how your content will be aligned."), layout.childAlignment);
+        if (EditorGUI.EndChangeCheck())
+		{
+            Undo.RecordObject(layout, "Changed Flexible Grid Layout");
+            layout.padding.left = left;
+            layout.padding.right = right;
+            layout.padding.top = top;
+            layout.padding.bottom = bottom;
+
+            layout.childAlignment = alignment;
+
+            layout.OnValidate();
+		}
+
         GUILayout.Space(10f);
-        layout.fitType = (FlexibleGridLayout.FitType)EditorGUILayout.EnumPopup(new GUIContent("Fit Type", "Determines how your content will be fitted."), layout.fitType);
-        if(layout.fitType == FlexibleGridLayout.FitType.FixedColumns || layout.fitType == FlexibleGridLayout.FitType.FixedRows)
-        {
-            layout.rows = EditorGUILayout.DelayedIntField(new GUIContent("Rows"), layout.rows);
-            layout.columns = EditorGUILayout.DelayedIntField(new GUIContent("Columns"), layout.columns);
-            GUILayout.Space(10f);
-            EditorGUI.BeginDisabledGroup(layout.fitX && layout.fitY);
-            layout.cellSize = EditorGUILayout.Vector2Field("Cell Size", layout.cellSize);
-            EditorGUI.EndDisabledGroup();
-            layout.spacing = EditorGUILayout.Vector2Field("Spacing", layout.spacing);
-            GUILayout.Space(10f);
-            layout.fitX = EditorGUILayout.Toggle("Fit X", layout.fitX);
-            layout.fitY = EditorGUILayout.Toggle("Fit Y", layout.fitY);
-        }
-        else
-        {
-            EditorGUI.BeginDisabledGroup(true);
-            layout.rows = EditorGUILayout.DelayedIntField(new GUIContent("Rows"), layout.rows);
-            layout.columns = EditorGUILayout.DelayedIntField(new GUIContent("Columns"), layout.columns);
-            EditorGUI.EndDisabledGroup();
-            GUILayout.Space(10f);
-            EditorGUI.BeginDisabledGroup(layout.fitX && layout.fitY);
-            layout.cellSize = EditorGUILayout.Vector2Field("Cell Size", layout.cellSize);
-            EditorGUI.EndDisabledGroup();
-            layout.spacing = EditorGUILayout.Vector2Field("Spacing", layout.spacing);
-            EditorGUI.BeginDisabledGroup(true);
-            GUILayout.Space(10f);
-            layout.fitX = EditorGUILayout.Toggle("Fit X", layout.fitX);
-            layout.fitY = EditorGUILayout.Toggle("Fit Y", layout.fitY);
-            EditorGUI.EndDisabledGroup();
-        }
+        DrawField(nameof(layout.fitType));
+
+        EditorGUI.BeginDisabledGroup(layout.fitType != FlexibleGridLayout.FitType.FixedColumns && layout.fitType != FlexibleGridLayout.FitType.FixedRows);
+        DrawField(nameof(layout.rows));
+        DrawField(nameof(layout.columns));
+        EditorGUI.EndDisabledGroup();
+
+        GUILayout.Space(10f);
+
+        EditorGUI.BeginDisabledGroup(layout.fitX && layout.fitY);
+        DrawField(nameof(layout.cellSize));
+        EditorGUI.EndDisabledGroup();
+        DrawField(nameof(layout.spacing));
+
+        GUILayout.Space(10f);
+
+        EditorGUI.BeginDisabledGroup(layout.fitType != FlexibleGridLayout.FitType.FixedColumns && layout.fitType != FlexibleGridLayout.FitType.FixedRows);
+        DrawField(nameof(layout.fitX));
+        DrawField(nameof(layout.fitY));
+        EditorGUI.EndDisabledGroup();
+
+        Apply();
     }
 }

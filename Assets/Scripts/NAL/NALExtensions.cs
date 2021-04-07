@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 
 namespace NALStudio.Extensions
 {
 	public static class StringExtensions
 	{
 		/// <summary>
-		/// Capitalizes the string
+		/// Capitalizes the string.
 		/// </summary>
 		/// <param name="str"></param>
 		/// <returns></returns>
@@ -18,7 +19,7 @@ namespace NALStudio.Extensions
 		}
 
 		/// <summary>
-		/// Capitalizes the string
+		/// Capitalizes the string.
 		/// </summary>
 		/// <param name="str"></param>
 		/// <param name="lower">If true; will lower all other characters</param>
@@ -29,21 +30,47 @@ namespace NALStudio.Extensions
 		}
 
 		/// <summary>
-		/// Return the text ready to be displayed on the UI as the supplied colour
+		/// Return the text ready to be displayed on the UI as the supplied color.
 		/// </summary>
-		/// <param name="text"></param>
+		/// <param name="str"></param>
 		/// <param name="colour"></param>
 		/// <returns></returns>
-		public static string Colored(this string text, Color colour)
+		public static string Colored(this string str, Color color)
 		{
-			return $"<color=#{ColorUtility.ToHtmlStringRGB(colour)}>{text}</color>";
+			return $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{str}</color>";
+		}
+
+        /// <summary>
+        /// If the string ends with the suffix string, return the string with the end suffix removed. Otherwise, return the original string.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        public static string RemoveSuffix(this string str, string suffix)
+		{
+            if (str.EndsWith(suffix))
+                return str.Substring(0, str.Length - suffix.Length);
+            return str;
+		}
+
+        /// <summary>
+        /// If the string starts with the prefix string, return the string with the start prefix removed. Otherwise, return the original string.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="prefix"></param>
+        /// <returns></returns>
+        public static string RemovePrefix(this string str, string prefix)
+		{
+            if (str.StartsWith(prefix))
+                return str.Substring(prefix.Length);
+            return str;
 		}
 	}
 
 	public static class GameObjectExtensions
 	{
 		/// <summary>
-		/// Return a component after either finding it on the game object or otherwise attaching it
+		/// Return a component after either finding it on the game object or otherwise attaching it.
 		/// </summary>
 		/// <typeparam name="T">Component To Attatch</typeparam>
 		/// <param name="gameObject"></param>
@@ -64,7 +91,7 @@ namespace NALStudio.Extensions
 	public static class TransformExtensions
 	{
 		/// <summary>
-		/// Destroy all children of this transform
+		/// Destroy all children of this transform.
 		/// </summary>
 		/// <param name="transform"></param>
 		public static void DestroyChildren(this Transform transform)
@@ -77,7 +104,7 @@ namespace NALStudio.Extensions
     public static class VectorExtensions
     {
         /// <summary>
-        /// Return a copy of this vector with an altered x and/or y and/or z component
+        /// Return a copy of this vector with an altered x and/or y and/or z component.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="x"></param>
@@ -90,7 +117,7 @@ namespace NALStudio.Extensions
         }
 
         /// <summary>
-        /// Return a copy of this vector with an altered x and/or y component
+        /// Return a copy of this vector with an altered x and/or y component.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="x"></param>
@@ -102,7 +129,7 @@ namespace NALStudio.Extensions
         }
 
         /// <summary>
-        /// Return this vector with only its x and y components
+        /// Return this vector with only its x and y components.
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -113,7 +140,7 @@ namespace NALStudio.Extensions
         }
 
         /// <summary>
-        /// Return a copy of this vector with an altered x component
+        /// Return a copy of this vector with an altered x component.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="x"></param>
@@ -124,7 +151,7 @@ namespace NALStudio.Extensions
         }
 
         /// <summary>
-        /// Return a copy of this vector with an altered y component
+        /// Return a copy of this vector with an altered y component.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="y"></param>
@@ -135,7 +162,7 @@ namespace NALStudio.Extensions
         }
 
         /// <summary>
-        /// Return a copy of this vector with an altered x component
+        /// Return a copy of this vector with an altered x component.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="x"></param>
@@ -146,7 +173,7 @@ namespace NALStudio.Extensions
         }
 
         /// <summary>
-        /// Return a copy of this vector with an altered y component
+        /// Return a copy of this vector with an altered y component.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="y"></param>
@@ -157,7 +184,7 @@ namespace NALStudio.Extensions
         }
 
         /// <summary>
-        /// Return a copy of this vector with an altered z component
+        /// Return a copy of this vector with an altered z component.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="z"></param>
@@ -168,7 +195,7 @@ namespace NALStudio.Extensions
         }
 
         /// <summary>
-        /// Return a Vector3 with this vector's components as well as the supplied z component
+        /// Return a Vector3 with this vector's components as well as the supplied z component.
         /// </summary>
         /// <param name="v"></param>
         /// <param name="z"></param>
@@ -178,4 +205,18 @@ namespace NALStudio.Extensions
             return new Vector3(v.x, v.y, z);
         }
     }
+
+    public static class EnumerableExtensions
+	{
+        public static string ToString<T>(this IEnumerable<T> item, bool formatted)
+		{
+            if (!formatted)
+				return item.ToString();
+
+			string output = "[";
+            foreach (T i in item)
+                output += $" {i},";
+            return output.RemoveSuffix(",") + " ]";
+		}
+	}
 }
