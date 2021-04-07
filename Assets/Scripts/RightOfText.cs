@@ -8,6 +8,7 @@ public class RightOfText : MonoBehaviour
     public TextMeshProUGUI text;
     public RectTransform toMove;
     public float offset;
+    public bool inheritXPos;
 
     void Start()
     {
@@ -22,7 +23,10 @@ public class RightOfText : MonoBehaviour
 
     public void UpdatePosition()
 	{
-        toMove.anchoredPosition = new Vector2(text.textBounds.size.x + offset, toMove.anchoredPosition.y);
+        float x = text.textBounds.size.x + offset;
+        if (inheritXPos)
+            x += text.rectTransform.anchoredPosition.x;
+        toMove.anchoredPosition = new Vector2(x, toMove.anchoredPosition.y);
     }
 
 	public void DelayedUpdatePosition()

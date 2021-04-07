@@ -69,7 +69,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.4.6",
+      "version": "1.4.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -115,7 +115,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.memoryprofiler": {
-      "version": "0.2.8-preview.2",
+      "version": "0.2.9-preview.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -145,7 +145,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.recorder": {
-      "version": "2.5.4",
+      "version": "2.5.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -193,7 +193,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.4.6",
+      "version": "1.4.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -212,6 +212,13 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "com.unity.ui.builder": {
+      "version": "1.0.0-preview.14",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
     },
     "com.unity.uiextensions": {
       "version": "https://bitbucket.org/UnityUIExtensions/unity-ui-extensions.git",
