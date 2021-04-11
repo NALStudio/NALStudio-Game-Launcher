@@ -45,10 +45,10 @@ public class SettingsManager : MonoBehaviour
     static string path = string.Empty;
 
     public static SettingsHolder Settings = null;
-    public static bool Loaded { get; private set; }
+    public static bool Loaded { get; private set; } = false;
     static SettingsManager active = null;
 
-    public static bool RemoteLoaded { get; private set; }
+    public static bool RemoteLoaded { get; private set; } = false;
     public struct userAttributes { }
     public struct appAttributes { }
 
@@ -93,7 +93,7 @@ public class SettingsManager : MonoBehaviour
             ConfigManager.SetEnvironmentID("03dfe905-cd6b-47f5-8a2d-ca5087b6e065");
 
         RemoteLoaded = false;
-        ConfigManager.FetchConfigs<userAttributes, appAttributes>(new userAttributes(), new appAttributes());
+        ConfigManager.FetchConfigs(new userAttributes(), new appAttributes());
     }
 
 #if UNITY_EDITOR
@@ -149,8 +149,9 @@ public class SettingsManager : MonoBehaviour
         Save();
     }
 
-    void OnApplicationQuit()
+    private System.Collections.IEnumerator OnApplicationQuit()
     {
         Save();
+        yield return new WaitWhile(() => !RemoteLoaded);
     }
 }

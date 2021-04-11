@@ -20,7 +20,7 @@ using UnityEngine.EventSystems;
 public class MouseoverTextStyle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 	#region Variables
-	public bool interactable = true;
+	public bool interactable;
     public TextMeshProUGUI text;
     public FontStyles normalStyle;
     public FontStyles highlightedStyle;
@@ -29,6 +29,7 @@ public class MouseoverTextStyle : MonoBehaviour, IPointerEnterHandler, IPointerE
 #if UNITY_EDITOR
 	void Reset()
 	{
+		interactable = true;
         text = GetComponent<TextMeshProUGUI>();
         normalStyle = FontStyles.Normal;
         highlightedStyle = FontStyles.Underline;

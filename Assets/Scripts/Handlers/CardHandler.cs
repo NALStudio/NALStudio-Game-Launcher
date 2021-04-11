@@ -23,6 +23,8 @@ using NALStudio.JSON;
 using NALStudio.UI;
 using NALStudio.GameLauncher.Games;
 using System.Linq;
+using NALStudio.Extensions;
+using System.Text.RegularExpressions;
 
 namespace NALStudio.GameLauncher.Cards
 {
@@ -53,6 +55,8 @@ namespace NALStudio.GameLauncher.Cards
 
         GridLayoutGroup gridLayout;
         RectTransform rectTransform;
+
+        string filter = null;
 
         #endregion
 
@@ -85,6 +89,12 @@ namespace NALStudio.GameLauncher.Cards
             }
         }
 
+        public void SetFilter(string f)
+		{
+            filter = f;
+            AddCards();
+		}
+
         void AddCards()
         {
             foreach (GameObject go in cards)
@@ -102,6 +112,30 @@ namespace NALStudio.GameLauncher.Cards
                 case SortingMode.relevance:
                     sortedDatas = sortedDatas.OrderBy(d => d.Order).ToArray();
                     break;
+            }
+
+            if (!string.IsNullOrEmpty(filter))
+			{
+                List<UniversalData> filtered = new List<UniversalData>();
+				for (int i = 0; i < sortedDatas.Length; i++)
+				{
+                    UniversalData toCheck = sortedDatas[i];
+                    string normalizedDisplayName = Regex.Replace(toCheck.DisplayName, @"\s", string.Empty).ToLowerInvariant();
+                    string normalizedFilter = Regex.Replace(filter, @"\s", string.Empty).ToLowerInvariant();
+                    if (normalizedDisplayName.Contains(normalizedFilter)
+                        || normalizedDisplayName.DamerauLevenshteinDistance(normalizedFilter, 7) != -1)
+						filtered.Add(toCheck);
+				}
+                sortedDatas = filtered.OrderBy(d =>
+                {
+                    string normalizedDisplayName = Regex.Replace(d.DisplayName, @"\s", string.Empty).ToLowerInvariant();
+                    string normalizedFilter = Regex.Replace(filter, @"\s", string.Empty).ToLowerInvariant();
+                    int returnModifier = 0;
+                    if (normalizedDisplayName.StartsWith(normalizedFilter))
+                        returnModifier = int.MinValue;
+                    returnModifier += normalizedDisplayName.DamerauLevenshteinDistance(normalizedFilter);
+                    return returnModifier;
+                }).ToArray();
             }
 
             for (int i = 0; i < sortedDatas.Length; i++)
@@ -134,6 +168,11 @@ namespace NALStudio.GameLauncher.Cards
             yield return new WaitUntil(() => SettingsManager.RemoteLoaded);
 
             string[] cardKeys = ConfigManager.appConfig.GetKeys();
+            if (cardKeys.Length < 1)
+			{
+                Debug.LogError("CardKeys is empty... Closing Application.");
+                Application.Quit();
+			}
             foreach (string cardKey in cardKeys)
             {
                 string fetchedJson = ConfigManager.appConfig.GetJson(cardKey, null);

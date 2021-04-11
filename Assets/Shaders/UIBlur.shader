@@ -5,6 +5,14 @@ Shader "Unlit/UIBlur"
     Properties
     {
         _Radius("Radius", Range(1, 255)) = 1
+
+        // For UI support
+        _StencilComp("Stencil Comparison", Float) = 8
+         _Stencil("Stencil ID", Float) = 0
+         _StencilOp("Stencil Operation", Float) = 0
+         _StencilWriteMask("Stencil Write Mask", Float) = 255
+         _StencilReadMask("Stencil Read Mask", Float) = 255
+         _ColorMask("Color Mask", Float) = 15
     }
 
         Category

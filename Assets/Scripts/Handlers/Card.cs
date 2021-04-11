@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using TMPro;
 using System;
+using NALStudio.Extensions;
 
 namespace NALStudio.GameLauncher.Cards
 {
@@ -13,9 +14,12 @@ namespace NALStudio.GameLauncher.Cards
     {
         public UniversalData data;
         public RawImage thumbnail;
+        public Color textLightColor;
         public TextMeshProUGUI title;
         public TextMeshProUGUI devPub;
         public TextMeshProUGUI price;
+        [Space(10f)]
+        public GameObject gradientObject;
 
         [HideInInspector]
         public StorePage storePage;
@@ -64,6 +68,20 @@ namespace NALStudio.GameLauncher.Cards
             thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = data.ThumbnailTexture.width / (float)data.ThumbnailTexture.height;
             thumbnail.texture = data.ThumbnailTexture;
             #endregion
-		}
-    }
+            #region Gradient
+            CornerGradient gradient = (CornerGradient)gradientObject.AddComponent(typeof(CornerGradient));
+            int ttw = data.ThumbnailTexture.width;
+            int tth = data.ThumbnailTexture.height;
+            // Gradient is for whatever reason flipped and because of that we invert y
+            gradient.m_topLeftColor = data.ThumbnailTexture.GetPixel(0, tth - 1);
+            gradient.m_topRightColor = data.ThumbnailTexture.GetPixel(ttw - 1, tth - 1);
+            gradient.m_bottomLeftColor = data.ThumbnailTexture.GetPixel(0, 0);
+            gradient.m_bottomRightColor = data.ThumbnailTexture.GetPixel(ttw - 1, 0);
+            // gradient.m_topLeftColor = data.ThumbnailTexture.GetPixels(0, 0, ttw / 2, tth / 2).Mode();
+            // gradient.m_topRightColor = data.ThumbnailTexture.GetPixels(ttw / 2, 0, ttw / 2, tth / 2).Mode();
+            // gradient.m_bottomLeftColor = data.ThumbnailTexture.GetPixels(0, tth / 2, ttw / 2, tth / 2).Mode();
+            // gradient.m_bottomRightColor = data.ThumbnailTexture.GetPixels(ttw / 2, tth / 2, ttw / 2, tth / 2).Mode();
+            #endregion
+        }
+	}
 }

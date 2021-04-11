@@ -107,6 +107,15 @@ namespace NALStudio.GameLauncher
             });
         }
 
+        public static void SetActivity(Discord.Activity activity)
+		{
+            ActivityManager?.UpdateActivity(activity, result =>
+            {
+                if (result != Discord.Result.Ok)
+                    Debug.LogError($"An error occured while updating activity. Error type: {result:F}");
+            });
+		}
+
         public static void ResetActivity()
 		{
             ActivityManager?.RegisterCommand("nalstudiogamelauncher://");
@@ -117,7 +126,7 @@ namespace NALStudio.GameLauncher
                 Assets = new Discord.ActivityAssets
                 {
                     LargeImage = "padding",
-                    LargeText = "NALStudio Game Launcher",
+                    LargeText = "NALStudio Game Launcher"
                 },
                 Instance = false
             }, (result) =>

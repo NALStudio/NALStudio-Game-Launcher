@@ -14,6 +14,8 @@ namespace NALStudio.GameLauncher.Networking
 		public delegate void InternetAvailabilityChangeHandler(bool available);
 		public static event InternetAvailabilityChangeHandler InternetAvailabilityChange;
 
+		public bool noInternetOverride;
+
 		public void Start()
 		{
 			InvokeRepeating(nameof(UpdateInternet), 1, 10);
@@ -36,6 +38,11 @@ namespace NALStudio.GameLauncher.Networking
 			handle.Complete();
 			bool available = result[0];
 			result.Dispose();
+#if UNITY_EDITOR
+			if (noInternetOverride)
+				available = false;
+#endif
+
 			if (available != InternetAvailable)
 			{
 				InternetAvailable = available;
@@ -81,7 +88,6 @@ namespace NALStudio.GameLauncher.Networking
 				}
 
 				jobResult[0] = true;
-				return;
 			}
 		}
 	}

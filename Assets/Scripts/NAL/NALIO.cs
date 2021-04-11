@@ -83,9 +83,9 @@ namespace NALStudio.IO
 			yield return new WaitUntil(() => handle.IsCompleted);
 			handle.Complete();
 			pathArray.Dispose();
-			onComplete?.Invoke(result[0]);
-			yield return null;
+			long r = result[0];
 			result.Dispose();
+			onComplete?.Invoke(r);
 		}
 
 		struct DirDelete : IJob
