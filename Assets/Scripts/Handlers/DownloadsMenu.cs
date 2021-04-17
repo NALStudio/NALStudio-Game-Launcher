@@ -24,7 +24,8 @@ public class DownloadsMenu : MonoBehaviour
 {
 	public DownloadHandler downloadHandler;
 	public UITweener tweener;
-	public UITweener inputIntercepterTweener;
+	public GameObject inputIntercepter; // Replaces UITweener
+	// public UITweener inputIntercepterTweener;
 	public CanvasGroup canvasGroup;
 	public ToggleButton toggler;
 
@@ -34,7 +35,7 @@ public class DownloadsMenu : MonoBehaviour
 	void Start()
 	{
 		tweener.OnComplete += () => opened = trueOpened;
-		inputIntercepterTweener.OnComplete += () => opened = trueOpened;
+		// inputIntercepterTweener.OnComplete += () => opened = trueOpened;
 	}
 
 	public void Open()
@@ -46,10 +47,14 @@ public class DownloadsMenu : MonoBehaviour
 		canvasGroup.interactable = true;
 		canvasGroup.blocksRaycasts = true;
 		tweener.DoTween();
+		inputIntercepter.SetActive(true);
+
+		/*
 		inputIntercepterTweener.StopTween();
 		if (inputIntercepterTweener.gameObject.activeSelf)
 			inputIntercepterTweener.gameObject.SetActive(false);
 		inputIntercepterTweener.gameObject.SetActive(true);
+		*/
 	}
 
 	public void Close()
@@ -60,6 +65,8 @@ public class DownloadsMenu : MonoBehaviour
 		canvasGroup.interactable = false;
 		canvasGroup.blocksRaycasts = false;
 		tweener.DoTween(true);
-		inputIntercepterTweener.DoTween(true, true);
+		inputIntercepter.SetActive(false);
+
+		// inputIntercepterTweener.DoTween(true, true);
 	}
 }

@@ -25,6 +25,7 @@ using Lean.Localization;
 using System;
 using UnityEngine.Analytics;
 using NALStudio.IO;
+using NALStudio.GameLauncher.Networking;
 
 namespace NALStudio.GameLauncher
 {
@@ -47,7 +48,7 @@ namespace NALStudio.GameLauncher
         public Color progressBarExtracting;
         [Space(10f)]
         public int maxDataPoints;
-        [Range(0, 1)]
+        [Range(0f, 0.9f)]
         public float lineSmoothing;
         bool updateGraphs;
         ulong oldDownloadedBytes;
@@ -199,32 +200,32 @@ namespace NALStudio.GameLauncher
                 downloadingAssets.SetActive(true);
                 progressBar.gameObject.SetActive(true);
 
+                #region Point Loading
+                while (dataPoints.Count >= maxDataPoints)
+                    dataPoints.RemoveAt(0);
+                dataPoints.Add((request.downloadedBytes - oldDownloadedBytes) / Time.fixedUnscaledDeltaTime);
+                if (dataPoints.Count > 1)
+                {
+                    if (dataPoints[dataPoints.Count - 1] == 0f && NetworkManager.InternetAvailable)
+                        dataPoints[dataPoints.Count - 1] = dataPoints[dataPoints.Count - 2];
+                    if (lineSmoothing > 0)
+                        dataPoints[dataPoints.Count - 1] = Mathf.Lerp(dataPoints[dataPoints.Count - 2], dataPoints[dataPoints.Count - 1], 1f - lineSmoothing);
+                }
+                #endregion
+
                 if (downloadsMenu.opened)
                 {
-
                     #region Progress Bar
                     progressBar.value = request.downloadProgress;
                     #endregion
 
                     #region Line Renderer
-                    #region Point Loading
-                    while (dataPoints.Count >= maxDataPoints)
-                        dataPoints.RemoveAt(0);
-                    dataPoints.Add((request.downloadedBytes - oldDownloadedBytes) / Time.fixedUnscaledDeltaTime);
-                    if (dataPoints.Count > 1)
-                    {
-                        if (dataPoints[dataPoints.Count - 1] == 0f && Application.internetReachability != NetworkReachability.NotReachable)
-                            dataPoints[dataPoints.Count - 1] = dataPoints[dataPoints.Count - 2];
-                        if (lineSmoothing > 0)
-                            dataPoints[dataPoints.Count - 1] = Mathf.Lerp(dataPoints[dataPoints.Count - 2], dataPoints[dataPoints.Count - 1], 1f - lineSmoothing);
-                    }
-                    #endregion
                     #region Point Updating
                     Vector2[] tmpPoints = new Vector2[maxDataPoints + 2];
                     float remapVal = 0;
                     if (dataPoints.Count > 0)
                         remapVal = dataPoints.Max();
-                    for (int i = 0; i < tmpPoints.Length; i++)
+                    for (int i = 0; i < maxDataPoints; i++)
                     {
                         if (i < dataPoints.Count)
                             tmpPoints[i] = new Vector2((float)i / maxDataPoints, dataPoints[i] / remapVal);
@@ -287,15 +288,8 @@ namespace NALStudio.GameLauncher
                         lineRenderer.color = lineNormalColor;
                     }
                     #endregion
-
-                    oldDownloadedBytes = request.downloadedBytes;
                 }
-                else
-                {
-                    dataPoints.Clear();
-                    oldDownloadedBytes = request.downloadedBytes;
-                    lineRenderer.Points = new Vector2[] { Vector2.zero };
-                }
+                oldDownloadedBytes = request.downloadedBytes;
             }
             else
             {
@@ -362,7 +356,7 @@ namespace NALStudio.GameLauncher
         {
             string downloadDir = Constants.Constants.DownloadPath;
             if (Directory.Exists(downloadDir))
-                Directory.Delete(downloadDir); // Threaded delete access gets denies.
+                Directory.Delete(downloadDir, true); // Threaded delete access gets denied.
             DirectoryInfo downloadTmp = Directory.CreateDirectory(downloadDir);
             downloadTmp.Attributes |= FileAttributes.Hidden;
             string downloadPath = Path.Combine(downloadDir, "data.nbf");

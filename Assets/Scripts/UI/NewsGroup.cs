@@ -20,18 +20,28 @@ using UnityEditor;
 
 public class NewsGroup : MonoBehaviour
 {
+	[System.Serializable]
+	public class NewsData
+	{
+		[Header("Texts")]
+		public string Name;
+		public string Status;
+		[TextArea]
+		public string Text;
+		[Header("Textures")]
+		public Sprite BannerLogo;
+		public Sprite BannerBackground;
+		public Sprite ButtonLogo;
+		[Header("Colors")]
+		public Color ButtonColor;
+		public Color TextColor;
+	}
+
 	[Header("Data")]
-	public List<Sprite> bannerLogos;
-	public List<Sprite> bannerBackgrounds;
-	public List<string> gameNames;
-	public List<Sprite> buttonLogos;
+	public NewsData[] News;
+	[Space(5f)]
 	public Color buttonColor;
 	public Color ButtonHighlightedColor;
-	public List<Color> buttonColors;
-	public List<string> titles;
-	[TextArea]
-	public List<string> texts;
-	public List<Color> textColors;
 	[Header("Settings")]
 	public Transform bannerParent;
 	public GameObject banner;
@@ -69,15 +79,16 @@ public class NewsGroup : MonoBehaviour
 		buttonScript.highlightedColor = ButtonHighlightedColor;
 		buttonScript.progress.maxValue = bannerSwitchDelay;
 		buttonScript.newsGroup = this;
-		for (int i = 0; i < bannerLogos.Count; i++)
+		foreach(NewsData n in News)
 		{
 			#region Banner Handling
-			bannerScript.logo.sprite = bannerLogos[i];
+			bannerScript.logo.sprite = n.BannerLogo;
 			if (bannerScript.logo.sprite == null)
 				bannerScript.logo.color = new Color(0, 0, 0, 0);
 			else
 				bannerScript.logo.color = Color.white;
-			bannerScript.background.sprite = bannerBackgrounds[i];
+
+			bannerScript.background.sprite = n.BannerBackground;
 			if (bannerScript.background.sprite == null)
 			{
 				bannerScript.background.color = new Color(0, 0, 0, 0);
@@ -85,24 +96,26 @@ public class NewsGroup : MonoBehaviour
 			else
 			{
 				bannerScript.background.color = Color.white;
-				bannerScript.ratioFitter.aspectRatio = bannerBackgrounds[i].bounds.size.x / bannerBackgrounds[i].bounds.size.y;
+				bannerScript.ratioFitter.aspectRatio = n.BannerBackground.bounds.size.x / n.BannerBackground.bounds.size.y;
 			}
-			bannerScript.title.text = titles[i];
-			bannerScript.title.color = textColors[i];
-			bannerScript.text.text = texts[i];
-			bannerScript.text.color = textColors[i];
+
+			bannerScript.title.text = n.Status;
+			bannerScript.title.color = n.TextColor;
+			bannerScript.text.text = n.Text;
+			bannerScript.text.color = n.TextColor;
 			GameObject ban = Instantiate(banner, bannerParent);
 			ban.SetActive(false);
 			banners.Add(ban.GetComponent<NewsBanner>());
 			#endregion
 			#region Button Handling
-			buttonScript.logo.sprite = buttonLogos[i];
+			buttonScript.logo.sprite = n.ButtonLogo;
 			if (buttonScript.logo.sprite == null)
 				buttonScript.logo.color = new Color(0, 0, 0, 0);
 			else
 				buttonScript.logo.color = Color.white;
-			buttonScript.selectedColor = buttonColors[i];
-			buttonScript.gameName.text = gameNames[i];
+
+			buttonScript.selectedColor = n.ButtonColor;
+			buttonScript.gameName.text = n.Name;
 			GameObject but = Instantiate(button, buttonParent);
 			but.SetActive(true);
 			NewsButton butComp = but.GetComponent<NewsButton>();
