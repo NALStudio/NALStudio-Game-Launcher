@@ -2827,7 +2827,7 @@ MonoBehaviour:
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
-  m_isRichText: 1
+  m_isRichText: 0
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -3102,11 +3102,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: 1
-  header: Update Available
-  content: 'An update is available for this game.
-
-    You can download it from the
-    store page.'
+  header: "P\xE4ivitys Saatavilla"
+  content: "P\xE4ivitys on saatavilla t\xE4h\xE4n peliin.\nVoit ladata sen kauppasivulta."
   delay: 0.5
 --- !u!114 &8009438405686588332
 MonoBehaviour:

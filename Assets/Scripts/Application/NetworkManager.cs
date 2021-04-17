@@ -38,6 +38,7 @@ namespace NALStudio.GameLauncher.Networking
 			handle.Complete();
 			bool available = result[0];
 			result.Dispose();
+
 #if UNITY_EDITOR
 			if (noInternetOverride)
 				available = false;

@@ -91,6 +91,8 @@ namespace NALStudio.GameLauncher.Cards
 
         public void SetFilter(string f)
 		{
+            if (f == filter)
+                return;
             filter = f;
             AddCards();
 		}
@@ -117,25 +119,29 @@ namespace NALStudio.GameLauncher.Cards
             if (!string.IsNullOrEmpty(filter))
 			{
                 List<UniversalData> filtered = new List<UniversalData>();
+                string normalizedFilter = Regex.Replace(filter, @"\s", string.Empty).ToLowerInvariant();
+
+                // Distance from data function
+                int distanceFromData(UniversalData d)
+				{
+					string normalizedDisplayName = Regex.Replace(d.DisplayName, @"\s", string.Empty).ToLowerInvariant();
+                    string shortName;
+                    if (normalizedDisplayName.Length > normalizedFilter.Length)
+                        shortName = normalizedDisplayName.Substring(0, normalizedFilter.Length);
+                    else
+                        shortName = normalizedDisplayName;
+                    return shortName.DamerauLevenshteinDistance(normalizedFilter, normalizedFilter.Length / 2);
+                }
+
 				for (int i = 0; i < sortedDatas.Length; i++)
 				{
                     UniversalData toCheck = sortedDatas[i];
-                    string normalizedDisplayName = Regex.Replace(toCheck.DisplayName, @"\s", string.Empty).ToLowerInvariant();
-                    string normalizedFilter = Regex.Replace(filter, @"\s", string.Empty).ToLowerInvariant();
-                    if (normalizedDisplayName.Contains(normalizedFilter)
-                        || normalizedDisplayName.DamerauLevenshteinDistance(normalizedFilter, 7) != -1)
+                    if (distanceFromData(toCheck) != -1)
 						filtered.Add(toCheck);
 				}
-                sortedDatas = filtered.OrderBy(d =>
-                {
-                    string normalizedDisplayName = Regex.Replace(d.DisplayName, @"\s", string.Empty).ToLowerInvariant();
-                    string normalizedFilter = Regex.Replace(filter, @"\s", string.Empty).ToLowerInvariant();
-                    int returnModifier = 0;
-                    if (normalizedDisplayName.StartsWith(normalizedFilter))
-                        returnModifier = int.MinValue;
-                    returnModifier += normalizedDisplayName.DamerauLevenshteinDistance(normalizedFilter);
-                    return returnModifier;
-                }).ToArray();
+
+                // Checking everything twice is not exactly optimal, but I don't know any other way.
+                sortedDatas = filtered.OrderBy(d => distanceFromData(d)).ToArray();
             }
 
             for (int i = 0; i < sortedDatas.Length; i++)

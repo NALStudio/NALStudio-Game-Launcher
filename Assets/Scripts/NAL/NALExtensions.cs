@@ -137,10 +137,9 @@ namespace NALStudio.Extensions
             }
             int lenDiff = tLen - sLen;
             if ((maxDistance < 0) || (maxDistance > tLen))
-            {
-                maxDistance = tLen;
-            }
-            else if (lenDiff > maxDistance) return -1;
+				maxDistance = tLen;
+			else if (lenDiff > maxDistance)
+                return -1;
 
             var v0 = new int[tLen];
             var v2 = new int[tLen]; // stores one level further back (offset by +1 position)
