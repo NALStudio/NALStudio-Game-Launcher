@@ -149,9 +149,8 @@ public class SettingsManager : MonoBehaviour
         Save();
     }
 
-    private System.Collections.IEnumerator OnApplicationQuit()
+    void OnApplicationQuit()
     {
         Save();
-        yield return new WaitWhile(() => !RemoteLoaded);
     }
 }

@@ -68,14 +68,10 @@ public class ApplicationChecker : MonoBehaviour
 		NetworkManager.InternetAvailabilityChange += (available) =>
 		{
 			if (available)
-			{
-				if ((bannerState & BannerState.NoInternet) != 0)
-					bannerState &= BannerState.NoInternet;
-			}
-			else if ((bannerState & BannerState.NoInternet) == 0)
-			{
+				bannerState &= ~BannerState.NoInternet;
+			else
 				bannerState |= BannerState.NoInternet;
-			}
+
 			UpdateBanner();
 		};
 
@@ -126,8 +122,7 @@ public class ApplicationChecker : MonoBehaviour
 			if (node["tag_name"] != Application.version)
 			{
 				Debug.Log($"Found an update for version: {node["tag_name"]}. Current Version: \"{Application.version}\"");
-				if ((bannerState & BannerState.Update) == 0)
-					bannerState |= BannerState.Update;
+				bannerState |= BannerState.Update;
 				UpdateBanner();
 			}
 		}

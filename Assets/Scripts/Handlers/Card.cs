@@ -7,10 +7,11 @@ using UnityEngine.Networking;
 using TMPro;
 using System;
 using NALStudio.Extensions;
+using UnityEngine.EventSystems;
 
 namespace NALStudio.GameLauncher.Cards
 {
-    public class Card : MonoBehaviour
+    public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public UniversalData data;
         public RawImage thumbnail;
@@ -20,6 +21,14 @@ namespace NALStudio.GameLauncher.Cards
         public TextMeshProUGUI price;
         [Space(10f)]
         public GameObject gradientObject;
+        public float gradientAnimationTime;
+        public Color gradientDefaultColor;
+        CornerGradient cornerGradient;
+        Graphic cornerGradientGraphic;
+        Color topLeftColor;
+        Color topRightColor;
+        Color bottomLeftColor;
+        Color bottomRightColor;
 
         [HideInInspector]
         public StorePage storePage;
@@ -44,7 +53,7 @@ namespace NALStudio.GameLauncher.Cards
 		void Start()
 		{
             Lean.Localization.LeanLocalization.OnLocalizationChanged += LanguageChange;
-		}
+        }
 
 		IEnumerator SetContent()
         {
@@ -69,19 +78,41 @@ namespace NALStudio.GameLauncher.Cards
             thumbnail.texture = data.ThumbnailTexture;
             #endregion
             #region Gradient
-            CornerGradient gradient = (CornerGradient)gradientObject.AddComponent(typeof(CornerGradient));
+            cornerGradient = gradientObject.GetComponent<CornerGradient>();
+            cornerGradientGraphic = gradientObject.GetComponent<Graphic>();
             int ttw = data.ThumbnailTexture.width;
             int tth = data.ThumbnailTexture.height;
             // Gradient is for whatever reason flipped and because of that we invert y
-            gradient.m_topLeftColor = data.ThumbnailTexture.GetPixel(0, tth - 1);
-            gradient.m_topRightColor = data.ThumbnailTexture.GetPixel(ttw - 1, tth - 1);
-            gradient.m_bottomLeftColor = data.ThumbnailTexture.GetPixel(0, 0);
-            gradient.m_bottomRightColor = data.ThumbnailTexture.GetPixel(ttw - 1, 0);
+            topLeftColor = data.ThumbnailTexture.GetPixel(0, tth - 1);
+            topRightColor = data.ThumbnailTexture.GetPixel(ttw - 1, tth - 1);
+            bottomLeftColor = data.ThumbnailTexture.GetPixel(0, 0);
+            bottomRightColor = data.ThumbnailTexture.GetPixel(ttw - 1, 0);
             // gradient.m_topLeftColor = data.ThumbnailTexture.GetPixels(0, 0, ttw / 2, tth / 2).Mode();
             // gradient.m_topRightColor = data.ThumbnailTexture.GetPixels(ttw / 2, 0, ttw / 2, tth / 2).Mode();
             // gradient.m_bottomLeftColor = data.ThumbnailTexture.GetPixels(0, tth / 2, ttw / 2, tth / 2).Mode();
             // gradient.m_bottomRightColor = data.ThumbnailTexture.GetPixels(ttw / 2, tth / 2, ttw / 2, tth / 2).Mode();
             #endregion
         }
+
+        void AnimationUpdate(float t, float _)
+		{
+            cornerGradientGraphic.SetVerticesDirty();
+            cornerGradient.m_topLeftColor = Color.Lerp(gradientDefaultColor, topLeftColor, t);
+            cornerGradient.m_topRightColor = Color.Lerp(gradientDefaultColor, topRightColor, t);
+            cornerGradient.m_bottomLeftColor = Color.Lerp(gradientDefaultColor, bottomLeftColor, t);
+            cornerGradient.m_bottomRightColor = Color.Lerp(gradientDefaultColor, bottomRightColor, t);
+        }
+
+		public void OnPointerEnter(PointerEventData eventData)
+		{
+            LeanTween.cancel(gradientObject);
+            LeanTween.value(gradientObject, AnimationUpdate, 0f, 1f, gradientAnimationTime);
+		}
+
+		public void OnPointerExit(PointerEventData eventData)
+		{
+            LeanTween.cancel(gradientObject);
+            LeanTween.value(gradientObject, AnimationUpdate, 1f, 0f, gradientAnimationTime);
+		}
 	}
 }
