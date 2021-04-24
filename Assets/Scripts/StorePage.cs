@@ -31,6 +31,10 @@ public class StorePage : MonoBehaviour
 	public AspectRatioFitter ratioFitter;
 	public GameObject earlyAccessBanner;
 	public TextMeshProUGUI title;
+	public RectTransform descriptionObject;
+	public float defaultDescriptionObjectHeight;
+	public float extendedDescriptionObjectHeight;
+	public TextMeshProUGUI description;
 	public TextMeshProUGUI developer;
 	public TextMeshProUGUI publisher;
 	public TextMeshProUGUI releaseDate;
@@ -52,7 +56,14 @@ public class StorePage : MonoBehaviour
 		earlyAccessBanner.SetActive(openedData.EarlyAccess);
 		ratioFitter.aspectRatio = (float)openedData.ThumbnailTexture.width / openedData.ThumbnailTexture.height;
 		image.texture = openedData.ThumbnailTexture;
+		image.color = Color.white;
 		title.text = openedData.DisplayName;
+
+		float descriptionHeight = openedData.EarlyAccess ? defaultDescriptionObjectHeight : extendedDescriptionObjectHeight;
+		descriptionObject.sizeDelta = new Vector2(descriptionObject.sizeDelta.x, descriptionHeight);
+		descriptionObject.gameObject.SetActive(openedData.Description != null);
+		description.text = openedData.Description;
+
 		developer.text = openedData.Developer;
 		publisher.text = openedData.Publisher;
 		releaseDate.text = openedData.ReleaseDate;
@@ -60,10 +71,6 @@ public class StorePage : MonoBehaviour
 		price.text = openedData.Price > 0 ? $"€{openedData.Price}" : LeanLocalization.GetTranslationText("pricing-free", "Free");
 
 		buttonMode = ButtonMode.Install;
-		string gameDataPath = Path.Combine(Constants.GamesPath, openedData.Name, GameHandler.gamedataFilePath);
-		if (SettingsManager.Settings.CustomGamePaths.ContainsKey(openedData.UUID))
-			gameDataPath = Path.Combine(SettingsManager.Settings.CustomGamePaths[openedData.UUID], GameHandler.gamedataFilePath);
-
 		if (openedData.Local != null)
 		{
 			if (openedData.Remote.Version != openedData.Local.Version)

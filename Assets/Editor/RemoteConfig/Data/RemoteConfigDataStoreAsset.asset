@@ -12,61 +12,92 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"6bf98044-d237-41fa-8a67-546e21a0617f\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"765542b6-b06d-41b1-8100-7043d8b4549f\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n     
     \"type\": \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n       
     \"name\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n        \"display_name\":
     \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n        \"uuid\": \"14544199-8754-4bb1-93ba-aaeb09b51bce\",\r\n       
     \"hidden\": false,\r\n        \"developer\": \"NALStudio\",\r\n        \"publisher\":
-    \"NALStudio\",\r\n        \"price\": 0,\r\n        \"release_date\": \"25.4.2020\",\r\n       
+    \"NALStudio\",\r\n        \"description\": \"<size=30><b>\xC4idinkieli Lausekeanalyysi
+    Peli</b></size>\\r\\n\\r\\n\xC4idinkieli Lausekeanalyysi Peli on maailman intensiivisin
+    lausekeanalyysi peli, jossa tavoitteena on ratkoa erilaisia lausekeanalyysej\xE4.\\r\\n\\r\\n<b>
+    Varoitus! Pelin analyyseiss\xE4 saattaa olla virheit\xE4, koska niit\xE4 ei olla
+    tarkistettu viel\xE4!</b>\\r\\n<i>(Eik\xE4 tullakkaan tarkistamaan... H\xE4\xE4h\xE4\xE4)</i>\\r\\n\\r\\n(Sovellus
+    ei ole oikeasti peli, vaan sovellus. Kutsun sit\xE4 kuitenkin peliksi eeppisyyden
+    takia.)\",\r\n        \"price\": 0,\r\n        \"release_date\": \"25.4.2020\",\r\n       
     \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/OxdvYnU.png\",\r\n       
     \"download_url\": \"https://github.com/NALStudio/Aidinkieli-Lausekeanalyysi-Peli/releases/download/1.2.5/Build.zip\",\r\n       
     \"order\": 3,\r\n        \"version\": \"1.2.5\",\r\n        \"executable_path\":
     \"Aidinkieli Lausekeanalyysi Peli.exe\",\r\n        \"discord_image_key\": \"aidinkieli\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"2a34ce89-3086-4ce9-988d-f7dcbed07d1a\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"379e7d67-c045-4b30-9159-ebb8bbee837d\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
     \"type\": \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n       
     \"name\": \"Koponen Dating Simulator\",\r\n        \"display_name\": \"Koponen
     Dating Simulator\",\r\n        \"uuid\": \"aba625d3-afef-4359-b7ab-b20b693b733c\",\r\n       
     \"hidden\": false,\r\n        \"developer\": \"KL Corporation\",\r\n        \"publisher\":
-    \"KL Corporation\",\r\n        \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n       
-    \"early_access\": true,\r\n        \"thumbnail_url\": \"https://i.imgur.com/kVjnUHx.png\",\r\n       
+    \"KL Corporation\",\r\n        \"description\": \"<size=30><b>Koponen Dating
+    Simulator</b></size>\\r\\nFuck around in an upper comprehensive school with your
+    crush Janne Koponen.\\r\\n\\r\\n<size=20><b>Koponen\u2122</b></size>\\r\\nFrom
+    Koivistontien v\xE4ist\xF6tilat to Hatanp\xE4\xE4n koulutalo, you cannot escape
+    the thoughts of Koponen\u2019s handsome beard and sexy body; thoughts so vivid
+    you will remember them for decades.\\r\\n\\r\\n<size=20><b>Incredible Level Design</b></size>\\r\\nPlay
+    the handcrafted Koponen Dating Simulator story line that will keep you immersed
+    for hours or jump to the many campaigns this game offers. The game has it all.\\r\\n\\r\\n<size=20><b>Realistic
+    Audio</b></size>\\r\\nKoponen Dating Simulator gives you hundreds of <s>stolen</s>
+    original sound effects to keep you immersed in the world of Koponen Dating Simulator.
+    Handcrafted in Aaro\u2019s basement, these sound effects are of the highest quality.\\r\\n\\r\\n<size=20><b>Next-Gen
+    Visuals</b></size>\\r\\nKoponen Dating Simulator harnesses the power of Koponen
+    Engine\u2122 to give you next-gen graphics with powerful performance. Based on
+    SDL, Koponen Engine\u2122 can produce high fidelity visuals incredibly efficiently.
+    \\r\\n\",\r\n        \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n       
+    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/kVjnUHx.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
     \"order\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"KoponenDatingSimulator.exe\",\r\n        \"discord_image_key\": \"kds_game\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"6c0081a8-6eee-4b21-b598-59052fd06edf\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b2abe18b-1b92-487a-9adc-9e97c1f72d37\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Rise and Fall\",\r\n       
     \"display_name\": \"Rise and Fall\",\r\n        \"uuid\": \"70f29c3f-b344-4767-9a6d-22a47c394129\",\r\n       
     \"hidden\": false,\r\n        \"developer\": \"Pentti Kaalimaa\",\r\n       
-    \"publisher\": \"Kaalimaa Productions\",\r\n        \"price\": 0,\r\n       
+    \"publisher\": \"Kaalimaa Productions\",\r\n        \"description\": \"A platformer
+    with twisted controls and difficult jumps.\",\r\n        \"price\": 0,\r\n       
     \"release_date\": \"Someday\",\r\n        \"early_access\": true,\r\n       
     \"thumbnail_url\": \"https://i.imgur.com/eQw5ewd.png\",\r\n        \"download_url\":
     \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
     \"order\": 1,\r\n        \"version\": \"0.2.0\",\r\n        \"executable_path\":
     \"Peli_VAL.exe\",\r\n        \"discord_image_key\": null\r\n      }\r\n    }\r\n 
-    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0f66454f-c799-4de8-a5d6-75a9cfad2723\"\r\n   
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"8b433e72-83b8-4078-a991-a329a216ff60\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Mastermind\",\r\n       
     \"display_name\": \"Mastermind\",\r\n        \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n       
     \"hidden\": false,\r\n        \"developer\": \"KL Corporation\",\r\n        \"publisher\":
-    \"KL Corporation\",\r\n        \"price\": 0,\r\n        \"release_date\": \"16.1.2021\",\r\n       
-    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n       
-    \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
+    \"KL Corporation\",\r\n        \"description\": \"<b>Mastermind</b> is a code-breaking
+    game based on the famous board game invented in the 70's by <color=#00FFFF>Mordecai
+    Meirowitz</color>.\\n\\n<b><size=16>Gameplay and rules</size></b>\\nThe goal
+    of Mastermind is for the codebreaker (player) to guess the correct code in both
+    order and colour, within twelve turns. After guessing, the codemaker (computer)
+    will place <color=#ff0000>red key pegs</color> for each code peg that is the
+    correct colour and <color=#00ff00>green key pegs</color> for each code peg that
+    is the correct colour and position. This cycle continues until either the codebreaker
+    guesses correctly, or all the rows of the board are full.\",\r\n        \"price\":
+    0,\r\n        \"release_date\": \"16.1.2021\",\r\n        \"early_access\": false,\r\n       
+    \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n        \"download_url\":
+    \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
     \"order\": 2,\r\n        \"version\": \"1.0.1\",\r\n        \"executable_path\":
     \"Mastermind.exe\",\r\n        \"discord_image_key\": \"mastermind\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"93f1b5da-a0a0-4c2f-b7a8-e99d52dba185\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"874cdc41-d55e-48a2-9afc-b2c41994f916\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\":
     \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\":
     \"KDS Level Builder\",\r\n        \"display_name\": \"KDS Level Builder\",\r\n       
     \"uuid\": \"4ca9096d-8055-4430-88f0-1e6a6046f92a\",\r\n        \"hidden\": false,\r\n       
     \"developer\": \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
-    \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n        \"early_access\":
-    false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/25abZCf.png\",\r\n       
+    \"description\": \"Make your own levels onto Koponen Dating Simulator using this
+    tool.\",\r\n        \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n       
+    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/25abZCf.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/LevelBuilder.zip\",\r\n       
     \"order\": 4,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"LevelBuilder.exe\",\r\n        \"discord_image_key\": \"kds_levelbuilder\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"5710933f-8935-4541-a5dd-28de839fc33a\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f0ad1d67-b4eb-4df1-9752-136d5ab2f582\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Test Game\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Test Game\",\r\n       
     \"display_name\": \"TEST GAME\",\r\n        \"uuid\": \"0e85ed87-dcfa-4c0b-a91b-7c09f455ea4f\",\r\n       
@@ -79,61 +110,92 @@ MonoBehaviour:
     \"Test Branch\": {\r\n            \"version\": \"0.0.2\",\r\n            \"executable_path\":
     \"Mastermind.exe\",\r\n            \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\"\r\n         
     }\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"6bf98044-d237-41fa-8a67-546e21a0617f\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"765542b6-b06d-41b1-8100-7043d8b4549f\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n     
     \"type\": \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n       
     \"name\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n        \"display_name\":
     \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n        \"uuid\": \"14544199-8754-4bb1-93ba-aaeb09b51bce\",\r\n       
     \"hidden\": false,\r\n        \"developer\": \"NALStudio\",\r\n        \"publisher\":
-    \"NALStudio\",\r\n        \"price\": 0,\r\n        \"release_date\": \"25.4.2020\",\r\n       
+    \"NALStudio\",\r\n        \"description\": \"<size=30><b>\xC4idinkieli Lausekeanalyysi
+    Peli</b></size>\\r\\n\\r\\n\xC4idinkieli Lausekeanalyysi Peli on maailman intensiivisin
+    lausekeanalyysi peli, jossa tavoitteena on ratkoa erilaisia lausekeanalyysej\xE4.\\r\\n\\r\\n<b>
+    Varoitus! Pelin analyyseiss\xE4 saattaa olla virheit\xE4, koska niit\xE4 ei olla
+    tarkistettu viel\xE4!</b>\\r\\n<i>(Eik\xE4 tullakkaan tarkistamaan... H\xE4\xE4h\xE4\xE4)</i>\\r\\n\\r\\n(Sovellus
+    ei ole oikeasti peli, vaan sovellus. Kutsun sit\xE4 kuitenkin peliksi eeppisyyden
+    takia.)\",\r\n        \"price\": 0,\r\n        \"release_date\": \"25.4.2020\",\r\n       
     \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/OxdvYnU.png\",\r\n       
     \"download_url\": \"https://github.com/NALStudio/Aidinkieli-Lausekeanalyysi-Peli/releases/download/1.2.5/Build.zip\",\r\n       
     \"order\": 3,\r\n        \"version\": \"1.2.5\",\r\n        \"executable_path\":
     \"Aidinkieli Lausekeanalyysi Peli.exe\",\r\n        \"discord_image_key\": \"aidinkieli\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"2a34ce89-3086-4ce9-988d-f7dcbed07d1a\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"379e7d67-c045-4b30-9159-ebb8bbee837d\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
     \"type\": \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n       
     \"name\": \"Koponen Dating Simulator\",\r\n        \"display_name\": \"Koponen
     Dating Simulator\",\r\n        \"uuid\": \"aba625d3-afef-4359-b7ab-b20b693b733c\",\r\n       
     \"hidden\": false,\r\n        \"developer\": \"KL Corporation\",\r\n        \"publisher\":
-    \"KL Corporation\",\r\n        \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n       
-    \"early_access\": true,\r\n        \"thumbnail_url\": \"https://i.imgur.com/kVjnUHx.png\",\r\n       
+    \"KL Corporation\",\r\n        \"description\": \"<size=30><b>Koponen Dating
+    Simulator</b></size>\\r\\nFuck around in an upper comprehensive school with your
+    crush Janne Koponen.\\r\\n\\r\\n<size=20><b>Koponen\u2122</b></size>\\r\\nFrom
+    Koivistontien v\xE4ist\xF6tilat to Hatanp\xE4\xE4n koulutalo, you cannot escape
+    the thoughts of Koponen\u2019s handsome beard and sexy body; thoughts so vivid
+    you will remember them for decades.\\r\\n\\r\\n<size=20><b>Incredible Level Design</b></size>\\r\\nPlay
+    the handcrafted Koponen Dating Simulator story line that will keep you immersed
+    for hours or jump to the many campaigns this game offers. The game has it all.\\r\\n\\r\\n<size=20><b>Realistic
+    Audio</b></size>\\r\\nKoponen Dating Simulator gives you hundreds of <s>stolen</s>
+    original sound effects to keep you immersed in the world of Koponen Dating Simulator.
+    Handcrafted in Aaro\u2019s basement, these sound effects are of the highest quality.\\r\\n\\r\\n<size=20><b>Next-Gen
+    Visuals</b></size>\\r\\nKoponen Dating Simulator harnesses the power of Koponen
+    Engine\u2122 to give you next-gen graphics with powerful performance. Based on
+    SDL, Koponen Engine\u2122 can produce high fidelity visuals incredibly efficiently.
+    \\r\\n\",\r\n        \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n       
+    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/kVjnUHx.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
     \"order\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"KoponenDatingSimulator.exe\",\r\n        \"discord_image_key\": \"kds_game\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"6c0081a8-6eee-4b21-b598-59052fd06edf\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b2abe18b-1b92-487a-9adc-9e97c1f72d37\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Rise and Fall\",\r\n       
     \"display_name\": \"Rise and Fall\",\r\n        \"uuid\": \"70f29c3f-b344-4767-9a6d-22a47c394129\",\r\n       
     \"hidden\": false,\r\n        \"developer\": \"Pentti Kaalimaa\",\r\n       
-    \"publisher\": \"Kaalimaa Productions\",\r\n        \"price\": 0,\r\n       
+    \"publisher\": \"Kaalimaa Productions\",\r\n        \"description\": \"A platformer
+    with twisted controls and difficult jumps.\",\r\n        \"price\": 0,\r\n       
     \"release_date\": \"Someday\",\r\n        \"early_access\": true,\r\n       
     \"thumbnail_url\": \"https://i.imgur.com/eQw5ewd.png\",\r\n        \"download_url\":
     \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
     \"order\": 1,\r\n        \"version\": \"0.2.0\",\r\n        \"executable_path\":
     \"Peli_VAL.exe\",\r\n        \"discord_image_key\": null\r\n      }\r\n    }\r\n 
-    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"0f66454f-c799-4de8-a5d6-75a9cfad2723\"\r\n   
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"8b433e72-83b8-4078-a991-a329a216ff60\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Mastermind\",\r\n       
     \"display_name\": \"Mastermind\",\r\n        \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n       
     \"hidden\": false,\r\n        \"developer\": \"KL Corporation\",\r\n        \"publisher\":
-    \"KL Corporation\",\r\n        \"price\": 0,\r\n        \"release_date\": \"16.1.2021\",\r\n       
-    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n       
-    \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
+    \"KL Corporation\",\r\n        \"description\": \"<b>Mastermind</b> is a code-breaking
+    game based on the famous board game invented in the 70's by <color=#00FFFF>Mordecai
+    Meirowitz</color>.\\n\\n<b><size=16>Gameplay and rules</size></b>\\nThe goal
+    of Mastermind is for the codebreaker (player) to guess the correct code in both
+    order and colour, within twelve turns. After guessing, the codemaker (computer)
+    will place <color=#ff0000>red key pegs</color> for each code peg that is the
+    correct colour and <color=#00ff00>green key pegs</color> for each code peg that
+    is the correct colour and position. This cycle continues until either the codebreaker
+    guesses correctly, or all the rows of the board are full.\",\r\n        \"price\":
+    0,\r\n        \"release_date\": \"16.1.2021\",\r\n        \"early_access\": false,\r\n       
+    \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n        \"download_url\":
+    \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
     \"order\": 2,\r\n        \"version\": \"1.0.1\",\r\n        \"executable_path\":
     \"Mastermind.exe\",\r\n        \"discord_image_key\": \"mastermind\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"93f1b5da-a0a0-4c2f-b7a8-e99d52dba185\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"874cdc41-d55e-48a2-9afc-b2c41994f916\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\":
     \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\":
     \"KDS Level Builder\",\r\n        \"display_name\": \"KDS Level Builder\",\r\n       
     \"uuid\": \"4ca9096d-8055-4430-88f0-1e6a6046f92a\",\r\n        \"hidden\": false,\r\n       
     \"developer\": \"KL Corporation\",\r\n        \"publisher\": \"KL Corporation\",\r\n       
-    \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n        \"early_access\":
-    false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/25abZCf.png\",\r\n       
+    \"description\": \"Make your own levels onto Koponen Dating Simulator using this
+    tool.\",\r\n        \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n       
+    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/25abZCf.png\",\r\n       
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/LevelBuilder.zip\",\r\n       
     \"order\": 4,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"LevelBuilder.exe\",\r\n        \"discord_image_key\": \"kds_levelbuilder\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"5710933f-8935-4541-a5dd-28de839fc33a\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f0ad1d67-b4eb-4df1-9752-136d5ab2f582\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Test Game\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Test Game\",\r\n       
     \"display_name\": \"TEST GAME\",\r\n        \"uuid\": \"0e85ed87-dcfa-4c0b-a91b-7c09f455ea4f\",\r\n       

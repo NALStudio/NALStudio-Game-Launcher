@@ -21,6 +21,15 @@ using UnityEngine.UI;
 
 public class SettingsTogglesFunctions : MonoBehaviour
 {
+	[Serializable]
+	public class ToggleData
+	{
+		public Toggle toggle;
+		public TogglesSetTypes setType;
+		public Graphic checkmark;
+		public TextMeshProUGUI text;
+	}
+
 	public enum TogglesSetTypes
 	{
 		allowInstallsDuringGameplay,
@@ -31,21 +40,18 @@ public class SettingsTogglesFunctions : MonoBehaviour
 		shortcuts
 	}
 
-	public Toggle[] toggles;
-	public TogglesSetTypes[] setTypes;
-	[Header("FPS Limit Disable UI")]
-	public TextMeshProUGUI lowPerfText;
-	public Graphic lowPerfCheckmark;
-	Color lowPerfTextNormalColor;
-	public Color limitDisabledColor;
-	public Toggle lowPerfToggle;
+	public ToggleData[] toggleDatas;
+	[Header("Disabled UI")]
+	public Color normalColor;
+	public Color disabledColor;
 	public float fadeDuration;
 
 	void Awake()
 	{
-		for (int i = 0; i < Mathf.Min(toggles.Length, setTypes.Length); i++)
+		for (int i = 0; i < toggleDatas.Length; i++)
 		{
-			toggles[i].isOn = (setTypes[i]) switch
+			ToggleData t = toggleDatas[i];
+			t.toggle.isOn = t.setType switch
 			{
 				TogglesSetTypes.allowInstallsDuringGameplay => SettingsManager.Settings.AllowInstallsDuringGameplay,
 				TogglesSetTypes.disableLogging => SettingsManager.Settings.DisableLogging,
@@ -56,7 +62,30 @@ public class SettingsTogglesFunctions : MonoBehaviour
 				_ => false,
 			};
 		}
-		lowPerfTextNormalColor = lowPerfText.color;
+	}
+
+	public void DisableToggle(bool disable, TogglesSetTypes type)
+	{
+		ToggleData d = null;
+		for (int i = 0; i < toggleDatas.Length; i++)
+		{
+			ToggleData check = toggleDatas[i];
+			if (check.setType == type)
+				d = check;
+		}
+		if (d == null)
+		{
+			Debug.LogError($"No toggle of type: {type:F} found!");
+			return;
+		}
+
+		d.text.CrossFadeColor(disable ? disabledColor : normalColor, fadeDuration, true, true);
+		d.checkmark.CrossFadeColor(disable ? disabledColor : normalColor, fadeDuration, true, true);
+		d.toggle.interactable = disable;
+		if (disable)
+			d.toggle.GetComponent<ToggleCheckmarkSprite>().SetToggle(false);
+		else
+			d.toggle.GetComponent<ToggleCheckmarkSprite>().SetToggle(d.toggle.isOn);
 	}
 
 	public void AllowInstallsGameplay(bool allow)
@@ -76,14 +105,7 @@ public class SettingsTogglesFunctions : MonoBehaviour
 	public void LimitFPS(bool limit)
 	{
 		SettingsManager.Settings.LimitFPS = limit;
-
-		lowPerfText.CrossFadeColor(!limit ? limitDisabledColor : lowPerfTextNormalColor, fadeDuration, true, true);
-		lowPerfCheckmark.CrossFadeColor(!limit ? limitDisabledColor : lowPerfTextNormalColor, fadeDuration, true, true);
-		lowPerfToggle.interactable = limit;
-		if (!limit)
-			lowPerfToggle.GetComponent<ToggleCheckmarkSprite>().SetToggle(false);
-		else
-			lowPerfToggle.GetComponent<ToggleCheckmarkSprite>().SetToggle(lowPerfToggle.isOn);
+		DisableToggle(!limit, TogglesSetTypes.lowPerf);
 	}
 
 	public void LowPerfMode(bool on)

@@ -280,6 +280,7 @@ public class UniversalData
 	public bool Hidden { get; private set; }
 	public string Developer { get; private set; }
 	public string Publisher { get; private set; }
+	public string Description { get; private set; }
 	public string ReleaseDate { get; private set; }
 	public bool EarlyAccess { get; private set; }
 	public long Price { get; private set; }
@@ -332,6 +333,7 @@ public class UniversalData
 		public bool hidden;
 		public string developer;
 		public string publisher;
+		public string description;
 		public long price;
 		public string release_date;
 		public bool early_access;
@@ -364,6 +366,7 @@ public class UniversalData
 		Hidden = d.hidden;
 		Developer = d.developer;
 		Publisher = d.publisher;
+		Description = d.description;
 		Price = d.price;
 		ReleaseDate = d.release_date;
 		EarlyAccess = d.early_access;
