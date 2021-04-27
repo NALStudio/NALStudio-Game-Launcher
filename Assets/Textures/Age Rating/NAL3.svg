@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="130.048"
+   inkscape:export-xdpi="130.048"
+   inkscape:export-filename="F:\Unity\Games\NALStudio Game Launcher\NALStudio Game Launcher\Assets\Textures\Age Rating\NAL3.png"
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="NAL3.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="208.45575"
+     inkscape:cy="161.90046"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-text-baseline="true"
+     inkscape:snap-page="true"
+     inkscape:window-width="1271"
+     inkscape:window-height="1198"
+     inkscape:window-x="1066"
+     inkscape:window-y="51"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Taso 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#0080ff;stroke:none;stroke-width:1.32292;stroke-linecap:round;stroke-linejoin:round;fill-opacity:1"
+       id="rect846"
+       width="100"
+       height="100"
+       x="0"
+       y="0"
+       rx="0.26458332" />
+    <path
+       id="rect833"
+       style="fill:#000000;stroke:none;stroke-width:3.39159;stroke-linecap:round;stroke-linejoin:round"
+       d="M 0.4609375 0 C 0.20603305 7.4014868e-17 0 0.20603305 0 0.4609375 L 0 7.0996094 L 0 370.85352 L 0 377.49219 C 7.4014868e-17 377.74709 0.20603305 377.95312 0.4609375 377.95312 L 7.0996094 377.95312 L 370.85352 377.95312 L 377.49219 377.95312 C 377.74709 377.95312 377.95312 377.74709 377.95312 377.49219 L 377.95312 370.85352 L 377.95312 7.0996094 L 377.95312 0.4609375 C 377.95313 0.20603305 377.74709 0 377.49219 0 L 7.0996094 0 L 0.4609375 0 z M 7.5585938 7.5585938 L 370.39453 7.5585938 L 370.39453 370.39453 L 7.5585938 370.39453 L 7.5585938 7.5585938 z "
+       transform="scale(0.26458333)" />
+    <text
+       transform="matrix(0.96593053,0.25881778,-0.25882031,0.96592112,0,0)"
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:85px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.264582"
+       x="37.600594"
+       y="65.57048"
+       id="text850"><tspan
+         sodipodi:role="line"
+         id="tspan848"
+         x="37.600594"
+         y="65.57048"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:85px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.264582">3</tspan></text>
+  </g>
+</svg>

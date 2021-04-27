@@ -24,9 +24,14 @@ using UnityEngine.Networking;
 
 public class DataHandler : MonoBehaviour
 {
+	public Texture2D _nullImage;
+
+	public static Texture2D NullImage { get { return Executor._nullImage; } }
+
 	static List<UniversalData> datas = new List<UniversalData>();
 	public static class UniversalDatas
 	{
+
 		public static bool Loaded { get; set; }
 
 		public static IReadOnlyCollection<UniversalData> Get()
@@ -271,6 +276,17 @@ public class UniversalData
 		public string DownloadUrl { get; private set; }
 	}
 
+	public enum AgeRating
+	{
+		NALUnrated = -1,
+		NAL3 = 3,
+		NAL7 = 7,
+		NAL10 = 10,
+		NAL13 = 13,
+		NAL16 = 16,
+		NAL18 = 18
+	}
+
 	#region Basic Info
 	public string Name { get; private set; }
 	public string DisplayName { get; private set; }
@@ -283,6 +299,7 @@ public class UniversalData
 	public string Description { get; private set; }
 	public string ReleaseDate { get; private set; }
 	public bool EarlyAccess { get; private set; }
+	public AgeRating Age { get; private set; }
 	public long Price { get; private set; }
 	public long Order { get; private set; }
 	public string DownloadUrl { get; private set; }
@@ -337,6 +354,7 @@ public class UniversalData
 		public long price;
 		public string release_date;
 		public bool early_access;
+		public int age_rating;
 		public string thumbnail_url;
 		public string download_url;
 		public long order;
@@ -370,6 +388,9 @@ public class UniversalData
 		Price = d.price;
 		ReleaseDate = d.release_date;
 		EarlyAccess = d.early_access;
+		Age = AgeRating.NALUnrated;
+		if (Enum.IsDefined(typeof(AgeRating), d.age_rating))
+			Age = (AgeRating)d.age_rating;
 		#region Thumbnail
 		if (d.thumbnail_url.StartsWith("https://imgur.com/", StringComparison.OrdinalIgnoreCase))
 			d.thumbnail_url = "https://i.imgur.com/" + d.thumbnail_url.Substring(18);
@@ -379,7 +400,7 @@ public class UniversalData
 			d.thumbnail_url = d.thumbnail_url.Insert(d.thumbnail_url.Length - 4, "l");
 		}
 		ThumbnailUrl = d.thumbnail_url;
-		ThumbnailTexture = null;
+		ThumbnailTexture = DataHandler.NullImage;
 		DataHandler.Executor.StartCoroutine(LoadThumbnail());
 		#endregion
 		DownloadUrl = d.download_url;
@@ -413,11 +434,9 @@ public class UniversalData
 		if (wr.result == UnityWebRequest.Result.ConnectionError || wr.result == UnityWebRequest.Result.DataProcessingError || wr.result == UnityWebRequest.Result.ProtocolError)
 		{
 			Debug.LogError(wr.error);
+			yield break;
 		}
-		else
-		{
-			yield return new WaitWhile(() => wr.downloadProgress < 1f);
-			ThumbnailTexture = texDl.texture;
-		}
+		yield return new WaitWhile(() => wr.downloadProgress < 1f);
+		ThumbnailTexture = texDl.texture;
 	}
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"765542b6-b06d-41b1-8100-7043d8b4549f\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"c9d1054b-69c1-4d65-a1ec-8a56e1cc31b3\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n     
     \"type\": \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n       
     \"name\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n        \"display_name\":
@@ -25,11 +25,11 @@ MonoBehaviour:
     tarkistettu viel\xE4!</b>\\r\\n<i>(Eik\xE4 tullakkaan tarkistamaan... H\xE4\xE4h\xE4\xE4)</i>\\r\\n\\r\\n(Sovellus
     ei ole oikeasti peli, vaan sovellus. Kutsun sit\xE4 kuitenkin peliksi eeppisyyden
     takia.)\",\r\n        \"price\": 0,\r\n        \"release_date\": \"25.4.2020\",\r\n       
-    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/OxdvYnU.png\",\r\n       
-    \"download_url\": \"https://github.com/NALStudio/Aidinkieli-Lausekeanalyysi-Peli/releases/download/1.2.5/Build.zip\",\r\n       
+    \"early_access\": false,\r\n        \"age_rating\": 3,\r\n        \"thumbnail_url\":
+    \"https://i.imgur.com/OxdvYnU.png\",\r\n        \"download_url\": \"https://github.com/NALStudio/Aidinkieli-Lausekeanalyysi-Peli/releases/download/1.2.5/Build.zip\",\r\n       
     \"order\": 3,\r\n        \"version\": \"1.2.5\",\r\n        \"executable_path\":
     \"Aidinkieli Lausekeanalyysi Peli.exe\",\r\n        \"discord_image_key\": \"aidinkieli\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"379e7d67-c045-4b30-9159-ebb8bbee837d\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ec2252dd-8483-4e04-9a9c-5b054210a137\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
     \"type\": \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n       
     \"name\": \"Koponen Dating Simulator\",\r\n        \"display_name\": \"Koponen
@@ -50,11 +50,11 @@ MonoBehaviour:
     Engine\u2122 to give you next-gen graphics with powerful performance. Based on
     SDL, Koponen Engine\u2122 can produce high fidelity visuals incredibly efficiently.
     \\r\\n\",\r\n        \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n       
-    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/kVjnUHx.png\",\r\n       
-    \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
+    \"early_access\": false,\r\n        \"age_rating\": 16,\r\n        \"thumbnail_url\":
+    \"https://i.imgur.com/kVjnUHx.png\",\r\n        \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
     \"order\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"KoponenDatingSimulator.exe\",\r\n        \"discord_image_key\": \"kds_game\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b2abe18b-1b92-487a-9adc-9e97c1f72d37\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"9bc996c4-34e4-4fd0-ab55-3914e8a3cc44\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Rise and Fall\",\r\n       
     \"display_name\": \"Rise and Fall\",\r\n        \"uuid\": \"70f29c3f-b344-4767-9a6d-22a47c394129\",\r\n       
@@ -62,11 +62,11 @@ MonoBehaviour:
     \"publisher\": \"Kaalimaa Productions\",\r\n        \"description\": \"A platformer
     with twisted controls and difficult jumps.\",\r\n        \"price\": 0,\r\n       
     \"release_date\": \"Someday\",\r\n        \"early_access\": true,\r\n       
-    \"thumbnail_url\": \"https://i.imgur.com/eQw5ewd.png\",\r\n        \"download_url\":
-    \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
+    \"age_rating\": 7,\r\n        \"thumbnail_url\": \"https://i.imgur.com/eQw5ewd.png\",\r\n       
+    \"download_url\": \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
     \"order\": 1,\r\n        \"version\": \"0.2.0\",\r\n        \"executable_path\":
     \"Peli_VAL.exe\",\r\n        \"discord_image_key\": null\r\n      }\r\n    }\r\n 
-    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"8b433e72-83b8-4078-a991-a329a216ff60\"\r\n   
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"8b8f8a38-1ade-4ef5-a4af-1a495e29d552\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Mastermind\",\r\n       
     \"display_name\": \"Mastermind\",\r\n        \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n       
@@ -81,11 +81,11 @@ MonoBehaviour:
     is the correct colour and position. This cycle continues until either the codebreaker
     guesses correctly, or all the rows of the board are full.\",\r\n        \"price\":
     0,\r\n        \"release_date\": \"16.1.2021\",\r\n        \"early_access\": false,\r\n       
-    \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n        \"download_url\":
-    \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
+    \"age_rating\": 3,\r\n        \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n       
+    \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
     \"order\": 2,\r\n        \"version\": \"1.0.1\",\r\n        \"executable_path\":
     \"Mastermind.exe\",\r\n        \"discord_image_key\": \"mastermind\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"874cdc41-d55e-48a2-9afc-b2c41994f916\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"8c989ade-2cf5-4d80-a7cc-f6ea7ac6d186\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\":
     \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\":
     \"KDS Level Builder\",\r\n        \"display_name\": \"KDS Level Builder\",\r\n       
@@ -97,7 +97,7 @@ MonoBehaviour:
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/LevelBuilder.zip\",\r\n       
     \"order\": 4,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"LevelBuilder.exe\",\r\n        \"discord_image_key\": \"kds_levelbuilder\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f0ad1d67-b4eb-4df1-9752-136d5ab2f582\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f9ed25ad-3e08-465c-8583-e156a38785f5\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Test Game\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Test Game\",\r\n       
     \"display_name\": \"TEST GAME\",\r\n        \"uuid\": \"0e85ed87-dcfa-4c0b-a91b-7c09f455ea4f\",\r\n       
@@ -109,8 +109,20 @@ MonoBehaviour:
     \"Aidinkieli Lausekeanalyysi Peli.exe\",\r\n        \"branches\": {\r\n         
     \"Test Branch\": {\r\n            \"version\": \"0.0.2\",\r\n            \"executable_path\":
     \"Mastermind.exe\",\r\n            \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\"\r\n         
-    }\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"765542b6-b06d-41b1-8100-7043d8b4549f\"\r\n   
+    }\r\n        }\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"dfa66c9b-0f66-433f-855a-b6929f9888aa\"\r\n    },\r\n    \"rs\":
+    {\r\n      \"key\": \"Matriisit\",\r\n      \"type\": \"json\",\r\n      \"schemaId\":
+    null,\r\n      \"value\": {\r\n        \"name\": \"Matriisit\",\r\n        \"display_name\":
+    \"Matriisit\",\r\n        \"uuid\": \"4851a521-00b7-4d8a-a58d-5b47a40cfce8\",\r\n       
+    \"hidden\": false,\r\n        \"developer\": \"ArktPVC\",\r\n        \"publisher\":
+    \"ArktPVC\",\r\n        \"description\": \"Uudenlainen Matriisi-peli, jota ei
+    onneksi ole tehty JavaScriptill\xE4.\",\r\n        \"price\": 0,\r\n        \"release_date\":
+    \"Spring 2021\",\r\n        \"early_access\": false,\r\n        \"age_rating\":
+    3,\r\n        \"thumbnail_url\": \"[teen ite]\",\r\n        \"download_url\":
+    \"[teen ite]\",\r\n        \"order\": 0,\r\n        \"version\": \"1.0.0\",\r\n       
+    \"executable_path\": \"[teen ite]\",\r\n        \"discord_image_key\": \"[teen
+    ehk\xE4, jos jaksan]\"\r\n      }\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"c9d1054b-69c1-4d65-a1ec-8a56e1cc31b3\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n     
     \"type\": \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n       
     \"name\": \"\xC4idinkieli Lausekeanalyysi Peli\",\r\n        \"display_name\":
@@ -123,11 +135,11 @@ MonoBehaviour:
     tarkistettu viel\xE4!</b>\\r\\n<i>(Eik\xE4 tullakkaan tarkistamaan... H\xE4\xE4h\xE4\xE4)</i>\\r\\n\\r\\n(Sovellus
     ei ole oikeasti peli, vaan sovellus. Kutsun sit\xE4 kuitenkin peliksi eeppisyyden
     takia.)\",\r\n        \"price\": 0,\r\n        \"release_date\": \"25.4.2020\",\r\n       
-    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/OxdvYnU.png\",\r\n       
-    \"download_url\": \"https://github.com/NALStudio/Aidinkieli-Lausekeanalyysi-Peli/releases/download/1.2.5/Build.zip\",\r\n       
+    \"early_access\": false,\r\n        \"age_rating\": 3,\r\n        \"thumbnail_url\":
+    \"https://i.imgur.com/OxdvYnU.png\",\r\n        \"download_url\": \"https://github.com/NALStudio/Aidinkieli-Lausekeanalyysi-Peli/releases/download/1.2.5/Build.zip\",\r\n       
     \"order\": 3,\r\n        \"version\": \"1.2.5\",\r\n        \"executable_path\":
     \"Aidinkieli Lausekeanalyysi Peli.exe\",\r\n        \"discord_image_key\": \"aidinkieli\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"379e7d67-c045-4b30-9159-ebb8bbee837d\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"ec2252dd-8483-4e04-9a9c-5b054210a137\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Koponen Dating Simulator\",\r\n     
     \"type\": \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n       
     \"name\": \"Koponen Dating Simulator\",\r\n        \"display_name\": \"Koponen
@@ -148,11 +160,11 @@ MonoBehaviour:
     Engine\u2122 to give you next-gen graphics with powerful performance. Based on
     SDL, Koponen Engine\u2122 can produce high fidelity visuals incredibly efficiently.
     \\r\\n\",\r\n        \"price\": 0,\r\n        \"release_date\": \"TBA\",\r\n       
-    \"early_access\": false,\r\n        \"thumbnail_url\": \"https://i.imgur.com/kVjnUHx.png\",\r\n       
-    \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
+    \"early_access\": false,\r\n        \"age_rating\": 16,\r\n        \"thumbnail_url\":
+    \"https://i.imgur.com/kVjnUHx.png\",\r\n        \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/KoponenDatingSimulator.zip\",\r\n       
     \"order\": 0,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"KoponenDatingSimulator.exe\",\r\n        \"discord_image_key\": \"kds_game\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"b2abe18b-1b92-487a-9adc-9e97c1f72d37\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"9bc996c4-34e4-4fd0-ab55-3914e8a3cc44\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Rise and Fall\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Rise and Fall\",\r\n       
     \"display_name\": \"Rise and Fall\",\r\n        \"uuid\": \"70f29c3f-b344-4767-9a6d-22a47c394129\",\r\n       
@@ -160,11 +172,11 @@ MonoBehaviour:
     \"publisher\": \"Kaalimaa Productions\",\r\n        \"description\": \"A platformer
     with twisted controls and difficult jumps.\",\r\n        \"price\": 0,\r\n       
     \"release_date\": \"Someday\",\r\n        \"early_access\": true,\r\n       
-    \"thumbnail_url\": \"https://i.imgur.com/eQw5ewd.png\",\r\n        \"download_url\":
-    \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
+    \"age_rating\": 7,\r\n        \"thumbnail_url\": \"https://i.imgur.com/eQw5ewd.png\",\r\n       
+    \"download_url\": \"https://github.com/KaalimaaProductions/Rise-and-Fall/releases/download/0.2.0/Rise.and.Fall.0.2.0.zip\",\r\n       
     \"order\": 1,\r\n        \"version\": \"0.2.0\",\r\n        \"executable_path\":
     \"Peli_VAL.exe\",\r\n        \"discord_image_key\": null\r\n      }\r\n    }\r\n 
-    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"8b433e72-83b8-4078-a991-a329a216ff60\"\r\n   
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"8b8f8a38-1ade-4ef5-a4af-1a495e29d552\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Mastermind\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Mastermind\",\r\n       
     \"display_name\": \"Mastermind\",\r\n        \"uuid\": \"26137df1-b46e-4e1e-a53b-b8387d26a59b\",\r\n       
@@ -179,11 +191,11 @@ MonoBehaviour:
     is the correct colour and position. This cycle continues until either the codebreaker
     guesses correctly, or all the rows of the board are full.\",\r\n        \"price\":
     0,\r\n        \"release_date\": \"16.1.2021\",\r\n        \"early_access\": false,\r\n       
-    \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n        \"download_url\":
-    \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
+    \"age_rating\": 3,\r\n        \"thumbnail_url\": \"https://i.imgur.com/rusrxcv.png\",\r\n       
+    \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\",\r\n       
     \"order\": 2,\r\n        \"version\": \"1.0.1\",\r\n        \"executable_path\":
     \"Mastermind.exe\",\r\n        \"discord_image_key\": \"mastermind\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"874cdc41-d55e-48a2-9afc-b2c41994f916\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"8c989ade-2cf5-4d80-a7cc-f6ea7ac6d186\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"KDS Level Builder\",\r\n      \"type\":
     \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\":
     \"KDS Level Builder\",\r\n        \"display_name\": \"KDS Level Builder\",\r\n       
@@ -195,7 +207,7 @@ MonoBehaviour:
     \"download_url\": \"https://github.com/KL-Corporation/Koponen-Dating-Simulator-Releases/releases/download/v0.0.5-dev/LevelBuilder.zip\",\r\n       
     \"order\": 4,\r\n        \"version\": \"0.0.5-dev\",\r\n        \"executable_path\":
     \"LevelBuilder.exe\",\r\n        \"discord_image_key\": \"kds_levelbuilder\"\r\n     
-    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f0ad1d67-b4eb-4df1-9752-136d5ab2f582\"\r\n   
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f9ed25ad-3e08-465c-8583-e156a38785f5\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"Test Game\",\r\n      \"type\": \"json\",\r\n     
     \"schemaId\": null,\r\n      \"value\": {\r\n        \"name\": \"Test Game\",\r\n       
     \"display_name\": \"TEST GAME\",\r\n        \"uuid\": \"0e85ed87-dcfa-4c0b-a91b-7c09f455ea4f\",\r\n       
@@ -207,7 +219,19 @@ MonoBehaviour:
     \"Aidinkieli Lausekeanalyysi Peli.exe\",\r\n        \"branches\": {\r\n         
     \"Test Branch\": {\r\n            \"version\": \"0.0.2\",\r\n            \"executable_path\":
     \"Mastermind.exe\",\r\n            \"download_url\": \"https://github.com/KL-Corporation/Mastermind/releases/download/1.0.1/Mastermind.zip\"\r\n         
-    }\r\n        }\r\n      }\r\n    }\r\n  }\r\n]"
+    }\r\n        }\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"dfa66c9b-0f66-433f-855a-b6929f9888aa\"\r\n    },\r\n    \"rs\":
+    {\r\n      \"key\": \"Matriisit\",\r\n      \"type\": \"json\",\r\n      \"schemaId\":
+    null,\r\n      \"value\": {\r\n        \"name\": \"Matriisit\",\r\n        \"display_name\":
+    \"Matriisit\",\r\n        \"uuid\": \"4851a521-00b7-4d8a-a58d-5b47a40cfce8\",\r\n       
+    \"hidden\": false,\r\n        \"developer\": \"ArktPVC\",\r\n        \"publisher\":
+    \"ArktPVC\",\r\n        \"description\": \"Uudenlainen Matriisi-peli, jota ei
+    onneksi ole tehty JavaScriptill\xE4.\",\r\n        \"price\": 0,\r\n        \"release_date\":
+    \"Spring 2021\",\r\n        \"early_access\": false,\r\n        \"age_rating\":
+    3,\r\n        \"thumbnail_url\": \"[teen ite]\",\r\n        \"download_url\":
+    \"[teen ite]\",\r\n        \"order\": 0,\r\n        \"version\": \"1.0.0\",\r\n       
+    \"executable_path\": \"[teen ite]\",\r\n        \"discord_image_key\": \"[teen
+    ehk\xE4, jos jaksan]\"\r\n      }\r\n    }\r\n  }\r\n]"
   _environments: "[\r\n  {\r\n    \"projectId\": \"36939bee-afea-4b49-a55d-cfba83548ea4\",\r\n   
     \"name\": \"Testing\",\r\n    \"id\": \"03dfe905-cd6b-47f5-8a2d-ca5087b6e065\",\r\n   
     \"createdAt\": \"2021-02-07T14:25:00Z\",\r\n    \"updatedAt\": \"2021-02-09T14:33:35Z\",\r\n   

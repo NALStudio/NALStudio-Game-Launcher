@@ -2,7 +2,6 @@ trackSelection = true
 fetchPreview = true
 wantsMore = false
 keepOpen = false
-itemIconSize = 1
 queryFolder = "Assets"
 onBoardingDoNotAskAgain = true
 showPackageIndexes = false
@@ -27,6 +26,7 @@ scopes = {
 	"m_SideBarSplitter.7F95D817" = "180"
 	"m_DetailsPanelSplitter.7F95D817" = "700"
 	"currentGroup.7F95D817" = "scene"
+	"InspectorPreview.83F126EB" = "0"
 }
 providers = {
 	asset = {
@@ -67,4 +67,7 @@ providers = {
 }
 recentSearches = [
 ]
+searchItemFavorites = [
+]
 savedSearchesSortOrder = 0
+showSavedSearchPanel = false

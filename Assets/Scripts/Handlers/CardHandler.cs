@@ -208,17 +208,19 @@ namespace NALStudio.GameLauncher.Cards
         }
 #endif
 
+        /*
         void CalculateRectHeight()
         {
             rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x,
-                gridHeight + ((gridHeight + verticalSpacing) * Mathf.CeilToInt((transform.childCount - 1) / 3)));
+				(gridHeight + verticalSpacing) * (Mathf.CeilToInt((transform.childCount - 1) / 3) + 1));
         }
+        */
 
         void CalculateCellSize()
         {
             gridLayout.cellSize = new Vector2((rectTransform.rect.width - 20) / 3, gridHeight);
             gridLayout.spacing = new Vector2(gridLayout.spacing.x, verticalSpacing);
-            CalculateRectHeight();
+            // CalculateRectHeight();
         }
 
         void OnRectTransformDimensionsChange()

@@ -36,7 +36,7 @@ namespace NALStudio.GameLauncher.Cards
         public void LoadAssets(UniversalData _data)
         {
             data = _data;
-            StartCoroutine(SetContent());
+            SetContent();
         }
 
         public void OpenStorePage()
@@ -53,33 +53,23 @@ namespace NALStudio.GameLauncher.Cards
 		void Start()
 		{
             Lean.Localization.LeanLocalization.OnLocalizationChanged += LanguageChange;
-        }
 
-		IEnumerator SetContent()
-        {
-            #region Title
-			title.text = data.DisplayName;
-            #endregion
-            #region Developer
-			devPub.text = data.Developer == data.Publisher ? data.Developer : $"{data.Developer} | {data.Publisher}";
-            #endregion
-            #region Price
-			string priceText = $"{data.Price}€";
-            if (data.Price == 0)
-                priceText = Lean.Localization.LeanLocalization.GetTranslationText("pricing-free", "Free");
-            price.text = priceText;
-			#endregion
-			#region Thumbnail
-            // If check added to remove the flicker
-            // that is sometimes seen because of WaitWhile
-            if (data.ThumbnailTexture == null)
-                yield return new WaitWhile(() => data.ThumbnailTexture == null);
-            thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = data.ThumbnailTexture.width / (float)data.ThumbnailTexture.height;
-            thumbnail.texture = data.ThumbnailTexture;
-            #endregion
-            #region Gradient
             cornerGradient = gradientObject.GetComponent<CornerGradient>();
             cornerGradientGraphic = gradientObject.GetComponent<Graphic>();
+        }
+
+        void Update()
+		{
+			if (thumbnail.texture != data.ThumbnailTexture)
+                SetThumbnail();
+		}
+
+		void SetThumbnail()
+		{
+            thumbnail.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = data.ThumbnailTexture.width / (float)data.ThumbnailTexture.height;
+            thumbnail.texture = data.ThumbnailTexture;
+
+            #region Gradient
             int ttw = data.ThumbnailTexture.width;
             int tth = data.ThumbnailTexture.height;
             // Gradient is for whatever reason flipped and because of that we invert y
@@ -94,9 +84,26 @@ namespace NALStudio.GameLauncher.Cards
             #endregion
         }
 
+        void SetContent()
+        {
+            #region Title
+			title.text = data.DisplayName;
+            #endregion
+            #region Developer
+			devPub.text = data.Developer == data.Publisher ? data.Developer : $"{data.Developer} | {data.Publisher}";
+            #endregion
+            #region Price
+			string priceText = $"{data.Price}€";
+            if (data.Price == 0)
+                priceText = Lean.Localization.LeanLocalization.GetTranslationText("pricing-free", "Free");
+            price.text = priceText;
+            #endregion
+            SetThumbnail();
+        }
+
         void AnimationUpdate(float t, float _)
 		{
-            cornerGradientGraphic.SetVerticesDirty();
+			cornerGradientGraphic.SetVerticesDirty();
             cornerGradient.m_topLeftColor = Color.Lerp(gradientDefaultColor, topLeftColor, t);
             cornerGradient.m_topRightColor = Color.Lerp(gradientDefaultColor, topRightColor, t);
             cornerGradient.m_bottomLeftColor = Color.Lerp(gradientDefaultColor, bottomLeftColor, t);

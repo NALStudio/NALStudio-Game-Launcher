@@ -22,12 +22,21 @@ using TMPro;
 using NALStudio.GameLauncher;
 using System.Collections;
 using Lean.Localization;
+using System.Collections.Generic;
 
 public class StorePage : MonoBehaviour
 {
+	[System.Serializable]
+	public class AgeRatingDataHolder
+	{
+		public UniversalData.AgeRating AgeRating;
+		public Sprite Image;
+	}
+
 	UniversalData openedData;
 	public UITweener tweener;
 	public RawImage image;
+	public Texture2D thumbnailNullImage;
 	public AspectRatioFitter ratioFitter;
 	public GameObject earlyAccessBanner;
 	public TextMeshProUGUI title;
@@ -43,6 +52,8 @@ public class StorePage : MonoBehaviour
 	public enum ButtonMode { Install, Update, Uninstall, Queued, Downloading }
 	public ButtonMode buttonMode;
 	public TextMeshProUGUI buttonText;
+	public Image AgeRatingImage;
+	public AgeRatingDataHolder[] AgeRatingDatas;
 	[Space(10f)]
 	public DownloadHandler downloadHandler;
 	public ToggleButton downloadsButton;
@@ -69,6 +80,17 @@ public class StorePage : MonoBehaviour
 		releaseDate.text = openedData.ReleaseDate;
 		version.text = openedData.Remote.Version;
 		price.text = openedData.Price > 0 ? $"€{openedData.Price}" : LeanLocalization.GetTranslationText("pricing-free", "Free");
+
+		for (int i = 0; i < AgeRatingDatas.Length; i++)
+		{
+			AgeRatingDataHolder a = AgeRatingDatas[i];
+			if (a.AgeRating == _data.Age)
+			{
+				AgeRatingImage.color = Color.white;
+				AgeRatingImage.sprite = a.Image;
+				break;
+			}
+		}
 
 		buttonMode = ButtonMode.Install;
 		if (openedData.Local != null)
