@@ -392,12 +392,15 @@ public class UniversalData
 		if (Enum.IsDefined(typeof(AgeRating), d.age_rating))
 			Age = (AgeRating)d.age_rating;
 		#region Thumbnail
-		if (d.thumbnail_url.StartsWith("https://imgur.com/", StringComparison.OrdinalIgnoreCase))
-			d.thumbnail_url = "https://i.imgur.com/" + d.thumbnail_url.Substring(18);
-		if (d.thumbnail_url.StartsWith("https://i.imgur.com/", StringComparison.OrdinalIgnoreCase)
-			&& !d.thumbnail_url.EndsWith("l.png", StringComparison.OrdinalIgnoreCase))
+		if (d.thumbnail_url != null)
 		{
-			d.thumbnail_url = d.thumbnail_url.Insert(d.thumbnail_url.Length - 4, "l");
+			if (d.thumbnail_url.StartsWith("https://imgur.com/", StringComparison.OrdinalIgnoreCase))
+				d.thumbnail_url = "https://i.imgur.com/" + d.thumbnail_url.Substring(18);
+			if (d.thumbnail_url.StartsWith("https://i.imgur.com/", StringComparison.OrdinalIgnoreCase)
+				&& !d.thumbnail_url.EndsWith("l.png", StringComparison.OrdinalIgnoreCase))
+			{
+				d.thumbnail_url = d.thumbnail_url.Insert(d.thumbnail_url.Length - 4, "l");
+			}
 		}
 		ThumbnailUrl = d.thumbnail_url;
 		ThumbnailTexture = DataHandler.NullImage;
@@ -427,6 +430,9 @@ public class UniversalData
 
 	IEnumerator LoadThumbnail()
 	{
+		if (ThumbnailUrl == null)
+			yield break;
+
 		UnityWebRequest wr = new UnityWebRequest(ThumbnailUrl);
 		DownloadHandlerTexture texDl = new DownloadHandlerTexture(true);
 		wr.downloadHandler = texDl;

@@ -22,16 +22,6 @@ using UnityEngine;
 
 public class SettingsManager : MonoBehaviour
 {
-    public enum ConfigManagerEnvironment
-	{
-        Auto,
-        Production,
-        Testing
-    }
-
-    public ConfigManagerEnvironment Environment;
-    static ConfigManagerEnvironment environmentOverride;
-
     [Serializable]
     class SettingsException : Exception
     {
@@ -76,22 +66,11 @@ public class SettingsManager : MonoBehaviour
                     break;
             }
         };
-
-        environmentOverride = Environment;
         ReloadRemote();
     }
 
     public static void ReloadRemote()
     {
-#if UNITY_EDITOR
-        if (environmentOverride == ConfigManagerEnvironment.Production || (environmentOverride == ConfigManagerEnvironment.Auto && !Debug.isDebugBuild))
-#else
-        if (!Debug.isDebugBuild)
-#endif
-            ConfigManager.SetEnvironmentID("08fedb44-fa53-49fc-88dd-81bbbcc55193");
-        else
-            ConfigManager.SetEnvironmentID("03dfe905-cd6b-47f5-8a2d-ca5087b6e065");
-
         RemoteLoaded = false;
         ConfigManager.FetchConfigs(new userAttributes(), new appAttributes());
     }
