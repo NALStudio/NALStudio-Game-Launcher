@@ -411,6 +411,7 @@ GameObject:
   - component: {fileID: 2428305270305077050}
   - component: {fileID: 2428305270305077048}
   - component: {fileID: 2428305270305077049}
+  - component: {fileID: 7180230035380140837}
   m_Layer: 5
   m_Name: Overlay
   m_TagString: Untagged
@@ -475,6 +476,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 30
+--- !u!114 &7180230035380140837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2428305270305077051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5ed1543c8cdf74c8b96acddbb4ade6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToAnimate: {fileID: 2428305270305077051}
+  animationType: 4
+  easeType: 18
+  duration: 0.5
+  delay: 0
+  loop: 0
+  pingpong: 0
+  startPositionOffset: 0
+  from: {x: 0, y: 0, z: 0}
+  endPositionOffset: 0
+  to: {x: 1, y: 1, z: 1}
+  startOnEnable: 1
+  stopOnDisable: 1
+  debugLogs: 0
 --- !u!1 &2428305270496666943
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,8 +537,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -87.5}
-  m_SizeDelta: {x: 0, y: 175}
+  m_AnchoredPosition: {x: 0, y: -2.5}
+  m_SizeDelta: {x: 0, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2428305270496666941
 CanvasRenderer:
@@ -1386,6 +1413,9 @@ MonoBehaviour:
   playtimeText: {fileID: 2428305271055975240}
   sizeText: {fileID: 1026477167452248211}
   versionText: {fileID: 2428305271469578000}
+  closeTweeners:
+  - {fileID: 8526588826836492400}
+  - {fileID: 7180230035380140837}
   updateAvailable: {fileID: 8975931217324676406}
   tooltipTrigger: {fileID: 8153245591476000237}
   ShortcutButton: {fileID: 2428305271478470842}
@@ -1959,6 +1989,7 @@ GameObject:
   - component: {fileID: 2428305271567097652}
   - component: {fileID: 2428305271567097641}
   - component: {fileID: 2428305271567097642}
+  - component: {fileID: 8526588826836492400}
   m_Layer: 5
   m_Name: Page
   m_TagString: Untagged
@@ -1983,9 +2014,9 @@ RectTransform:
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -135}
-  m_SizeDelta: {x: 0, y: -135}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 170}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2428305271567097641
 CanvasRenderer:
@@ -2025,6 +2056,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 30
+--- !u!114 &8526588826836492400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2428305271567097653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5ed1543c8cdf74c8b96acddbb4ade6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToAnimate: {fileID: 2428305271567097653}
+  animationType: 3
+  easeType: 18
+  duration: 0.5
+  delay: 0
+  loop: 0
+  pingpong: 0
+  startPositionOffset: 0
+  from: {x: 0, y: 0, z: 0}
+  endPositionOffset: 0
+  to: {x: 1, y: 1, z: 1}
+  startOnEnable: 1
+  stopOnDisable: 1
+  debugLogs: 0
 --- !u!1 &2428305271691072669
 GameObject:
   m_ObjectHideFlags: 0
@@ -3102,8 +3159,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: 1
-  header: "P\xE4ivitys Saatavilla"
-  content: "P\xE4ivitys on saatavilla t\xE4h\xE4n peliin.\nVoit ladata sen kauppasivulta."
+  header: Update Available
+  content: 'An update is available for this game.
+
+    You can download it from the
+    store page.'
   delay: 0.5
 --- !u!114 &8009438405686588332
 MonoBehaviour:

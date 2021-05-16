@@ -136,48 +136,52 @@ public class NewsGroup : MonoBehaviour
 	void Update()
 	{
 		NewsButton button = buttons[index];
-		if (button.progress.value < button.progress.maxValue)
+		if (button.progress.value >= button.progress.maxValue)
 		{
-			button.Select();
-			button.progress.value += Time.deltaTime;
-			for (int i = 0; i < banners.Count; i++)
+			if (!button.pointerInside)
 			{
-				if (i == index)
-				{
-					banners[i].gameObject.SetActive(true);
-					banners[i].transform.SetAsLastSibling();
-				}
-				else if (banners[i] == lastBanner)
-				{
-					banners[i].gameObject.SetActive(true);
-				}
-				else
-				{
-					banners[i].gameObject.SetActive(false);
-				}
+				int newIndex = index + 1;
+				if (newIndex >= buttons.Count)
+					newIndex = 0;
+				SetPage(newIndex);
 			}
-
+			return;
 		}
-		else if (!button.pointerInside)
+
+		button.Select();
+		button.progress.value += Time.deltaTime;
+		for (int i = 0; i < banners.Count; i++)
 		{
-			lastBanner = banners[index];
-			button.Unselect();
-			index++;
-			if (index >= buttons.Count)
-				index = 0;
+			if (i == index)
+			{
+				banners[i].gameObject.SetActive(true);
+				banners[i].transform.SetAsLastSibling();
+			}
+			else if (banners[i] == lastBanner)
+			{
+				banners[i].gameObject.SetActive(true);
+			}
+			else
+			{
+				banners[i].gameObject.SetActive(false);
+			}
 		}
 	}
 
 	public void SetPage(NewsButton newsButton)
 	{
-		if (newsButton == buttons[index])
+		SetPage(buttons.IndexOf(newsButton));
+	}
+
+	public void SetPage(int _index)
+	{
+		if (_index == index)
 			return;
-		if (buttons.IndexOf(newsButton) == banners.IndexOf(lastBanner))
+		if (_index == banners.IndexOf(lastBanner))
 			lastBanner.gameObject.SetActive(false);
 		lastBanner = banners[index];
-		NewsButton button = buttons[index];
-		button.Unselect();
-		index = buttons.IndexOf(newsButton);
+		buttons[index].Unselect();
+		index = _index;
 	}
 }
 

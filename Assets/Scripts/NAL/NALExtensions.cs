@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
+using System;
 
 namespace NALStudio.Extensions
 {
@@ -225,7 +226,7 @@ namespace NALStudio.Extensions
 		public static void DestroyChildren(this Transform transform)
 		{
 			foreach (Transform child in transform)
-				Object.Destroy(child.gameObject);
+				UnityEngine.Object.Destroy(child.gameObject);
 		}
 	}
 
@@ -350,7 +351,7 @@ namespace NALStudio.Extensions
 
                 colorCounts[c]++;
 			}
-            Color? maxValue = null;
+            Color maxValue = default;
             int maxCount = 0;
             foreach (KeyValuePair<Color, int> kv in colorCounts)
 			{
@@ -361,9 +362,7 @@ namespace NALStudio.Extensions
 				}
 			}
 
-            if (maxValue is Color ret)
-                return ret;
-            throw new System.InvalidOperationException("Tried to operate Mode with an empty list.");
+            return maxValue;
 		}
 
         public static Color Average(this ICollection<Color> colors)
@@ -371,10 +370,11 @@ namespace NALStudio.Extensions
             if (colors.Count < 1)
                 throw new System.ArgumentOutOfRangeException("Colors cannot be empty!");
 
-            float rSum = 0;
-            float gSum = 0;
-            float bSum = 0;
+            double rSum = 0;
+            double gSum = 0;
+            double bSum = 0;
 
+            int len = colors.Count;
             foreach (Color c in colors)
 			{
                 rSum += c.r;
@@ -382,8 +382,14 @@ namespace NALStudio.Extensions
                 bSum += c.b;
 			}
 
-            return new Color(rSum / colors.Count, gSum / colors.Count, bSum / colors.Count);
+            return new Color((float)(rSum / len), (float)(gSum / len), (float)(bSum / len));
         }
+
+        public static float GetHSPBrightness(this Color c)
+		{
+            return Mathf.Sqrt(0.299f * Mathf.Pow(c.r, 2f) + 0.587f * Mathf.Pow(c.g, 2f) + 0.114f * Mathf.Pow(c.b, 2f));
+        }
+
 	}
 
     public static class EnumerableExtensions

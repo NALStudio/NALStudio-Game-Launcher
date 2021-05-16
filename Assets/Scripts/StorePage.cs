@@ -23,6 +23,7 @@ using NALStudio.GameLauncher;
 using System.Collections;
 using Lean.Localization;
 using System.Collections.Generic;
+using NALStudio.Extensions;
 
 public class StorePage : MonoBehaviour
 {
@@ -51,7 +52,11 @@ public class StorePage : MonoBehaviour
 	public TextMeshProUGUI price;
 	public enum ButtonMode { Install, Update, Uninstall, Queued, Downloading }
 	public ButtonMode buttonMode;
+	public Image buttonImage;
+	public Color defaultButtonColor;
 	public TextMeshProUGUI buttonText;
+	public Color buttonTextLightColor;
+	public Color buttonTextDarkColor;
 	public Image AgeRatingImage;
 	public AgeRatingDataHolder[] AgeRatingDatas;
 	[Space(10f)]
@@ -73,7 +78,7 @@ public class StorePage : MonoBehaviour
 		float descriptionHeight = openedData.EarlyAccess ? defaultDescriptionObjectHeight : extendedDescriptionObjectHeight;
 		descriptionObject.sizeDelta = new Vector2(descriptionObject.sizeDelta.x, descriptionHeight);
 		descriptionObject.gameObject.SetActive(openedData.Description != null);
-		description.text = openedData.Description;
+		description.text = openedData.Description ?? "";
 
 		developer.text = openedData.Developer;
 		publisher.text = openedData.Publisher;
@@ -84,13 +89,16 @@ public class StorePage : MonoBehaviour
 		for (int i = 0; i < AgeRatingDatas.Length; i++)
 		{
 			AgeRatingDataHolder a = AgeRatingDatas[i];
-			if (a.AgeRating == _data.Age)
+			if (a.AgeRating == openedData.Age)
 			{
 				AgeRatingImage.color = Color.white;
 				AgeRatingImage.sprite = a.Image;
 				break;
 			}
 		}
+
+		buttonImage.color = openedData.Color;
+		buttonText.color = openedData.Color.GetHSPBrightness() < 0.5f ? buttonTextLightColor : buttonTextDarkColor;
 
 		buttonMode = ButtonMode.Install;
 		if (openedData.Local != null)

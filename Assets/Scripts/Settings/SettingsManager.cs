@@ -14,6 +14,7 @@ Copyright © 2020 NALStudio. All Rights Reserved.
 using NALStudio.GameLauncher;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,16 @@ using UnityEngine;
 
 public class SettingsManager : MonoBehaviour
 {
-    [Serializable]
+    public enum RemoteConfigEnvironment { Auto, Production, Testing }
+    public RemoteConfigEnvironment environment;
+    static readonly Dictionary<RemoteConfigEnvironment, string> environmentIDs = new Dictionary<RemoteConfigEnvironment, string>
+    {
+        { RemoteConfigEnvironment.Auto, null },
+        { RemoteConfigEnvironment.Production, "596d42d3-f63b-4dc4-881e-9f5f9eb219b4" },
+        { RemoteConfigEnvironment.Testing, "03dfe905-cd6b-47f5-8a2d-ca5087b6e065" }
+    };
+
+	[Serializable]
     class SettingsException : Exception
     {
         public SettingsException() : base() { }
@@ -47,7 +57,7 @@ public class SettingsManager : MonoBehaviour
         if (active == null)
             active = this;
         else
-            throw new SettingsException("Only one Settings Manger allowed per scene!");
+            throw new SettingsException("Only one Settings Manager allowed per scene!");
 
         path = Path.Combine(Application.persistentDataPath, "settings.nal");
         Load();
@@ -55,7 +65,6 @@ public class SettingsManager : MonoBehaviour
 
         ConfigManager.FetchCompleted += (resp) =>
         {
-            RemoteLoaded = true;
             switch (resp.requestOrigin)
             {
                 case ConfigOrigin.Default:
@@ -65,6 +74,7 @@ public class SettingsManager : MonoBehaviour
                     Debug.LogWarning("Using cached remote data.");
                     break;
             }
+            RemoteLoaded = true;
         };
         ReloadRemote();
     }
@@ -72,8 +82,41 @@ public class SettingsManager : MonoBehaviour
     public static void ReloadRemote()
     {
         RemoteLoaded = false;
-        ConfigManager.FetchConfigs(new userAttributes(), new appAttributes());
+        string environmentID = environmentIDs[RemoteConfigEnvironment.Production];
+        if (Debug.isDebugBuild)
+		{
+			environmentID = active.environment switch
+			{
+				RemoteConfigEnvironment.Auto => environmentIDs[RemoteConfigEnvironment.Testing],
+				_ => environmentIDs[active.environment],
+			};
+		}
+        ConfigManager.SetEnvironmentID(environmentID);
+        ConfigManager.FetchConfigs<userAttributes, appAttributes>(new userAttributes(), new appAttributes());
+        active.StartCoroutine(GetRequestStatus());
     }
+
+    static IEnumerator GetRequestStatus()
+	{
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(1f);
+            switch (ConfigManager.requestStatus)
+			{
+                case ConfigRequestStatus.None:
+                    Debug.LogError("No request for games found!");
+                    break;
+                case ConfigRequestStatus.Failed:
+                    Debug.LogError("Config request failed! Retrying...");
+                    ReloadRemote();
+                    yield break;
+                case ConfigRequestStatus.Success:
+                    yield break;
+                case ConfigRequestStatus.Pending: // Being explicit
+                    break;
+			}
+        }
+	}
 
 #if UNITY_EDITOR
     void Reset()

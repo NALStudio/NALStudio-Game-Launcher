@@ -23,7 +23,8 @@ public class ButtonAwareButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 {
     #region Variables
     public Graphic graphic;
-    public Color normalColor;
+
+	public Color normalColor;
     public Color highlightedColor;
     public Color pressedColor;
     public float fadeDuration;
@@ -36,8 +37,7 @@ public class ButtonAwareButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 	public UnityEvent onRightClick;
 
 	PointerEventData.InputButton[] enabledButtons;
-
-	Dictionary<PointerEventData.InputButton, bool> pressedButtons = new Dictionary<PointerEventData.InputButton, bool> 
+	readonly Dictionary<PointerEventData.InputButton, bool> pressedButtons = new Dictionary<PointerEventData.InputButton, bool> 
 	{
 		{ PointerEventData.InputButton.Left, false },
 		{ PointerEventData.InputButton.Middle, false },
@@ -48,7 +48,7 @@ public class ButtonAwareButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 	bool selected;
 	#endregion
 
-	public void isSelected()
+	public void IsSelected()
 	{
 		selected = pressedButtons.Values.Any((bool v) => v) && inside;
 	}
@@ -84,7 +84,7 @@ public class ButtonAwareButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		inside = true;
-		isSelected();
+		IsSelected();
 		if (!selected)
 			graphic.CrossFadeColor(highlightedColor, fadeDuration, true, true);
 	}
@@ -92,7 +92,7 @@ public class ButtonAwareButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		inside = true;
-		isSelected();
+		IsSelected();
 		if (!selected)
 			graphic.CrossFadeColor(normalColor, fadeDuration, true, true);
 	}
@@ -100,7 +100,7 @@ public class ButtonAwareButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 	public void OnPointerDown(PointerEventData eventData)
 	{
 		pressedButtons[eventData.button] = true;
-		isSelected();
+		IsSelected();
 		if (inside && enabledButtons.Contains(eventData.button))
 			graphic.CrossFadeColor(pressedColor, fadeDuration, true, true);
 	}
@@ -108,7 +108,7 @@ public class ButtonAwareButton : MonoBehaviour, IPointerEnterHandler, IPointerEx
 	public void OnPointerUp(PointerEventData eventData)
 	{
 		pressedButtons[eventData.button] = false;
-		isSelected();
+		IsSelected();
 		if (inside)
 			graphic.CrossFadeColor(highlightedColor, fadeDuration, true, true);
 		else

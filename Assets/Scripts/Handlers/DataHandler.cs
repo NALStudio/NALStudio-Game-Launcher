@@ -25,8 +25,10 @@ using UnityEngine.Networking;
 public class DataHandler : MonoBehaviour
 {
 	public Texture2D _nullImage;
+	public Color _nullColor;
 
 	public static Texture2D NullImage { get { return Executor._nullImage; } }
+	public static Color NullColor { get { return Executor._nullColor; } }
 
 	static List<UniversalData> datas = new List<UniversalData>();
 	public static class UniversalDatas
@@ -34,15 +36,9 @@ public class DataHandler : MonoBehaviour
 
 		public static bool Loaded { get; set; }
 
-		public static IReadOnlyCollection<UniversalData> Get()
-		{
-			return datas;
-		}
+		public static IReadOnlyCollection<UniversalData> Get() => datas;
 
-		public static UniversalData Get(string uuid)
-		{
-			return datas.Find(d => d.UUID == uuid);
-		}
+		public static UniversalData Get(string uuid) => datas.Find(d => d.UUID == uuid);
 
 		public static void Clear()
 		{
@@ -51,10 +47,13 @@ public class DataHandler : MonoBehaviour
 
 		public static void Add(UniversalData toAdd)
 		{
-			if (!datas.Any((d) => d.UUID == toAdd.UUID))
-				datas.Add(toAdd);
-			else
+			if (datas.Any((d) => d.UUID == toAdd.UUID))
+			{
 				Debug.LogError($"Game with UUID \"{toAdd.UUID}\" exists already!");
+				return;
+			}
+
+			datas.Add(toAdd);
 		}
 	}
 
@@ -67,6 +66,7 @@ public class DataHandler : MonoBehaviour
 		else
 			Debug.LogError("Only one DataHandler is allowed per scene!");
 	}
+
 #if UNITY_EDITOR
 	void Reset()
 	{
@@ -307,6 +307,7 @@ public class UniversalData
 	#region Displaying Info
 	public string ThumbnailUrl { get; private set; }
 	public Texture2D ThumbnailTexture { get; private set; }
+	public Color Color { get; private set; }
 	#endregion
 	#region Branch Info
 	public BranchData[] Branches { get; private set; }
@@ -359,6 +360,8 @@ public class UniversalData
 		public string download_url;
 		public long order;
 
+		public string color;
+
 		public Dictionary<string, BranchData.JsonBranchData> branches;
 
 		public string version;
@@ -404,6 +407,23 @@ public class UniversalData
 		}
 		ThumbnailUrl = d.thumbnail_url;
 		ThumbnailTexture = DataHandler.NullImage;
+		if (d.color != null)
+		{
+			if (d.color.Length > 0 && ColorUtility.TryParseHtmlString(d.color[0] == '#' ? d.color : $"#{d.color}", out Color tmpColor))
+			{
+				Color = tmpColor;
+			}
+			else
+			{
+				Debug.LogError($"Color: \"{d.color}\" could not be parsed to any color!");
+				Color = DataHandler.NullColor;
+			}
+		}
+		else
+		{
+			Color = DataHandler.NullColor;
+		}
+
 		DataHandler.Executor.StartCoroutine(LoadThumbnail());
 		#endregion
 		DownloadUrl = d.download_url;

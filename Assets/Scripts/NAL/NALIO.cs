@@ -69,10 +69,10 @@ namespace NALStudio.IO
 			if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
 			{
 				Debug.LogError($"Directory \"{path}\" does not exist!");
-				onComplete.Invoke(0L);
+				onComplete.Invoke(-1L);
 				yield break;
 			}
-			NativeArray<long> result = new NativeArray<long>(1, Allocator.Persistent);
+			NativeArray<long> result = new NativeArray<long>(new long[]{-1L}, Allocator.Persistent);
 			NativeArray<char> pathArray = new NativeArray<char>(path.ToCharArray(), Allocator.Persistent);
 			DirSizeCalculator job = new DirSizeCalculator
 			{

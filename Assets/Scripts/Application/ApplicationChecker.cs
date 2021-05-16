@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
-using SimpleJSON;
 using NALStudio.GameLauncher.Networking;
 using TMPro;
 using UnityEngine.UI;
@@ -118,10 +117,10 @@ public class ApplicationChecker : MonoBehaviour
 		{
 			yield return new WaitWhile(() => req.downloadProgress < 1f);
 			string json = req.downloadHandler.text;
-			JSONNode node = JSON.Parse(json);
-			if (node["tag_name"] != Application.version)
+			dynamic releaseData = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+			if (releaseData.tag_name != Application.version)
 			{
-				Debug.Log($"Found an update for version: {node["tag_name"]}. Current Version: \"{Application.version}\"");
+				Debug.Log($"Found an update for version: {releaseData.tag_name}. Current Version: \"{Application.version}\"");
 				bannerState |= BannerState.Update;
 				UpdateBanner();
 			}

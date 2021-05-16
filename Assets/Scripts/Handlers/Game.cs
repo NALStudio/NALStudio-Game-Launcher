@@ -36,6 +36,7 @@ namespace NALStudio.GameLauncher.Games
 		public TextMeshProUGUI playtimeText;
 		public TextMeshProUGUI sizeText;
 		public TextMeshProUGUI versionText;
+		public UITweener[] closeTweeners;
 		[Header("Update Tooltip")]
 		public GameObject updateAvailable;
 		public NALTooltipTrigger tooltipTrigger;
@@ -108,23 +109,11 @@ namespace NALStudio.GameLauncher.Games
 		public void LoadAssets(UniversalData _data)
 		{
 			data = _data;
-			StartCoroutine(SetContent());
-		}
-
-		public IEnumerator SetContent()
-		{
 			nameText.text = data.DisplayName;
 			versionText.text = data.Local.Version;
 			// Update so that it sets the thumbnail
 			// immediately if found.
 			Update();
-			sizeText.text = LeanLocalization.GetTranslationText("global-calculating", "Calculating...");
-			#region Game Size
-			long gameSize = -1;
-			StartCoroutine(NALDirectory.GetSize(data.Local.LocalsPath, (s) => gameSize = s));
-			yield return new WaitWhile(() => gameSize < 0);
-			sizeText.text = $"{Math.Convert.BytesToMB(gameSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}";
-			#endregion
 		}
 
 		public void StartGame()
@@ -132,21 +121,39 @@ namespace NALStudio.GameLauncher.Games
 			gameHandler.StartGame(data);
 		}
 
+		void MorePageAnimationEnd()
+		{
+			morePage.SetActive(false);
+		}
+
 		void MorePageHandler(bool open)
 		{
-			if (open)
-			{
-				#region Playtime
-				playtimeText.text = NALStudio.Math.Convert.MinutesToReadable(data.Playtime);
-				#endregion
-				#region Shortcut Button
-				bool shortcuts = ApplicationHandler.ShortcutsEnabled;
-				ShortcutButton.interactable = shortcuts;
-				ShortcutText.color = shortcuts ? ShortcutTextNormal : ShortcutTextDisabled;
-				#endregion
-			}
+			closeTweeners[0].OnComplete -= MorePageAnimationEnd;
 			morePageToggle.isOn = open;
-			morePage.SetActive(open);
+
+			if (!open)
+			{
+				foreach (UITweener tweener in closeTweeners)
+					tweener.DoTween(true);
+				closeTweeners[0].OnComplete += MorePageAnimationEnd;
+				return;
+			}
+
+			#region Playtime
+			playtimeText.text = Math.Convert.MinutesToReadable(data.Playtime);
+			#endregion
+			#region Shortcut Button
+			bool shortcuts = ApplicationHandler.ShortcutsEnabled;
+			ShortcutButton.interactable = shortcuts;
+			ShortcutText.color = shortcuts ? ShortcutTextNormal : ShortcutTextDisabled;
+			#endregion
+			#region Game Size
+			sizeText.text = LeanLocalization.GetTranslationText("global-calculating");
+			StartCoroutine(NALDirectory.GetSize(data.Local.LocalsPath,
+				(size) => sizeText.text = $"{Math.Convert.BytesToMB(size):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}"));
+			#endregion
+			morePage.SetActive(false); // Fixes animation not playing sometimes
+			morePage.SetActive(true);
 		}
 
 		public void MorePage(bool open)
