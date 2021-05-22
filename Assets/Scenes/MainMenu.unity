@@ -19068,7 +19068,7 @@ MonoBehaviour:
     Text: Home
     Object: {fileID: 0}
   - Language: Finnish
-    Text: Koti
+    Text: Etusivu
     Object: {fileID: 0}
 --- !u!1 &1218596797
 GameObject:
