@@ -95,8 +95,10 @@ public class FlexibleGridLayout : LayoutGroup
 
     public override void SetLayoutVertical() { }
 
-	new public void OnValidate()
+#if UNITY_EDITOR
+    new public void OnValidate()
 	{
         base.OnValidate();
 	}
+#endif
 }
