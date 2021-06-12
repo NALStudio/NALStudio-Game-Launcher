@@ -81,7 +81,7 @@ public class SettingsTogglesFunctions : MonoBehaviour
 
 		d.text.CrossFadeColor(disable ? disabledColor : normalColor, fadeDuration, true, true);
 		d.checkmark.CrossFadeColor(disable ? disabledColor : normalColor, fadeDuration, true, true);
-		d.toggle.interactable = disable;
+		d.toggle.interactable = !disable;
 		if (disable)
 			d.toggle.GetComponent<ToggleCheckmarkSprite>().SetToggle(false);
 		else
