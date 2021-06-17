@@ -3128,23 +3128,23 @@ MonoBehaviour:
     Description: NAL 13 rated games depict violence at a stage that looks close to
       real life. The use of bad language can be more extreme, the game may contain
       sexual innuendo or sexual posturing, and the mild use of tobacco, alcohol or
-      drugs can also be present. The game can contain in-game purchases with cosmetic
-      only random items.
+      illegal drugs can also be present. The game can contain in-game purchases with
+      cosmetic only random items.
   - AgeRating: 16
     Image: {fileID: 21300000, guid: 996b5c2467841ca4e93ef57d40230575, type: 3}
     Name: NAL 16
     Description: NAL 16 rated games contain violence or sexual activity that reaches
       a stage which looks the same as in real life and/or is a depiction of gross
       violence, motiveless killing, or violence towards defenceless characters. The
-      use of bad language can be quite extreme and the use of tobacco, alcohol can
-      be more prevalent and illegal drug use can also be present. The game can contain
-      in-game purchases with random items which can have functional value.
+      use of bad language can be quite extreme, and the use of tobacco, alcohol or
+      illegal drugs can be more prevalent. The game can contain in-game purchases
+      with random items which have functional value.
   - AgeRating: 18
     Image: {fileID: 21300000, guid: 1f95ff1afc550f4409d23b8e2afd9938, type: 3}
     Name: NAL 18
     Description: 'NAL 18 rated games can contain any of the things mentioned above
-      and/or glamorisation of the use of illegal drugs, contain gambling-like features,
-      contain explicit sexual activity and/or contain discrimination. '
+      and/or glamorisation of the use of illegal drugs, gambling-like features, explicit
+      sexual activity, or discrimination. '
   downloadHandler: {fileID: 271946580}
   downloadsButton: {fileID: 2021689460}
   gameHandler: {fileID: 1246525250}
