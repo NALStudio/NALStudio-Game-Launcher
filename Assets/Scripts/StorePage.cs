@@ -32,6 +32,9 @@ public class StorePage : MonoBehaviour
 	{
 		public UniversalData.AgeRating AgeRating;
 		public Sprite Image;
+		public string Name;
+		[TextArea]
+		public string Description;
 	}
 
 	UniversalData openedData;
@@ -58,6 +61,7 @@ public class StorePage : MonoBehaviour
 	public Color buttonTextLightColor;
 	public Color buttonTextDarkColor;
 	public Image AgeRatingImage;
+	public NALTooltipTrigger AgeRatingTooltip;
 	public AgeRatingDataHolder[] AgeRatingDatas;
 	[Space(10f)]
 	public DownloadHandler downloadHandler;
@@ -93,6 +97,8 @@ public class StorePage : MonoBehaviour
 			{
 				AgeRatingImage.color = Color.white;
 				AgeRatingImage.sprite = a.Image;
+				AgeRatingTooltip.header = a.Name;
+				AgeRatingTooltip.content = a.Description;
 				break;
 			}
 		}

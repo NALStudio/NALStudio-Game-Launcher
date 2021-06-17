@@ -829,7 +829,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 45
+  m_RootOrder: 43
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &65863360
 MonoBehaviour:
@@ -2850,7 +2850,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 56
+  m_RootOrder: 54
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &199179601
 MonoBehaviour:
@@ -3095,21 +3095,56 @@ MonoBehaviour:
   buttonTextLightColor: {r: 0.9254902, g: 0.9411765, b: 0.94509804, a: 1}
   buttonTextDarkColor: {r: 0.1254902, g: 0.1254902, b: 0.1254902, a: 1}
   AgeRatingImage: {fileID: 1310403460}
+  AgeRatingTooltip: {fileID: 1310403463}
   AgeRatingDatas:
   - AgeRating: -1
     Image: {fileID: 21300000, guid: 7ea74b90b110cf543b40d035633d0ca4, type: 3}
+    Name: NAL Unrated
+    Description: NAL Unrated games are either not yet rated or do not need to be
+      rated. Please be aware that even though the game is not rated, it might still
+      contain content found in higher rated games.
   - AgeRating: 3
     Image: {fileID: 21300000, guid: 5ee2ae5c976f9b5418031f26cd39cb17, type: 3}
+    Name: NAL 3
+    Description: The content of games with NAL 3 rating are suitable for all age
+      groups. The game should not contain any sounds or pictures that are likely
+      to frighten young children. A very mild form of violence (for example, comically)
+      is acceptable. No bad language should be heard.
   - AgeRating: 7
     Image: {fileID: 21300000, guid: 2fd78a85c7710d24a945b63c30bfbf26, type: 3}
+    Name: NAL 7
+    Description: NAL 7 rated games can have scenes or sounds that can possibly be
+      frightening to younger children. Mild forms of violence (non-detailed or non-realistic
+      violence) is acceptable. No bad language should be heard.
   - AgeRating: 10
     Image: {fileID: 21300000, guid: af6c8a1324dca2d4b8f3e184f625747e, type: 3}
+    Name: NAL 10
+    Description: NAL 10 rated games show slightly more graphic violence towards fantasy
+      characters or non-realistic violence towards human-like characters. Mild swearing
+      and/or other bad language is acceptable. The game can contain in-game purchases.
   - AgeRating: 13
     Image: {fileID: 21300000, guid: 6cf13730a472b144e8496014be390610, type: 3}
+    Name: NAL 13
+    Description: NAL 13 rated games depict violence at a stage that looks close to
+      real life. The use of bad language can be more extreme, the game may contain
+      sexual innuendo or sexual posturing, and the mild use of tobacco, alcohol or
+      drugs can also be present. The game can contain in-game purchases with cosmetic
+      only random items.
   - AgeRating: 16
     Image: {fileID: 21300000, guid: 996b5c2467841ca4e93ef57d40230575, type: 3}
+    Name: NAL 16
+    Description: NAL 16 rated games contain violence or sexual activity that reaches
+      a stage which looks the same as in real life and/or is a depiction of gross
+      violence, motiveless killing, or violence towards defenceless characters. The
+      use of bad language can be quite extreme and the use of tobacco, alcohol can
+      be more prevalent and illegal drug use can also be present. The game can contain
+      in-game purchases with random items which can have functional value.
   - AgeRating: 18
     Image: {fileID: 21300000, guid: 1f95ff1afc550f4409d23b8e2afd9938, type: 3}
+    Name: NAL 18
+    Description: 'NAL 18 rated games can contain any of the things mentioned above
+      and/or glamorisation of the use of illegal drugs, contain gambling-like features,
+      contain explicit sexual activity and/or contain discrimination. '
   downloadHandler: {fileID: 271946580}
   downloadsButton: {fileID: 2021689460}
   gameHandler: {fileID: 1246525250}
@@ -3378,7 +3413,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 47
+  m_RootOrder: 45
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &225991514
 MonoBehaviour:
@@ -3624,57 +3659,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &241626645
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 241626646}
-  - component: {fileID: 241626647}
-  m_Layer: 0
-  m_Name: units-megabyte_short
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &241626646
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 241626645}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 379797149}
-  m_RootOrder: 18
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &241626647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 241626645}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: 0
-  entries:
-  - Language: English
-    Text: MB
-    Object: {fileID: 0}
-  - Language: Finnish
-    Text: Mt
-    Object: {fileID: 0}
 --- !u!1 &252086385
 GameObject:
   m_ObjectHideFlags: 0
@@ -5814,7 +5798,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 57
+  m_RootOrder: 55
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &312848482
 MonoBehaviour:
@@ -6406,6 +6390,57 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 2.5}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!1 &345918918
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 345918919}
+  - component: {fileID: 345918920}
+  m_Layer: 0
+  m_Name: units-giga
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &345918919
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345918918}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 66
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &345918920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345918918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: G
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: G
+    Object: {fileID: 0}
 --- !u!1 &346301309
 GameObject:
   m_ObjectHideFlags: 0
@@ -7064,8 +7099,6 @@ Transform:
   - {fileID: 2082241809}
   - {fileID: 1051079049}
   - {fileID: 579884884}
-  - {fileID: 241626646}
-  - {fileID: 2095782144}
   - {fileID: 593071292}
   - {fileID: 1065517751}
   - {fileID: 1005805553}
@@ -7111,6 +7144,11 @@ Transform:
   - {fileID: 2063986268}
   - {fileID: 2043256909}
   - {fileID: 1103441132}
+  - {fileID: 1734808039}
+  - {fileID: 605789112}
+  - {fileID: 924677352}
+  - {fileID: 345918919}
+  - {fileID: 1210562038}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7218,7 +7256,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 37
+  m_RootOrder: 35
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &402414497
 MonoBehaviour:
@@ -8694,7 +8732,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 33
+  m_RootOrder: 31
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &474667508
 MonoBehaviour:
@@ -9951,7 +9989,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 53
+  m_RootOrder: 51
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &541449238
 MonoBehaviour:
@@ -10547,7 +10585,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 50
+  m_RootOrder: 48
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &586400626
 MonoBehaviour:
@@ -10604,7 +10642,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 20
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &593071293
 MonoBehaviour:
@@ -10902,6 +10940,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 600563633}
   m_CullTransparentMesh: 0
+--- !u!1 &605789111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 605789112}
+  - component: {fileID: 605789113}
+  m_Layer: 0
+  m_Name: units-kilo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &605789112
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605789111}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 64
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &605789113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605789111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: k
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: k
+    Object: {fileID: 0}
 --- !u!1 &606881270
 GameObject:
   m_ObjectHideFlags: 0
@@ -11604,7 +11693,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 28
+  m_RootOrder: 26
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &660715928
 MonoBehaviour:
@@ -12129,7 +12218,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 24
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &701210482
 MonoBehaviour:
@@ -12972,7 +13061,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 44
+  m_RootOrder: 42
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &778309476
 MonoBehaviour:
@@ -14087,7 +14176,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 52
+  m_RootOrder: 50
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &853670166
 MonoBehaviour:
@@ -14272,7 +14361,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 48
+  m_RootOrder: 46
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &877834826
 MonoBehaviour:
@@ -15081,7 +15170,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 42
+  m_RootOrder: 40
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &923645595
 MonoBehaviour:
@@ -15105,6 +15194,57 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Finnish
     Text: "P\xE4ivitys on saatavilla t\xE4h\xE4n peliin.\nVoit ladata sen kauppasivulta."
+    Object: {fileID: 0}
+--- !u!1 &924677351
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 924677352}
+  - component: {fileID: 924677353}
+  m_Layer: 0
+  m_Name: units-mega
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &924677352
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924677351}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 65
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &924677353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924677351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: M
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: M
     Object: {fileID: 0}
 --- !u!1 &931545392
 GameObject:
@@ -15466,7 +15606,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 27
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &956532181
 MonoBehaviour:
@@ -16062,7 +16202,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 22
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1005805554
 MonoBehaviour:
@@ -16859,7 +16999,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 54
+  m_RootOrder: 52
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1033385886
 MonoBehaviour:
@@ -17341,7 +17481,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 21
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1065517752
 MonoBehaviour:
@@ -17682,7 +17822,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 64
+  m_RootOrder: 62
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1103441133
 MonoBehaviour:
@@ -17836,7 +17976,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 35
+  m_RootOrder: 33
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1108754958
 MonoBehaviour:
@@ -18668,7 +18808,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 32
+  m_RootOrder: 30
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1155230546
 MonoBehaviour:
@@ -19069,6 +19209,57 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Finnish
     Text: Etusivu
+    Object: {fileID: 0}
+--- !u!1 &1210562037
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1210562038}
+  - component: {fileID: 1210562039}
+  m_Layer: 0
+  m_Name: units-per_second
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1210562038
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210562037}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 67
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1210562039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210562037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: /s
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: /s
     Object: {fileID: 0}
 --- !u!1 &1218596797
 GameObject:
@@ -19626,7 +19817,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 29
+  m_RootOrder: 27
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1260791507
 MonoBehaviour:
@@ -19728,7 +19919,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 51
+  m_RootOrder: 49
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1291017126
 MonoBehaviour:
@@ -20034,7 +20225,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 59
+  m_RootOrder: 57
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1308531337
 MonoBehaviour:
@@ -20067,6 +20258,7 @@ GameObject:
   - component: {fileID: 1310403462}
   - component: {fileID: 1310403461}
   - component: {fileID: 1310403460}
+  - component: {fileID: 1310403463}
   m_Layer: 5
   m_Name: Age Rating
   m_TagString: Untagged
@@ -20132,6 +20324,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -50}
   m_SizeDelta: {x: 70, y: -300}
   m_Pivot: {x: 1, y: 1}
+--- !u!114 &1310403463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310403459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ef9d2dbfe08c9d4d9e4609eb03834ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: 1
+  header: 
+  content: 
+  delay: 0.5
 --- !u!1 &1322489849
 GameObject:
   m_ObjectHideFlags: 0
@@ -20292,7 +20500,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 25
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1323789474
 MonoBehaviour:
@@ -20343,7 +20551,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 38
+  m_RootOrder: 36
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1324783344
 MonoBehaviour:
@@ -20566,7 +20774,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 61
+  m_RootOrder: 59
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1340025940
 MonoBehaviour:
@@ -20982,7 +21190,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 36
+  m_RootOrder: 34
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1348341668
 MonoBehaviour:
@@ -21501,7 +21709,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 39
+  m_RootOrder: 37
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1367864606
 MonoBehaviour:
@@ -24844,7 +25052,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 58
+  m_RootOrder: 56
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1608134044
 MonoBehaviour:
@@ -25883,7 +26091,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 60
+  m_RootOrder: 58
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1686507080
 MonoBehaviour:
@@ -26614,6 +26822,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   translationName: downloads-download
   FallbackText: Download
+--- !u!1 &1734808038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1734808039}
+  - component: {fileID: 1734808040}
+  m_Layer: 0
+  m_Name: units-byte
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1734808039
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734808038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 63
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1734808040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734808038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: B
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: B
+    Object: {fileID: 0}
 --- !u!1 &1748955497
 GameObject:
   m_ObjectHideFlags: 0
@@ -27699,7 +27958,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 55
+  m_RootOrder: 53
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1805135951
 MonoBehaviour:
@@ -28256,7 +28515,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 46
+  m_RootOrder: 44
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1837685482
 MonoBehaviour:
@@ -29791,7 +30050,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 26
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1900813874
 MonoBehaviour:
@@ -31636,7 +31895,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 41
+  m_RootOrder: 39
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2007982968
 MonoBehaviour:
@@ -32290,7 +32549,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 40
+  m_RootOrder: 38
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2038934893
 MonoBehaviour:
@@ -32345,7 +32604,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 63
+  m_RootOrder: 61
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2043256910
 MonoBehaviour:
@@ -32648,7 +32907,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 31
+  m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2052670624
 MonoBehaviour:
@@ -32887,7 +33146,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 62
+  m_RootOrder: 60
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2063986269
 MonoBehaviour:
@@ -32938,7 +33197,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 34
+  m_RootOrder: 32
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2079625179
 MonoBehaviour:
@@ -33295,57 +33554,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091179935}
   m_CullTransparentMesh: 1
---- !u!1 &2095782143
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2095782144}
-  - component: {fileID: 2095782145}
-  m_Layer: 0
-  m_Name: units-megabits_per_second-short
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2095782144
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2095782143}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 379797149}
-  m_RootOrder: 19
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2095782145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2095782143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: 0
-  entries:
-  - Language: English
-    Text: Mb/s
-    Object: {fileID: 0}
-  - Language: Finnish
-    Text: Mb/s
-    Object: {fileID: 0}
 --- !u!1 &2096941648
 GameObject:
   m_ObjectHideFlags: 0
@@ -33648,7 +33856,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 49
+  m_RootOrder: 47
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2107117506
 MonoBehaviour:
@@ -33778,7 +33986,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 23
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2119008516
 MonoBehaviour:
@@ -33829,7 +34037,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 43
+  m_RootOrder: 41
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2120863216
 MonoBehaviour:
@@ -34030,7 +34238,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 379797149}
-  m_RootOrder: 30
+  m_RootOrder: 28
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2131275496
 MonoBehaviour:

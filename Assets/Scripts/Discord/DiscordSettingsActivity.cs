@@ -6,17 +6,32 @@ using UnityEngine;
 
 public class DiscordSettingsActivity : MonoBehaviour
 {
+    bool wasDefault;
+
 	void OnEnable()
 	{
-        DiscordHandler.SetActivity(new Discord.Activity
+        wasDefault = DiscordHandler.IsDefaultActivity;
+
+        if (wasDefault)
         {
-            State = "Idling",
-            Timestamps = new Discord.ActivityTimestamps { Start = DateTimeOffset.Now.ToUnixTimeSeconds() },
-            Assets = new Discord.ActivityAssets
+            DiscordHandler.SetActivity(new Discord.Activity
             {
-                LargeImage = "settings",
-            },
-            Instance = false
-        });
+                State = "Configuring Settings",
+                Timestamps = new Discord.ActivityTimestamps { Start = DateTimeOffset.Now.ToUnixTimeSeconds() },
+                Assets = new Discord.ActivityAssets
+                {
+                    LargeImage = "settings",
+                },
+                Instance = false
+            });
+        }
     }
+
+	void OnDisable()
+	{
+		if (wasDefault)
+		{
+            DiscordHandler.ResetActivity();
+        }
+	}
 }

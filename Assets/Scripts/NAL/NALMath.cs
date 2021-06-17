@@ -20,27 +20,67 @@ namespace NALStudio.Math
 {
     public static class Convert
     {
-		#region Bytes To MB
-		public static double BytesToMB(ulong value) => value / (1024d * 1024d);
-
-		public static double BytesToMB(long value) => value / (1024d * 1024d);
-
-		public static double BytesToMB(double value) => value / (1024d * 1024d);
-
-		public static float BytesToMB(int value) => value / (1024f * 1024f);
-
-		public static float BytesToMB(float value) => value / (1024f * 1024f);
+		#region Bytes To MiB
+		public static double BytesToMiB(ulong value) => value / (1024d * 1024d);
 		#endregion
 
-		#region Bits To Mb
-		public static float BitsToMb(int value)
+		#region Bytes (auto)
+		// Uses JEDEC standard
+		public static string BytesAutoFormatter(double value)
 		{
-            return value / (1024f * 1024f);
-        }
+			static string format(double _v, string translationName)
+			{
+				string translation = translationName != null ? LeanLocalization.GetTranslationText(translationName) : "";
+				return $"{_v:0.0}{translation}{LeanLocalization.GetTranslationText("units-byte", "B")}";
+			}
 
-		public static float BitsToMb(float value)
+			if (value < 1024d)
+				return format(value, null);
+
+			double kilo = value / 1024d;
+			if (kilo < 1024d)
+				return format(kilo, "units-kilo");
+
+			double mega = kilo / 1024d;
+			if (mega < 1024d)
+				return format(mega, "units-mega");
+
+			double giga = mega / 1024d;
+			return format(giga, "units-giga");
+
+		}
+
+		public static string BytePairAutoFormatter(double v1, double v2)
 		{
-			return value / (1024f * 1024f);
+			static string format(double _v1, double _v2, string translationName)
+			{
+				string unitTanslation = translationName != null ? LeanLocalization.GetTranslationText(translationName) : "";
+				string byteTranslation = LeanLocalization.GetTranslationText("units-byte", "B");
+				return $"{_v1:0.0}{unitTanslation}{byteTranslation} / {_v2:0.0}{unitTanslation}{byteTranslation}";
+			}
+
+			double max = System.Math.Max(v1, v2);
+			if (max < 1024d)
+				return format(v1, v2, null);
+
+			double kilo = max / 1024d;
+			if (kilo < 1024d)
+			{
+				double div = 1024d;
+				return format(v1 / div, v2 / div, "units-kilo");
+			}
+
+			double mega = kilo / 1024d;
+			if (mega < 1024d)
+			{
+				double div = 1024d * 1024d;
+				return format(v1 / div, v2 / div, "units-mega");
+			}
+			else
+			{
+				double div = 1024d * 1024d * 1024d;
+				return format(v1 / div, v2 / div, "units-giga");
+			}
 		}
 		#endregion
 

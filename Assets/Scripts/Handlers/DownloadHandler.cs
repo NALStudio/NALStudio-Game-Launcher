@@ -241,7 +241,7 @@ namespace NALStudio.GameLauncher
                     #endregion
 
                     #region Download Speed
-                    downloadSpeedText.text = $"{Math.Convert.BitsToMb(dataPoints.Last() * 8):0.0}{LeanLocalization.GetTranslationText("units-megabits_per_second-short", "Mb/s")}";
+                    downloadSpeedText.text = $"{Math.Convert.BytesAutoFormatter(dataPoints.Last())}{LeanLocalization.GetTranslationText("units-per_second", "/s")}";
                     downloadSpeedRect.anchoredPosition = new Vector2((lineRenderer.Points.Last().x * LineArea.rect.width) + lineRenderer.LineThickness + 5, downloadSpeedRect.anchoredPosition.y);
                     #endregion
 
@@ -249,9 +249,7 @@ namespace NALStudio.GameLauncher
                     double downloadSize = request.downloadedBytes / (double)request.downloadProgress;
                     if (double.IsNaN(downloadSize))
                         downloadSize = 0;
-                    downloadProgressText.text =
-                        $"{Math.Convert.BytesToMB(request.downloadedBytes):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")} / " +
-                        $"{Math.Convert.BytesToMB(downloadSize):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short")}";
+                    downloadProgressText.text = Math.Convert.BytePairAutoFormatter(request.downloadedBytes, downloadSize);
                     #endregion
 
                     #region Download Time Remaining

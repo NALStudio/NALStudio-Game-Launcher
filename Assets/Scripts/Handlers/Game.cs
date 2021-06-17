@@ -150,7 +150,7 @@ namespace NALStudio.GameLauncher.Games
 			#region Game Size
 			sizeText.text = LeanLocalization.GetTranslationText("global-calculating");
 			StartCoroutine(NALDirectory.GetSize(data.Local.LocalsPath,
-				(size) => sizeText.text = $"{Math.Convert.BytesToMB(size):0.0}{LeanLocalization.GetTranslationText("units-megabyte_short", "MB")}"));
+				(size) => sizeText.text = Math.Convert.BytesAutoFormatter(size)));
 			#endregion
 			morePage.SetActive(false); // Fixes animation not playing sometimes
 			morePage.SetActive(true);

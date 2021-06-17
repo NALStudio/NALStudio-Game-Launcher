@@ -9,6 +9,7 @@ namespace NALStudio.GameLauncher
     {
         public static Discord.Discord DiscordClient { get; internal set; }
         public static Discord.ActivityManager ActivityManager { get; private set; }
+        public static bool IsDefaultActivity { get; private set; }
 
         void Start()
         {
@@ -87,6 +88,8 @@ namespace NALStudio.GameLauncher
 
         public static void SetActivity(UniversalData data, long epochStartTime)
 		{
+            IsDefaultActivity = false;
+
             ActivityManager?.RegisterCommand($"nalstudiogamelauncher://rungameid/{data.UUID}");
             ActivityManager?.UpdateActivity(new Discord.Activity
 			{
@@ -109,6 +112,8 @@ namespace NALStudio.GameLauncher
 
         public static void SetActivity(Discord.Activity activity)
 		{
+            IsDefaultActivity = false;
+
             ActivityManager?.UpdateActivity(activity, result =>
             {
                 if (result != Discord.Result.Ok)
@@ -118,6 +123,8 @@ namespace NALStudio.GameLauncher
 
         public static void ResetActivity()
 		{
+            IsDefaultActivity = true;
+
             ActivityManager?.RegisterCommand("nalstudiogamelauncher://");
             ActivityManager?.UpdateActivity(new Discord.Activity
             {
