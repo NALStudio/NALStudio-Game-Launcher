@@ -20,7 +20,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots here to help explain your problem.
 
 **System (please complete the following information):**
- - OS: [e.g. Windows]
+ - OS: [e.g. Windows 10]
  - Version: [e.g. 20H2]
  - Type: [e.g. 64bit]
 
