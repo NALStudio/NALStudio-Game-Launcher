@@ -13,7 +13,8 @@ NALStudio Game Launcher has amazing games with affordable prices. You can grab t
 <br />
 **Supported Operating Systems:**
 - Windows 10
-- Windows 11 __(not to be confused with MacOS)__
+- Windows 11 _(not to be confused with MacOS)_
+<br />
 **Games:**
 - Koponen Dating Simulator
 - Rise and Fall
