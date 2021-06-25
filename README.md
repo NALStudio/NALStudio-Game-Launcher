@@ -8,12 +8,17 @@
 ---
 
 ### Game Launcher by NALStudio
-[<img align="left" alt="KL Corporation" width="128px" src="https://i.imgur.com/o9yxe7i.png" />][website]
+NALStudio Game Launcher has amazing games with affordable prices. You can grab the latest release [here](https://github.com/NALStudio/NALStudio-Game-Launcher/releases/latest).
+**Supported Operating Systems:**
+- Windows 10
+- Windows 11 __(not to be confused with MacOS)__
+**Games:**
+- Koponen Dating Simulator
+- Rise and Fall
+- Mastermind
+- Äidinkieli Lausekeanalyysi Peli
+- Matriisit
 
-<br />
-<br />
-<br />
-<br />
 <br />
 
 ---
