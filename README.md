@@ -15,13 +15,8 @@ NALStudio Game Launcher has amazing games with affordable prices. You can grab t
 - Windows 10
 - Windows 11
 <br />
-Test
 **Games:**
-- Koponen Dating Simulator
-- Rise and Fall
-- Mastermind
-- Äidinkieli Lausekeanalyysi Peli
-- Matriisit
+
 
 <br />
 
