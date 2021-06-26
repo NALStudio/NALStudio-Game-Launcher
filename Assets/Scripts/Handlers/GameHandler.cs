@@ -109,6 +109,8 @@ namespace NALStudio.GameLauncher.Games
 		public void Uninstall(UniversalData data)
 		{
 			StartCoroutine(UninstallCoroutine(data));
+			if (data.MsixBundle)
+				System.Diagnostics.Process.Start("ms-settings:appsfeatures");
 		}
 
 		IEnumerator UninstallCoroutine(UniversalData data, Action onComplete = null)
@@ -270,16 +272,21 @@ namespace NALStudio.GameLauncher.Games
 			if (gameRunningProcess != null)
 				return;
 
-			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
+			System.Diagnostics.ProcessStartInfo startInfo;
+			if (!data.MsixBundle)
 			{
-				FileName = Path.Combine(data.Local.LocalsPath, data.Local.ExecutablePath),
-				WorkingDirectory = data.Local.LocalsPath
-			};
-
-			if (!File.Exists(startInfo.FileName))
+				startInfo = new System.Diagnostics.ProcessStartInfo
+				{
+					FileName = Path.Combine(data.Local.LocalsPath, data.Local.ExecutablePath),
+					WorkingDirectory = data.Local.LocalsPath
+				};
+			}
+			else
 			{
-				Debug.LogError($"File not found on path: \"{startInfo.FileName}\"");
-				return;
+				startInfo = new System.Diagnostics.ProcessStartInfo
+				{
+					FileName = data.Local.ExecutablePath
+				};
 			}
 
 			#region Set Start Time
@@ -297,8 +304,16 @@ namespace NALStudio.GameLauncher.Games
 			gameRunningProcess.Exited += GameCloseHandler;
 			gameRunningData = data;
 			gameRunningStartTime = DateTime.UtcNow;
-			gameRunningProcess.Start();
-			gameRunning = true;
+			try
+			{
+				gameRunningProcess.Start();
+				gameRunning = true;
+			}
+			catch (Exception ex)
+			{
+				gameRunningProcess = null;
+				Debug.LogError($"Game could not be started. Exception: {ex}");
+			}
 
 
 			if (sortingMode == SortingMode.recent)

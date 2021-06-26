@@ -333,6 +333,9 @@ public class UniversalData
 		}
 	}
 	#endregion
+	#region Install Info
+	public bool MsixBundle { get; private set; }
+	#endregion
 
 	public LocalData Local { get; set; }
 
@@ -359,6 +362,7 @@ public class UniversalData
 		public string thumbnail_url;
 		public string download_url;
 		public long order;
+		public bool msix_bundle;
 
 		public string color;
 
@@ -391,6 +395,7 @@ public class UniversalData
 		Price = d.price;
 		ReleaseDate = d.release_date;
 		EarlyAccess = d.early_access;
+		MsixBundle = d.msix_bundle;
 		Age = AgeRating.NALUnrated;
 		if (Enum.IsDefined(typeof(AgeRating), d.age_rating))
 			Age = (AgeRating)d.age_rating;

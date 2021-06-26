@@ -3090,6 +3090,7 @@ MonoBehaviour:
   price: {fileID: 852913507}
   buttonMode: 0
   buttonImage: {fileID: 1667737293}
+  experimentalMsixTrigger: {fileID: 1667737299}
   defaultButtonColor: {r: 0.29803923, g: 0.81960785, b: 0.21568628, a: 1}
   buttonText: {fileID: 2034907935}
   buttonTextLightColor: {r: 0.9254902, g: 0.9411765, b: 0.94509804, a: 1}
@@ -7149,6 +7150,8 @@ Transform:
   - {fileID: 924677352}
   - {fileID: 345918919}
   - {fileID: 1210562038}
+  - {fileID: 1410315229}
+  - {fileID: 1773888985}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -21448,7 +21451,7 @@ GameObject:
   - component: {fileID: 1350570733}
   - component: {fileID: 1350570736}
   m_Layer: 5
-  m_Name: Tooltip Canvas
+  m_Name: Popup Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22478,6 +22481,54 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &1410315228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1410315229}
+  - component: {fileID: 1410315230}
+  m_Layer: 0
+  m_Name: store_page-experimental_msix_header
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1410315229
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410315228}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 68
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1410315230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410315228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: 'WARNING: EXPERIMENTAL'
+    Object: {fileID: 0}
 --- !u!1 &1419536298
 GameObject:
   m_ObjectHideFlags: 0
@@ -25654,6 +25705,9 @@ GameObject:
   - component: {fileID: 1667737293}
   - component: {fileID: 1667737295}
   - component: {fileID: 1667737296}
+  - component: {fileID: 1667737299}
+  - component: {fileID: 1667737298}
+  - component: {fileID: 1667737297}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -25786,6 +25840,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
+--- !u!114 &1667737297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667737291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd48fc39df1a4f49a7acbdf3ff02152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: store_page-experimental_msix_content
+  FallbackText: Warning! MSIX Bundle support is experimental and may contain bugs.
+--- !u!114 &1667737298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667737291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6075f2e91375ab247938b557d2b2f7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: store_page-experimental_msix_header
+  FallbackText: 'WARNING: EXPERIMENTAL'
+--- !u!114 &1667737299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667737291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ef9d2dbfe08c9d4d9e4609eb03834ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: 1
+  header: 'WARNING: EXPERIMENTAL'
+  content: Warning! MSIX Bundle support is experimental and may contain bugs.
+  delay: 0
 --- !u!1 &1671239396
 GameObject:
   m_ObjectHideFlags: 0
@@ -27289,6 +27387,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1768441807}
   m_CullTransparentMesh: 1
+--- !u!1 &1773888984
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1773888985}
+  - component: {fileID: 1773888986}
+  m_Layer: 0
+  m_Name: store_page-experimental_msix_content
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1773888985
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773888984}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 379797149}
+  m_RootOrder: 69
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1773888986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773888984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Warning! MSIX Bundle support is experimental and may contain bugs.
+    Object: {fileID: 0}
+  - Language: Finnish
+    Text: "Varoitus! MSIX Bundle -tiedostojen tuki on kokeellinen ja saattaa sis\xE4lt\xE4\xE4
+      bugeja."
+    Object: {fileID: 0}
 --- !u!1 &1777333150
 GameObject:
   m_ObjectHideFlags: 0

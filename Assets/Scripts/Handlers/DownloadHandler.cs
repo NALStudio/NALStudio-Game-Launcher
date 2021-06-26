@@ -350,7 +350,7 @@ namespace NALStudio.GameLauncher
             yield return StartCoroutine(DownloadError($"{error.Message}\n{error.StackTrace}"));
         }
 
-        IEnumerator Downloader(UniversalData data)
+		IEnumerator Downloader(UniversalData data)
         {
             string downloadDir = Constants.Constants.DownloadPath;
             if (Directory.Exists(downloadDir))
@@ -382,7 +382,12 @@ namespace NALStudio.GameLauncher
                             extractingAssets.SetActive(true);
                             progressBarBackground.color = progressBarExtracting;
                             progressBarFill.color = new Color(0, 0, 0, 0);
-                            yield return StartCoroutine(Extractor(downloadPath, data));
+                            if (!SettingsManager.Settings.AllowInstallsDuringGameplay)
+                                yield return new WaitUntil(() => !gameHandler.gameRunning || ApplicationHandler.HasFocus || SettingsManager.Settings.AllowInstallsDuringGameplay);
+                            if (!data.MsixBundle)
+                                yield return StartCoroutine(ZipInstaller(downloadPath, data));
+                            else
+                                yield return StartCoroutine(MsixInstaller(downloadPath, data));
 							StartCoroutine(gameHandler.LoadGames());
 							yield return new WaitForSeconds(Time.fixedDeltaTime * 2);
                             extractingAssets.SetActive(false);
@@ -426,19 +431,43 @@ namespace NALStudio.GameLauncher
             }
         }
 
-        IEnumerator Extractor(string zipPath, UniversalData data)
+        IEnumerator ZipInstaller(string zipPath, UniversalData data)
         {
-            if (!SettingsManager.Settings.AllowInstallsDuringGameplay)
-                yield return new WaitUntil(() => !gameHandler.gameRunning || ApplicationHandler.HasFocus || SettingsManager.Settings.AllowInstallsDuringGameplay);
-
-            bool extractError = false;
-
             string extractPath = Path.Combine(Constants.Constants.DownloadPath, "extraction");
             if (Directory.Exists(extractPath))
                 yield return StartCoroutine(NALDirectory.Delete(extractPath, true));
 
             yield return StartCoroutine(NALZipFile.ExtractToDirectoryThreaded(zipPath, extractPath));
 
+            yield return StartCoroutine(LateInstall(extractPath, data));
+        }
+
+        IEnumerator MsixInstaller(string _bundlePath, UniversalData data)
+		{
+            string bundlePath = Path.Combine(Path.GetDirectoryName(_bundlePath), $"{data.UUID}.msixbundle");
+            File.Move(_bundlePath, bundlePath);
+            // Redirect to web download with useless download, because I have no idea
+            // how I could make this better... Otherwise the file just gets deleted.
+            System.Diagnostics.Process i = System.Diagnostics.Process.Start($"ms-appinstaller:?source={data.DownloadUrl}");
+            yield return new WaitUntil(() => i.HasExited); // Does not wait for App Installer to finish......
+            if (i.ExitCode == 0)
+			{
+                yield return StartCoroutine(LateInstall(bundlePath, data));
+			}
+            else
+			{
+                StartCoroutine(DownloadError($"Windows App Installer process exit code was not zero. Exit Code: {i.ExitCode}"));
+                extractingText.color = errorColor;
+                extractingText.text = "[ERROR]";
+                progressBarBackground.color = errorColor;
+                progressBarFill.color = new Color(0, 0, 0, 0);
+                yield break;
+            }
+		}
+
+		IEnumerator LateInstall(string toMove, UniversalData data)
+		{
+            bool extractError = false;
             bool updated = false;
             yield return StartCoroutine(gameHandler.UpdateUninstall(data, (u) => updated = u));
 
@@ -446,49 +475,61 @@ namespace NALStudio.GameLauncher
             if (Queue.CustomPath(data) == null)
             {
                 searchDir = Path.Combine(Constants.Constants.GamesPath, data.Name);
-				if (File.Exists(Path.Combine(searchDir, Constants.Constants.gamedataFilePath)))
-				{
+                if (File.Exists(Path.Combine(searchDir, Constants.Constants.gamedataFilePath)))
+                {
                     string json = File.ReadAllText(Path.Combine(searchDir, Constants.Constants.gamedataFilePath));
                     var tmp = UniversalData.LocalData.FromJson(json);
                     if (tmp != null && tmp.UUID != data.UUID)
                         searchDir = Path.Combine(Constants.Constants.GamesPath, data.UUID);
-				}
-			}
+                }
+            }
             else
             {
                 searchDir = Queue.CustomPath(data);
-			}
+            }
 
             string gamePath = Path.Combine(Constants.Constants.GamesPath, searchDir);
             string customPath = Queue.CustomPath(data);
             if (customPath != null)
             {
                 gamePath = customPath;
-				// Extra prosessointi kakkaa
-				if (!SettingsManager.Settings.CustomGamePaths.Keys.Contains(data.UUID))
-				{
-					SettingsManager.Settings.CustomGamePaths.Add(data.UUID, gamePath);
-				}
-				else
-				{
-					Debug.LogWarning($"Custom path \"{gamePath}\" for game \"{data.UUID}\" ({data.Name}) exists already! Overriding old setting...");
+                // Extra prosessointi kakkaa
+                if (!SettingsManager.Settings.CustomGamePaths.Keys.Contains(data.UUID))
+                {
+                    SettingsManager.Settings.CustomGamePaths.Add(data.UUID, gamePath);
+                }
+                else
+                {
+                    Debug.LogWarning($"Custom path \"{gamePath}\" for game \"{data.UUID}\" ({data.Name}) exists already! Overriding old setting...");
                     SettingsManager.Settings.CustomGamePaths[data.UUID] = gamePath;
                 }
 
-				SettingsManager.Save();
+                SettingsManager.Save();
             }
 
             if (Directory.Exists(gamePath))
-			{
-				yield return StartCoroutine(NALDirectory.Delete(gamePath, true));
+            {
+                yield return StartCoroutine(NALDirectory.Delete(gamePath, true));
                 Debug.LogWarning("Directory found at gamePath... Deleting directory...");
-			}
+            }
 
-			string[] subDirs = Directory.GetDirectories(extractPath);
-            if (subDirs.Length == 1 && Directory.GetFiles(extractPath).Length < 1)
-                yield return StartCoroutine(NALDirectory.Move(subDirs[0], gamePath));
-            else
-                yield return StartCoroutine(NALDirectory.Move(extractPath, gamePath));
+            if (Directory.Exists(toMove))
+            {
+                string[] subDirs = Directory.GetDirectories(toMove);
+                if (subDirs.Length == 1 && Directory.GetFiles(toMove).Length < 1)
+                    yield return StartCoroutine(NALDirectory.Move(subDirs[0], gamePath));
+                else
+                    yield return StartCoroutine(NALDirectory.Move(toMove, gamePath));
+            }
+            else if (File.Exists(toMove))
+			{
+                Directory.CreateDirectory(gamePath);
+                File.Move(toMove, Path.Combine(gamePath, Path.GetFileName(toMove)));
+			}
+			else
+			{
+                Debug.LogError("toMove is not a directory or a file!");
+			}
 
             if (!Directory.Exists(gamePath))
             {
@@ -503,25 +544,25 @@ namespace NALStudio.GameLauncher
             if (Directory.Exists(Constants.Constants.DownloadPath))
                 yield return StartCoroutine(NALDirectory.Delete(Constants.Constants.DownloadPath, true));
 
-			if (data.Local != null)
-			{
-				data.Local.Version = data.Remote.Version;
-				data.Local.ExecutablePath = data.Remote.ExecutablePath;
-				data.Local.LastInterest = DateTimeOffset.Now.ToUnixTimeSeconds();
+            if (data.Local != null)
+            {
+                data.Local.Version = data.Remote.Version;
+                data.Local.ExecutablePath = data.Remote.ExecutablePath;
+                data.Local.LastInterest = DateTimeOffset.Now.ToUnixTimeSeconds();
                 data.Local.Save();
-			}
-			else
-			{
-				data.Local = new UniversalData.LocalData(data.UUID,
-					data.Remote.Version,
-					data.Remote.ExecutablePath,
-					gamePath);
+            }
+            else
+            {
+                data.Local = new UniversalData.LocalData(data.UUID,
+                    data.Remote.Version,
+                    data.Remote.ExecutablePath,
+                    gamePath);
                 // Will automatically save and create a directory if needed.
-			}
+            }
             string tmpPath = Path.Combine(gamePath, Constants.Constants.launcherDataFilePath);
             if (!Directory.Exists(tmpPath))
             {
-                StartCoroutine(DownloadError($"No launcher data directory found. Excepted to find directory at path: \"{tmpPath}\""));
+                StartCoroutine(DownloadError($"No launcher data directory found. Expected to find directory at path: \"{tmpPath}\""));
                 extractError = true;
                 extractingText.color = errorColor;
                 extractingText.text = "[ERROR]";
@@ -550,7 +591,7 @@ namespace NALStudio.GameLauncher
                         { "version", data.Remote.Version },
                         { "playtime", playtime }
                     });
-                    }
+                }
                 else
                 {
                     Debug.Log($"Updated game: \"{data.UUID}\" ({data.Name})");

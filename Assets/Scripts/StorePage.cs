@@ -56,6 +56,7 @@ public class StorePage : MonoBehaviour
 	public enum ButtonMode { Install, Update, Uninstall, Queued, Downloading }
 	public ButtonMode buttonMode;
 	public Image buttonImage;
+	public NALTooltipTrigger experimentalMsixTrigger;
 	public Color defaultButtonColor;
 	public TextMeshProUGUI buttonText;
 	public Color buttonTextLightColor;
@@ -74,6 +75,7 @@ public class StorePage : MonoBehaviour
 		gameObject.SetActive(true);
 		openedData = _data;
 		earlyAccessBanner.SetActive(openedData.EarlyAccess);
+		experimentalMsixTrigger.interactable = openedData.MsixBundle;
 		ratioFitter.aspectRatio = (float)openedData.ThumbnailTexture.width / openedData.ThumbnailTexture.height;
 		image.texture = openedData.ThumbnailTexture;
 		image.color = Color.white;
@@ -143,6 +145,9 @@ public class StorePage : MonoBehaviour
 
 	IEnumerator InstallCustomDir(UniversalData openedData)
 	{
+		if (openedData.MsixBundle)
+			yield break;
+
 		bool finished = false;
 		bool success = false;
 		string path = null;
@@ -163,20 +168,25 @@ public class StorePage : MonoBehaviour
 	{
 		if (!rightClick)
 		{
-			bool openDownloads = true;
+			bool openDownloads;
 			switch (buttonMode)
 			{
 				case ButtonMode.Install:
 				case ButtonMode.Update:
 					downloadHandler.Queue.Add(openedData);
+					openDownloads = true;
 					break;
 				case ButtonMode.Queued:
 				case ButtonMode.Downloading:
 					downloadHandler.Cancel(openedData);
+					openDownloads = true;
 					break;
 				case ButtonMode.Uninstall:
 					gameHandler.Uninstall(openedData);
 					openDownloads = false;
+					break;
+				default:
+					openDownloads = true;
 					break;
 			}
 			Close(openDownloads);
@@ -194,12 +204,13 @@ public class StorePage : MonoBehaviour
 
 	public void Close()
 	{
+		NALTooltipSystem.Hide();
 		tweener.DoTween(true, true);
 	}
 
 	public void Close(bool openDownloads)
 	{
-		tweener.DoTween(true, true);
+		Close();
 		if (openDownloads)
 			downloadsButton.IsOn = true;
 	}
