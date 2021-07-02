@@ -32,6 +32,7 @@ public class ApplicationHandler : MonoBehaviour
 
 	void Start()
 	{
+		/* It was a fucking stupid idea to collect this information
 		AnalyticsEvent.Custom("Application Start", new Dictionary<string, object>()
 		{
 			{ "Version", Application.version },
@@ -42,6 +43,7 @@ public class ApplicationHandler : MonoBehaviour
 			{ "CPU Core Count", SystemInfo.processorCount },
 			{ "OS", SystemInfo.operatingSystem }
 		});
+		*/
 
 		if ((!File.Exists(Constants.LaunchPath) || PlayerPrefs.GetString("shortcut_launcher_version", null) != System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Application.streamingAssetsPath, "NALStudioGameLauncherShortcutLaunch.exe")).FileVersion) && SettingsManager.Settings.AllowShortcuts)
 		{
