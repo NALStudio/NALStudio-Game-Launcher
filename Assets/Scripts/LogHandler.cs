@@ -87,11 +87,9 @@ I==========[ SYSTEM INFO ]==========I";
 				_ => "null",
 			};
 
-			using (StreamWriter sw = new StreamWriter(logFilePath, true))
-			{
-				sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") +
-					$"-{typeString}: {logString}\n    {stackTrace.Replace("\n", "\n    ")}");
-			}
+			using StreamWriter sw = new StreamWriter(logFilePath, true);
+			sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") +
+				$"-{logType.ToString("F").ToUpper()}: {logString}\n    {stackTrace.Replace("\n", "\n    ")}");
 		}
 	}
 }

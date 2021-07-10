@@ -398,6 +398,18 @@ namespace NALStudio.GameLauncher.Games
 					Environment.SetEnvironmentVariable("NALStudioGameLauncherLaunchApplication", null, EnvironmentVariableTarget.User);
 				}
 			}
+
+			string openUUID = Environment.GetEnvironmentVariable("NALStudioGameLauncherOpenStorePage", EnvironmentVariableTarget.User);
+			if (openUUID != null)
+			{
+				UniversalData correctData = DataHandler.UniversalDatas.Get().FirstOrDefault(d => d.UUID == openUUID);
+				if (correctData != null)
+					storePage.Open(correctData);
+				else
+					Debug.LogError($"Game name not found in gameDatas! GameDatas count: {gameDatas.Length}, Game UUID: {openUUID}");
+
+				Environment.SetEnvironmentVariable("NALStudioGameLauncherOpenStorePage", null, EnvironmentVariableTarget.User);
+			}
 		}
 	}
 }
