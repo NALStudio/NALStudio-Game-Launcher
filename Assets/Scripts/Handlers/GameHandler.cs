@@ -278,14 +278,16 @@ namespace NALStudio.GameLauncher.Games
 				startInfo = new System.Diagnostics.ProcessStartInfo
 				{
 					FileName = Path.Combine(data.Local.LocalsPath, data.Local.ExecutablePath),
-					WorkingDirectory = data.Local.LocalsPath
+					WorkingDirectory = data.Local.LocalsPath,
+					UseShellExecute = true
 				};
 			}
 			else
 			{
 				startInfo = new System.Diagnostics.ProcessStartInfo
 				{
-					FileName = data.Local.ExecutablePath
+					FileName = data.Local.ExecutablePath,
+					UseShellExecute = true
 				};
 			}
 
@@ -299,7 +301,7 @@ namespace NALStudio.GameLauncher.Games
 			gameRunningProcess = new System.Diagnostics.Process
 			{
 				StartInfo = startInfo,
-				EnableRaisingEvents = true
+				EnableRaisingEvents = !data.MsixBundle
 			};
 			gameRunningProcess.Exited += GameCloseHandler;
 			gameRunningData = data;
@@ -311,13 +313,16 @@ namespace NALStudio.GameLauncher.Games
 			}
 			catch (Exception ex)
 			{
-				gameRunningProcess = null;
+				GameCloseHandler(savePlaytime: false);
 				Debug.LogError($"Game could not be started. Exception: {ex}");
 			}
 
 
 			if (sortingMode == SortingMode.recent)
 				StartCoroutine(LoadGames());
+
+			if (data.MsixBundle)
+				GameCloseHandler(savePlaytime: false);
 		}
 
 		void Update()
@@ -332,14 +337,19 @@ namespace NALStudio.GameLauncher.Games
 			CheckForStartRequest();
 		}
 
-		void GameCloseHandler(object sender, EventArgs e)
+		void GameCloseHandler(object sender, EventArgs e) => GameCloseHandler();
+
+		void GameCloseHandler(bool savePlaytime = true)
 		{
-			try
+			if (savePlaytime)
 			{
-				TimeSpan playTime = DateTime.UtcNow - gameRunningStartTime;
-				playtimesToSave.Add(gameRunningData.UUID, playTime.TotalMinutes);
+				try
+				{
+					TimeSpan playTime = DateTime.UtcNow - gameRunningStartTime;
+					playtimesToSave.Add(gameRunningData.UUID, playTime.TotalMinutes);
+				}
+				catch (Exception ex) { Debug.LogError(ex.Message); }
 			}
-			catch (Exception ex) { Debug.LogError(ex.Message); }
 			gameRunningData = null;
 			gameRunningProcess = null;
 			gameRunning = false;
