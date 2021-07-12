@@ -45,7 +45,8 @@ namespace NALStudio.Logging
 				File.Delete(logFiles[i]);
 
 			string initString = $@"Created log file: {logFilePath}
-I==========[ SYSTEM INFO ]==========I
+I==========[ DEBUG INFO ]==========I
+- Version:      {Application.version}
 - Window:       {Screen.width}x{Screen.height}@{Screen.currentResolution.refreshRate} [{Screen.dpi}dpi]
 - Graphics API: {SystemInfo.graphicsDeviceVersion}
 - GPU:          {SystemInfo.graphicsDeviceName}
@@ -54,10 +55,8 @@ I==========[ SYSTEM INFO ]==========I
 - RAM:          {SystemInfo.systemMemorySize}MB
 - OS:           {SystemInfo.operatingSystem} [{SystemInfo.deviceType}]
 I==========[ SYSTEM INFO ]==========I";
-			using (StreamWriter sw = new StreamWriter(logFilePath))
-			{
-				sw.WriteLine(initString);
-			}
+			using StreamWriter sw = new StreamWriter(logFilePath);
+			sw.WriteLine(initString);
 		}
 
 		void Awake()
@@ -76,16 +75,6 @@ I==========[ SYSTEM INFO ]==========I";
 				StopAllCoroutines();
 				Init();
 			}
-
-			string typeString = logType switch
-			{
-				LogType.Error => "ERROR",
-				LogType.Assert => "ASSERT",
-				LogType.Warning => "WARNING",
-				LogType.Log => "DEBUG",
-				LogType.Exception => "EXCEPTION",
-				_ => "null",
-			};
 
 			using StreamWriter sw = new StreamWriter(logFilePath, true);
 			sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") +

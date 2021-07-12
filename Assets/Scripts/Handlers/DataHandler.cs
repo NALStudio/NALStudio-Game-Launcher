@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -55,6 +56,33 @@ public class DataHandler : MonoBehaviour
 
 			datas.Add(toAdd);
 		}
+	}
+
+	public static UniversalData[] FilterDatasByString(string filter, IEnumerable<UniversalData> datas)
+	{
+		List<UniversalData> filtered = new List<UniversalData>();
+		string normalizedFilter = Regex.Replace(filter, @"\s", string.Empty).ToLowerInvariant();
+
+		// Distance from data function
+		int distanceFromData(UniversalData d)
+		{
+			string normalizedDisplayName = Regex.Replace(d.DisplayName, @"\s", string.Empty).ToLowerInvariant();
+			string shortName;
+			if (normalizedDisplayName.Length > normalizedFilter.Length)
+				shortName = normalizedDisplayName.Substring(0, normalizedFilter.Length);
+			else
+				shortName = normalizedDisplayName;
+			return shortName.DamerauLevenshteinDistance(normalizedFilter, normalizedFilter.Length / 2);
+		}
+
+		foreach (UniversalData toCheck in datas)
+		{
+			if (distanceFromData(toCheck) != -1)
+				filtered.Add(toCheck);
+		}
+
+		// Checking everything twice is not exactly optimal, but I don't know any other way.
+		return filtered.OrderBy(d => distanceFromData(d)).ToArray();
 	}
 
 	public static DataHandler Executor { get; private set; }

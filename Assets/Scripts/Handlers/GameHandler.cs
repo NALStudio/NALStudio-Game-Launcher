@@ -63,6 +63,9 @@ namespace NALStudio.GameLauncher.Games
 
 		Dictionary<string, double> playtimesToSave = new Dictionary<string, double>();
 
+		string filter;
+
+
 		void Start()
 		{
 			gridLayout = GetComponent<GridLayoutGroup>();
@@ -189,6 +192,14 @@ namespace NALStudio.GameLauncher.Games
 			}
 		}
 
+		public void SetFilter(string f)
+		{
+			if (f == filter)
+				return;
+			filter = f;
+			AddGames();
+		}
+
 		void AddGames()
 		{
 			foreach (GameObject go in games)
@@ -197,24 +208,29 @@ namespace NALStudio.GameLauncher.Games
 			gameScripts.Clear();
 			gameTweeners.Clear();
 
+			UniversalData[] sortedgames = new UniversalData[gameDatas.Length];
+			gameDatas.CopyTo(sortedgames, 0);
 			switch (sortingMode)
 			{
 				case SortingMode.recent:
-					gameDatas = gameDatas.OrderByDescending(g => g.Local.LastInterest).ToArray();
+					sortedgames = sortedgames.OrderByDescending(g => g.Local.LastInterest).ToArray();
 					break;
 				case SortingMode.alphabetical:
-					gameDatas = gameDatas.OrderBy(g => g.DisplayName).ToArray();
+					sortedgames = sortedgames.OrderBy(g => g.DisplayName).ToArray();
 					break;
 			}
 
-			for (int i = 0; i < gameDatas.Length; i++)
+			if (!string.IsNullOrEmpty(filter))
+				sortedgames = DataHandler.FilterDatasByString(filter, sortedgames);
+
+			for (int i = 0; i < sortedgames.Length; i++)
 			{
 				GameObject instantiated = Instantiate(gamePrefab, transform);
 				games.Add(instantiated);
 				Game insGame = instantiated.GetComponent<Game>();
 				insGame.gameHandler = this;
 				insGame.storePage = storePage;
-				insGame.LoadAssets(gameDatas[i]);
+				insGame.LoadAssets(sortedgames[i]);
 				gameScripts.Add(insGame);
 				UITweener insTweener = instantiated.GetComponent<UITweener>();
 				insTweener.duration = cardAnimationDuration;
