@@ -37,10 +37,12 @@ namespace NALStudio.GameLauncher.Games
 		public System.Diagnostics.Process gameRunningProcess { get; private set; }
 		[Space(10f)]
 		public GameObject gamePrefab;
-		public Cards.CardHandler cardHandler;
+		public float gameAnimationBaseDelay;
+		public float gameAnimationAddDelay = 0.1f;
+		public float gameAnimationDuration = 0.5f;
+		[Space(10f)]
 		public StorePage storePage;
-		public float cardAnimationBasedelay;
-		public float cardAnimationDuration = 0.5f;
+		public Cards.CardHandler cardHandler;
 		[Space(10f)]
 		public SortingMode sortingMode;
 		public TMPro.TMP_Dropdown sortDropdown;
@@ -233,8 +235,8 @@ namespace NALStudio.GameLauncher.Games
 				insGame.LoadAssets(sortedgames[i]);
 				gameScripts.Add(insGame);
 				UITweener insTweener = instantiated.GetComponent<UITweener>();
-				insTweener.duration = cardAnimationDuration;
-				insTweener.delay = cardAnimationBasedelay + (i / 10f);
+				insTweener.duration = gameAnimationDuration;
+				insTweener.delay = gameAnimationBaseDelay + (i * gameAnimationAddDelay);
 				gameTweeners.Add(insTweener);
 			}
 		}
@@ -382,17 +384,19 @@ namespace NALStudio.GameLauncher.Games
 			gameRunningProcess?.Kill();
 		}
 
+		/*
 		void CalculateRectHeight()
 		{
 			rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x,
 				gridHeight + ((gridHeight + verticalSpacing) * Mathf.CeilToInt((transform.childCount - 1) / 3)));
 		}
+		*/
 
 		void CalculateCellSize()
 		{
-			gridLayout.cellSize = new Vector2((rectTransform.rect.width - 20) / 5, gridHeight);
+			gridLayout.cellSize = new Vector2((rectTransform.rect.width - 40f) / 5f, gridHeight);
 			gridLayout.spacing = new Vector2(gridLayout.spacing.x, verticalSpacing);
-			CalculateRectHeight();
+			// CalculateRectHeight();
 		}
 
 		void OnRectTransformDimensionsChange()

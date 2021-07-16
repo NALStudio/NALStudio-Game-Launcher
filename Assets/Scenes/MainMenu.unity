@@ -2491,7 +2491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Padding: {x: -100, y: 0, z: -100, w: 0}
   m_Softness: {x: 0, y: 0}
 --- !u!1 &165333082
 GameObject:
@@ -20123,10 +20123,11 @@ MonoBehaviour:
   gridHeight: 130
   verticalSpacing: 10
   gamePrefab: {fileID: 2428305271127268703, guid: 5e5d8208c281ae5499e6529e3c0437a9, type: 3}
-  cardHandler: {fileID: 637743226}
+  gameAnimationBaseDelay: 0
+  gameAnimationAddDelay: 0.1
+  gameAnimationDuration: 0.5
   storePage: {fileID: 213149830}
-  cardAnimationBasedelay: 0
-  cardAnimationDuration: 0.5
+  cardHandler: {fileID: 637743226}
   sortingMode: 0
   sortDropdown: {fileID: 1859482935}
   gameDatas: []
@@ -24185,7 +24186,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.65
+  m_fontSize: 18
   m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 1

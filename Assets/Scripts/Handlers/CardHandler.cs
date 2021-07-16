@@ -38,7 +38,7 @@ namespace NALStudio.GameLauncher.Cards
         [Space(10)]
         public GameObject cardPrefab;
         public float cardAnimationBaseDelay;
-        public float cardAnimationAddDelay = 0.05f;
+        public float cardAnimationAddDelay = 0.1f;
         public float cardAnimationDuration = 0.5f;
         [Space(10)]
         public StorePage storePage;
@@ -193,7 +193,7 @@ namespace NALStudio.GameLauncher.Cards
 
         void CalculateCellSize()
         {
-            gridLayout.cellSize = new Vector2((rectTransform.rect.width - 20) / 3, gridHeight);
+            gridLayout.cellSize = new Vector2((rectTransform.rect.width - 20f) / 3f, gridHeight);
             gridLayout.spacing = new Vector2(gridLayout.spacing.x, verticalSpacing);
             // CalculateRectHeight();
         }
